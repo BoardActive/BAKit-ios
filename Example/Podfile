@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'BAKit_Example' do
+  pod 'BAKit', :path => '../'
+
+  target 'BAKit_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
