@@ -1,0 +1,30 @@
+PODS:
+  - Alamofire (4.7.3)
+  - BAKit (0.1.0):
+    - Alamofire (~> 4.7)
+    - PromiseKit/Alamofire (~> 6.0)
+  - PromiseKit/Alamofire (6.4.0):
+    - Alamofire (~> 4.0)
+    - PromiseKit/CorePromise
+  - PromiseKit/CorePromise (6.4.0)
+
+DEPENDENCIES:
+  - BAKit (from `../`)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Alamofire
+    - PromiseKit
+
+EXTERNAL SOURCES:
+  BAKit:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
+  BAKit: cf04c71ef1900071c75ef6a4b6fb07ef7dae096c
+  PromiseKit: ae3616f45d7bb9bf4ff1e91abc9b7a8c48a340e0
+
+PODFILE CHECKSUM: 1c3161ba792fa7a701ca84f172c3daf47e90cdd0
+
+COCOAPODS: 1.5.3

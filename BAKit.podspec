@@ -9,34 +9,27 @@
 Pod::Spec.new do |s|
   s.name             = 'BAKit'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of BAKit.'
-
-# This description is used to generate tags and improve search results.
-#   * Think: What does it do? Why did you write it? What is the focus?
-#   * Try to keep it short, snappy and to the point.
-#   * Write the description between the DESC delimiters below.
-#   * Finally, don't worry about the indent, CocoaPods strips it!
-
-  s.description      = <<-DESC
-TODO: Add long description of the pod here.
-                       DESC
-
-  s.homepage         = 'https://github.com/HVNT/BAKit'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
+  s.summary          = 'Location-based notifications for personalized user engagement and retention campaigns'
+  s.description      = 'Board Active iOS SDK, for integrating BoardActive into your iOS application. The SDK supports iOS 8, iOS 9, iOS 10, and iOS 11'
+  s.homepage         = 'https://github.com/boardactive/BAKit-ios'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'HVNT' => 'hunterbrennick@gmail.com' }
-  s.source           = { :git => 'https://github.com/HVNT/BAKit.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
-
-  s.ios.deployment_target = '8.0'
-
-  s.source_files = 'BAKit/Classes/**/*'
+  s.author           = { 'Hunter Brennick' => 'hunter@boardactive.com' }
+  s.source           = { :git => 'https://github.com/boardactive/BAKit-ios.git', :tag => s.version.to_s }
   
-  # s.resource_bundles = {
-  #   'BAKit' => ['BAKit/Assets/*.png']
-  # }
-
+  s.ios.deployment_target = '10.0'
+  s.swift_version         = '4.0'
+  
+  s.source_files = 'BAKit/Source/**/*'
+  
+  s.resource_bundle = { 'BAKit' => ['BAKit/*.xcassets'] }
+  
+  #s.subspec 'Resources' do |resources|
+  #  resources.resource_bundle =  { 'BAKit' => ['BAKit/*.xcassets'] }
+  # end
+  
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.dependency 'Alamofire', '~> 4.7'
+  s.dependency 'PromiseKit/Alamofire', '~> 6.0'
+  # s.dependency 'OneSignal', '>= 2.6.2', '< 3.0'
 end
