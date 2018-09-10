@@ -27,9 +27,13 @@ Pod::Spec.new do |s|
   #  resources.resource_bundle =  { 'BAKit' => ['BAKit/*.xcassets'] }
   # end
   
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
   s.dependency 'Alamofire', '~> 4.7'
   s.dependency 'PromiseKit/Alamofire', '~> 6.0'
+  s.dependency 'Firebase/Core', '~> 5.0'
+  s.dependency 'Firebase/Messaging'
+  # for some reason adding ~> 3.1.1 or any 3.x.x of Firebase/Messaging caused the app to fail
+  
+  
+  s.static_framework = true
   # s.dependency 'OneSignal', '>= 2.6.2', '< 3.0'
 end

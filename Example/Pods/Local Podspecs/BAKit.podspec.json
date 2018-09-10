@@ -31,6 +31,13 @@
     ],
     "PromiseKit/Alamofire": [
       "~> 6.0"
+    ],
+    "Firebase/Core": [
+      "~> 5.0"
+    ],
+    "Firebase/Messaging": [
+
     ]
-  }
+  },
+  "static_framework": true
 }
