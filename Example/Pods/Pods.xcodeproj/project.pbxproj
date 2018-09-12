@@ -209,6 +209,7 @@
 		A61F4643EC7040E4A994777468A4E66A /* fwd.h in Headers */ = {isa = PBXBuildFile; fileRef = 81DD954EA8B2369A82379A9DC2AD282A /* fwd.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A72E6F8E4887A8E31D737696533D21DB /* FIRLoggerLevel.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FDE85284773574B547BB87A58D42340 /* FIRLoggerLevel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A826A9F00B760A718AE9564ABB4B2DFB /* join.m in Sources */ = {isa = PBXBuildFile; fileRef = B29777795CF569E13E1E2A626FDF7BE9 /* join.m */; };
+		A9151E51B24FF5EE0C0900C320491DB0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03DDA1DBD670206C1DE7C211E928C2A2 /* Assets.xcassets */; };
 		A99BFC54675A9AB8BE9F7B1369480EA8 /* FIRMessagingPacketQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 21DFED93BFBC75FD2FCBD57BF2C2E81A /* FIRMessagingPacketQueue.m */; };
 		A9EEEA7477981DEEBC72432DE9990A4B /* Alamofire-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA93ABDF13295B3082E08BC8A4FFA6E9 /* Alamofire-dummy.m */; };
 		AA336B19370F7FE21C1CA2F681258380 /* Thenable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3CC72D2948DB2359D7FEF45771EEF8 /* Thenable.swift */; };
@@ -292,7 +293,6 @@
 		FB122D4049F6D2F9AC1972117AB516A6 /* GPBUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 9443B6FF65A3E15D32BCB918618BC505 /* GPBUtilities.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		FB39578CB38CC3C1268F7DF1670921EF /* FIRMessagingRemoteNotificationsProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = B881779FCEB34B4BB504F64BA5FB93B0 /* FIRMessagingRemoteNotificationsProxy.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		FD026FF52A85C92B6FAF1D181E9A3D3D /* FIRMessagingReceiver.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D6F91E74136A009180B12A7213784A4 /* FIRMessagingReceiver.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		FDE130688CB3109AA4C1770E6AA00F20 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 411AC18256D1318D40BD5BEB1574C801 /* Assets.xcassets */; };
 		FE7E5062EB618C12D3A722C01B4B0D83 /* Api.pbobjc.h in Headers */ = {isa = PBXBuildFile; fileRef = 52DDC0F2A25B2C01A24ED4B5256E2200 /* Api.pbobjc.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FED72370A361AFC8B7E8059F3A44453F /* FIRComponentContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 650835B0A7F70083246ECAACBEA372E3 /* FIRComponentContainer.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		FF3FC459B172091A6F923199A99BE769 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8F38E8AA7250F579486A53D0B392BF4 /* Foundation.framework */; };
@@ -461,6 +461,7 @@
 		031EE667C3C231107AC23F8C93A3A890 /* Configuration.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Configuration.swift; path = Sources/Configuration.swift; sourceTree = "<group>"; };
 		03270F010814538A7CBDC0C907804049 /* GULNetworkLoggerProtocol.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GULNetworkLoggerProtocol.h; path = GoogleUtilities/Network/Private/GULNetworkLoggerProtocol.h; sourceTree = "<group>"; };
 		0343C6D6986B46F173AC94BADA64C28F /* FirebaseMessaging.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = FirebaseMessaging.framework; path = FirebaseMessaging.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		03DDA1DBD670206C1DE7C211E928C2A2 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = BAKit/Resources/Assets.xcassets; sourceTree = "<group>"; };
 		04B90D820572695F00B3835D3B4D7AC8 /* FirebaseCore.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = FirebaseCore.xcconfig; sourceTree = "<group>"; };
 		0565A45C76F1229E853DFF798EE4829C /* FIRVersion.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FIRVersion.h; path = Firebase/Core/Private/FIRVersion.h; sourceTree = "<group>"; };
 		064DE17AB68756E79F1DDDE93FFC6FC4 /* AdDrop.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AdDrop.swift; sourceTree = "<group>"; };
@@ -546,7 +547,6 @@
 		3E576286871DE2C7AF61044025C520D5 /* FIRAnalyticsConfiguration+Internal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "FIRAnalyticsConfiguration+Internal.h"; path = "Firebase/Core/Private/FIRAnalyticsConfiguration+Internal.h"; sourceTree = "<group>"; };
 		3EFEF8007C46D7CFFE6BD6CE3040DE6B /* GULMutableDictionary.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GULMutableDictionary.m; path = GoogleUtilities/Network/GULMutableDictionary.m; sourceTree = "<group>"; };
 		3FDF9660A95BA4BB9F6378A7099ACAA8 /* SavedCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SavedCell.swift; sourceTree = "<group>"; };
-		411AC18256D1318D40BD5BEB1574C801 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = BAKit/Assets.xcassets; sourceTree = "<group>"; };
 		421E4B873CDF0E1A541F5012ABA90C68 /* BAKit-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "BAKit-prefix.pch"; sourceTree = "<group>"; };
 		43550DCD9556E8AD14A0E45464D7ECF1 /* GPBExtensionRegistry.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GPBExtensionRegistry.m; path = objectivec/GPBExtensionRegistry.m; sourceTree = "<group>"; };
 		43795EAAA04EDE50EA02F6C1F0846A94 /* GPBMessage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GPBMessage.h; path = objectivec/GPBMessage.h; sourceTree = "<group>"; };
@@ -903,7 +903,7 @@
 				E60CB95C3AA9AF604C478D98E758EB48 /* Controllers */,
 				C575544A468F258C253A6A174E6E0046 /* Helpers */,
 				070497D5D933E680D098CFC406DD2386 /* Pod */,
-				E38775C3CA2EB43DA50B95156BCFE3AF /* Resources */,
+				3ABA9C2B4EAB276021CEC3B86F10DE52 /* Resources */,
 				FD43B7E7765775A04E30712DDD68CCED /* Support Files */,
 				382ABB8CB68A3F76D7B9E4DF3E83B8EE /* Views */,
 			);
@@ -1086,6 +1086,14 @@
 				83802CDF3018DD0818F2B8195FFD79D2 /* FirebaseCoreDiagnostics.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3ABA9C2B4EAB276021CEC3B86F10DE52 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				03DDA1DBD670206C1DE7C211E928C2A2 /* Assets.xcassets */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		4DAB6B8523DA6C34233425AA5026FC87 /* Pods-BAKit_Example */ = {
@@ -1584,14 +1592,6 @@
 			);
 			name = GoogleAppMeasurement;
 			path = GoogleAppMeasurement;
-			sourceTree = "<group>";
-		};
-		E38775C3CA2EB43DA50B95156BCFE3AF /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				411AC18256D1318D40BD5BEB1574C801 /* Assets.xcassets */,
-			);
-			name = Resources;
 			sourceTree = "<group>";
 		};
 		E60CB95C3AA9AF604C478D98E758EB48 /* Controllers */ = {
@@ -2129,7 +2129,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FDE130688CB3109AA4C1770E6AA00F20 /* Assets.xcassets in Resources */,
+				A9151E51B24FF5EE0C0900C320491DB0 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,8 +12,9 @@
   class AdDrop {
     
     // Meta members
-    var id: Int
-    var advertisementId: Int
+    var id: String
+    var advertisementId: String
+    var notificationId: String?
     var dateCreated: String?       // TODO set to String?
     var dateUpdated: String?       // "
     
@@ -43,8 +44,9 @@
     var categoryColor: UIColor
     
     init(_ json: [String: Any]) {
-      self.id = json["promotion_id"] as! Int
-      self.advertisementId = json["advertisement_id"] as! Int
+      self.id = json["promotion_id"] as! String
+      self.advertisementId = json["advertisement_id"] as! String
+      self.notificationId = json["gcm.message_id"] as? String
       
       // Visible members
       self.title = json["title"] as! String
@@ -125,5 +127,33 @@
       }
       
       self.locations = newLocations
+    }
+    
+    public func isValidNotification() -> Bool {
+      return self.id != nil &&
+        self.notificationId != nil &&
+        self.advertisementId != nil
+    }
+    
+    public func log () -> Void {
+      print("---START ADDROP LOG---")
+      print("id:", self.id)
+      print("notificationId:", self.notificationId)
+      print("advertisementId:", self.advertisementId)
+      print("title:", self.title)
+      print("description:", self.description)
+      print("category:", self.category)
+      print("isBookmarked:", self.isBookmarked)
+      print("imageUrl:", self.imageUrl)
+      print("promoUrl:", self.promoUrl)
+      print("qrUrl:", self.qrUrl)
+      print("categoryColor:", self.categoryColor)
+      print("dateCreated:", self.dateCreated)
+      print("dateUpdated:", self.dateUpdated)
+      print("dateStart:", self.dateStart)
+      print("dateExpires:", self.dateExpires)
+      print("timeStart:", self.timeStart)
+      print("timeEnd:", self.timeEnd)
+      print("---END ADDROP LOG---")
     }
   }

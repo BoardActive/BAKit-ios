@@ -22,7 +22,7 @@ pod 'BAKit'
 
 ## Author
 
-HVNT, hunterbrennick@gmail.com
+HVNT, hunter@boardactive.com
 
 ## License
 

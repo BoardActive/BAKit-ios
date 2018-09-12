@@ -12,7 +12,6 @@ import BAKit
 
 class ViewController: UIViewController {
   @IBOutlet weak var openBoardActiveButton: UIButton!
-  let BAClient = BoardActive.client
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -24,7 +23,8 @@ class ViewController: UIViewController {
   }
   
   @IBAction func showBoardActive(_ sender: Any) {
-    BAClient.show()
+    BoardActive.client.show()
+    BoardActive.client.stopUpdatingLocation()
   }
 }
 

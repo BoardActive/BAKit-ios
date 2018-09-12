@@ -8,16 +8,22 @@
 
 import Foundation
 import CoreLocation
+import UserNotifications
 import Alamofire
 import PromiseKit
+import FirebaseCore
+import FirebaseMessaging
 
-public class BoardActive: UIViewController, CLLocationManagerDelegate {
-  let appDelegate = UIApplication.shared.delegate
+public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
+  // exposes public API
   public static let client = BoardActive()
   
-  var openingViewController: UIViewController?
+  let appDelegate = UIApplication.shared.delegate
   let clientViewController: UIViewController = UINavigationController(rootViewController: HomeController(collectionViewLayout: UICollectionViewFlowLayout()))
-  
+  var openingViewController: UIViewController?
+  let locationManager: CLLocationManager = CLLocationManager()
+  var mostRecentLocation: CLLocation?
+  var userId: String = ""
   let API = [
     "prod": "https://api.boardactive.com/mobile",
     "dev": "https://dev-api.boardactive.com/mobile",
@@ -25,16 +31,20 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate {
     "webDev": "https://dev-api.boardactive.com"
   ]
   
-  private let locationManager: CLLocationManager = CLLocationManager()
-  var mostRecentLocation: CLLocation?
-  var userId: String = ""
-  
   // Set to private so only "Client" can declare instances of itself
   private init() {
     super.init(nibName: nil, bundle: nil)
     // initialize everything? reset props?
     // set default values for props?
+    
+    
+    // TODO move to init?
+    FirebaseApp.configure()
   }
+  
+//  required public init?(coder aDecoder: NSCoder) {
+//    fatalError("init(coder:) has not been implemented")
+//  }
   
   required public init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
@@ -67,8 +77,57 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate {
     locationManager.startUpdatingLocation()
   }
   
+  public func registerForNotifications (_ application: UIApplication) {
+    // [START set_messaging_delegate]
+    Messaging.messaging().delegate = self;
+    // [END set_messaging_delegate]
+    
+    // Register for remote notifications. This shows a permission dialog on first run, to
+    // show the dialog at a more appropriate time move this registration accordingly.
+    // [START register_for_notifications]
+    if #available(iOS 10.0, *) {
+      // For iOS 10 display notification (sent via APNS)
+      UNUserNotificationCenter.current().delegate = self
+      
+      let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+      
+      UNUserNotificationCenter.current().requestAuthorization(
+        options: authOptions,
+        completionHandler: {_, _ in })
+    } else {
+      let settings: UIUserNotificationSettings =
+        UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+      application.registerUserNotificationSettings(settings)
+    }
+    
+    application.registerForRemoteNotifications()
+    // [END register_for_notifications]
+  }
+  
   public func stopUpdatingLocation() {
     locationManager.stopUpdatingLocation()
+  }
+  
+  public func handleNotification(_ application: UIApplication, _ userInfo: [AnyHashable: Any]) {
+    // TODO check if 3rd party notifications execute this callback
+    
+    let a = AdDrop(userInfo as! [String: Any])
+    
+    if (a.isValidNotification()) {
+      if (application.applicationState == UIApplicationState.active) {
+        // in FG and receive notification
+        print("RECEIVED FOREGROUND")
+        createEvent(name: "received", notificationId: a.notificationId ?? "", advertisementId: a.advertisementId, promotionId: a.id)
+      } else if (application.applicationState == UIApplicationState.background) {
+        // in BG and receive notification
+        print("RECEIVED BACKGROUND")
+        createEvent(name: "received", notificationId: a.notificationId ?? "", advertisementId: a.advertisementId, promotionId: a.id)
+      } else if (application.applicationState == UIApplicationState.inactive) {
+        // tap notification from notification center
+        print("TAPPED & TRANSITIONING")
+        createEvent(name: "opened", notificationId: a.notificationId ?? "", advertisementId: a.advertisementId, promotionId: a.id)
+      }
+    }
   }
   
   // TODO put in another class and make private
@@ -79,6 +138,14 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate {
     }
   }
   
+  public func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+    print("Firebase registration token: \(fcmToken)")
+    
+    let dataDict:[String: String] = ["token": fcmToken]
+    NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
+    // TODO: If necessary send token to application server.
+    // Note: This callback is fired at each app startup and whenever a new token is generated.
+  }
   
   private func getPath() -> String {
     return API["prod"]!
@@ -171,8 +238,8 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate {
     }
   }
   
-  func fetchAdDropById(_ id: Int) -> Promise<AdDrop> {
-    let path = getPath() + "/promotions/" + String(id)
+  func fetchAdDropById(_ id: String) -> Promise<AdDrop> {
+    let path = getPath() + "/promotions/" + id
     let headers = getHeaders()
     
     return Promise { seal in
@@ -205,6 +272,7 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate {
         "name": name,
         "params": [
           //          "oneSignalNotificationId": notificationId,
+          "firebaseNotificationId": notificationId,
           "advertisement_id": advertisementId,
           "promotion_id": promotionId
         ]
@@ -310,6 +378,8 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate {
   
   // PUBLIC API
   public func show() {
+    print("OPENING")
+    
     openingViewController = appDelegate?.window??.rootViewController
     appDelegate?.window??.rootViewController = clientViewController
   }

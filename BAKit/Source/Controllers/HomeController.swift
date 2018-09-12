@@ -10,6 +10,7 @@ import UIKit
 
 class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
   let imgBundle = Bundle(identifier: "org.cocoapods.BAKit")
+  
   let homeMenuBarBGMask = UIView()
   let homeMenuBarTitles = ["Home", "Saved"]
   
@@ -27,6 +28,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
   
   lazy var buttonClose: UIBarButtonItem = {
     let img = UIImage(named: "icons-close-24", in: imgBundle, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+    
     let btn = UIBarButtonItem(image: img, style: UIBarButtonItemStyle.plain, target: self, action: #selector(HomeController.hideBoardActive(_:)))
     btn.tintColor = .black
     return btn

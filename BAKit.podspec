@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.name             = 'BAKit'
   s.version          = '0.1.0'
   s.summary          = 'Location-based notifications for personalized user engagement and retention campaigns'
-  s.description      = 'Board Active iOS SDK, for integrating BoardActive into your iOS application. The SDK supports iOS 8, iOS 9, iOS 10, and iOS 11'
+  s.description      = 'Board Active iOS SDK, for integrating BoardActive into your iOS application. The SDK supports iOS 10+'
   s.homepage         = 'https://github.com/boardactive/BAKit-ios'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Hunter Brennick' => 'hunter@boardactive.com' }
@@ -21,17 +21,17 @@ Pod::Spec.new do |s|
   
   s.source_files = 'BAKit/Source/**/*'
   
-  s.resource_bundle = { 'BAKit' => ['BAKit/*.xcassets'] }
-  
   #s.subspec 'Resources' do |resources|
   #  resources.resource_bundle =  { 'BAKit' => ['BAKit/*.xcassets'] }
-  # end
+  #end
+  
+  s.resource_bundle = { 'BAKit' => ['BAKit/Resources/Assets.xcassets'] }
   
   s.dependency 'Alamofire', '~> 4.7'
   s.dependency 'PromiseKit/Alamofire', '~> 6.0'
   s.dependency 'Firebase/Core', '~> 5.0'
   s.dependency 'Firebase/Messaging'
-  # for some reason adding ~> 3.1.1 or any 3.x.x of Firebase/Messaging caused the app to fail
+  # NOTE: adding ~> 3.1.1 or any 3.x.x of Firebase/Messaging caused the app to fail
   
   
   s.static_framework = true
