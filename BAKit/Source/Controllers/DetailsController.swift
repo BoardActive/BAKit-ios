@@ -11,8 +11,6 @@ import UIKit
 class DetailsController: UIViewController {
   let imgBundle = Bundle(identifier: "org.cocoapods.BAKit")
   let BA = BoardActive.client
-  
-  weak var feed: FeedCell?
   var adDrop: AdDrop? {
     didSet {
       if let a = adDrop {
@@ -20,6 +18,7 @@ class DetailsController: UIViewController {
       }
     }
   }
+  weak var feed: FeedCell?
   var hasUrlPromo: Bool = false
   var hasUrlQR: Bool = false
   var hasDirections: Bool = false
@@ -29,33 +28,7 @@ class DetailsController: UIViewController {
     return false
   }
   
-  private func resetView(_ a: AdDrop) {
-    // images
-    viewImage.loadImageUsingCache(withUrl: a.imageUrl!)
-    
-    // labels
-    labelCategory.textColor = a.categoryColor
-    labelCategory.text = a.category.uppercased()
-    labelTitle.text = a.title
-    labelDescription.text = a.description
-    
-    hasUrlPromo = !((a.promoUrl ?? "").isEmpty as Bool)
-    hasUrlQR = !((a.qrUrl ?? "").isEmpty as Bool)
-    hasDirections = !(a.locations ?? []).isEmpty as Bool
-    
-    // disable btns programatically
-    buttonUrl.isEnabled = hasUrlPromo
-    // hide btns programatically
-    buttonRedeem.isHidden = !hasUrlQR
-    buttonDirections.isHidden = !hasDirections
-    
-    // if bookmarked switch out icon from black outline to red fill
-    refreshSaveBtnState()
-  }
-  
-  /*
-   UIImageViews
-   */
+  // [START UIImageView]
   let viewImage: UIImageView = {
     let imageHeight = (UIScreen.main.bounds.width * (9/16)) // 16:9 aspect ratio
     let iv = UIImageView(frame: CGRect(x:0, y: 0, width: UIScreen.main.bounds.width, height: imageHeight))
@@ -63,10 +36,9 @@ class DetailsController: UIViewController {
     iv.contentMode = UIViewContentMode.scaleAspectFit
     return iv
   }()
+  // [END UIImageView]
   
-  /*
-   UIButtons
-   */
+  // [START UIButtons]
   lazy var buttonUrl: UIButton = {
     let btn = UIButton()
     if let img = UIImage(named: "icons-external-link-48", in: imgBundle, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate) {
@@ -124,10 +96,9 @@ class DetailsController: UIViewController {
     btn.addTarget(self, action: #selector(DetailsController.openDirections(_:)), for: .touchUpInside)
     return btn
   }()
+  // [END UIButtons]
   
-  /*
-   UILabels
-   */
+  // [START UILabels]
   let labelCategory: UILabel = {
     let lbl = UILabel()
     lbl.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
@@ -145,6 +116,7 @@ class DetailsController: UIViewController {
     lbl.font = UIFont.systemFont(ofSize: 16)
     return lbl
   }()
+  // [END UILabels]
   
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
@@ -234,10 +206,34 @@ class DetailsController: UIViewController {
     view.layoutIfNeeded()
   }
   
-  /*
-   Button *touch* handlers
-   */
   
+  
+  private func resetView(_ a: AdDrop) {
+    // images
+    viewImage.loadImageUsingCache(withUrl: a.imageUrl!)
+    
+    // labels
+    labelCategory.textColor = a.categoryColor
+    labelCategory.text = a.category.uppercased()
+    labelTitle.text = a.title
+    labelDescription.text = a.description
+    
+    hasUrlPromo = !((a.promoUrl ?? "").isEmpty as Bool)
+    hasUrlQR = !((a.qrUrl ?? "").isEmpty as Bool)
+    hasDirections = !(a.locations ?? []).isEmpty as Bool
+    
+    // disable btns programatically
+    buttonUrl.isEnabled = hasUrlPromo
+    // hide btns programatically
+    buttonRedeem.isHidden = !hasUrlQR
+    buttonDirections.isHidden = !hasDirections
+    
+    // if bookmarked switch out icon from black outline to red fill
+    refreshSaveBtnState()
+  }
+  
+  
+  // [START Action *touch* handlers]
   // buttonSave
   @objc func toggleSave(_ sender: UIButton) {
     adDrop?.toggleAdDropBookmark()
@@ -245,7 +241,7 @@ class DetailsController: UIViewController {
     
     BA.toggleAdDropBookmark(adDrop!)
       .done { adDrop -> Void in
-        self.feed?.fetchData() // refresh parent list (TODO probably not the most efficient
+        self.feed?.fetchData() // refresh parent list (TODO implement caching layer)
       }
       .catch { error in
         // on fail revert
@@ -274,4 +270,5 @@ class DetailsController: UIViewController {
     let googleUrl = "comgooglemaps://" + "?daddr=" + directionsSlug
     UIApplication.shared.open(URL(string: googleUrl)!, options: [:], completionHandler: nil)
   }
+  // [END Action *touch* handlers]
 }

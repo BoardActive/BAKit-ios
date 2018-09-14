@@ -12,8 +12,8 @@ class FeedCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionVi
   let imgBundle = Bundle(identifier: "org.cocoapods.BAKit")
   let BA = BoardActive.client
   let feedCellId = "addropcardcell"
-  var data = [AdDrop]()
   
+  var data = [AdDrop]()
   weak var navCtrl: UINavigationController?
   weak var homeController: HomeController?
   
@@ -62,7 +62,7 @@ class FeedCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionVi
     }
   }
   
-  /* START: collectionView functions */
+  // [START collectionView functions]
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     let detailsAdDrop = self.data[indexPath.row]
     let dc = DetailsController()
@@ -88,7 +88,7 @@ class FeedCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionVi
     let height = 16 + imageHeight + 8 + 28 + 8 + 13 + 8 + 15 + 8 + 15 + 16 // vertical labels / constraints
     return CGSize(width: frame.width, height: height)
   }
-  /* END: collectionView functions */
+  // [END collectionView functions]
   
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")

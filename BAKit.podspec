@@ -21,11 +21,12 @@ Pod::Spec.new do |s|
   
   s.source_files = 'BAKit/Source/**/*'
   
-  #s.subspec 'Resources' do |resources|
-  #  resources.resource_bundle =  { 'BAKit' => ['BAKit/*.xcassets'] }
-  #end
+  # s.subspec 'Resources' do |resources|
+    # resources.resource_bundle =  { 'BAKit' => ['BAKit/*.bundle'] }
+  # end
   
-  s.resource_bundle = { 'BAKit' => ['BAKit/Resources/Assets.xcassets'] }
+  s.resource_bundle =  { 'BAKit' => ['BAKit/Resources/Assets.bundle'] }
+  # s.resource_bundles = { 'BAKit' => ['*.bundle'] }
   
   s.dependency 'Alamofire', '~> 4.7'
   s.dependency 'PromiseKit/Alamofire', '~> 6.0'

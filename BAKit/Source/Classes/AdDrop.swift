@@ -12,9 +12,9 @@
   class AdDrop {
     
     // Meta members
-    var id: String
-    var advertisementId: String
-    var notificationId: String?
+    var id: String = ""
+    var advertisementId: String = ""
+    var notificationId: String? = ""
     var dateCreated: String?       // TODO set to String?
     var dateUpdated: String?       // "
     
@@ -130,30 +130,30 @@
     }
     
     public func isValidNotification() -> Bool {
-      return self.id != nil &&
+      return !self.id.isEmpty &&
         self.notificationId != nil &&
-        self.advertisementId != nil
+        !self.advertisementId.isEmpty
     }
     
-    public func log () -> Void {
-      print("---START ADDROP LOG---")
-      print("id:", self.id)
-      print("notificationId:", self.notificationId)
-      print("advertisementId:", self.advertisementId)
-      print("title:", self.title)
-      print("description:", self.description)
-      print("category:", self.category)
-      print("isBookmarked:", self.isBookmarked)
-      print("imageUrl:", self.imageUrl)
-      print("promoUrl:", self.promoUrl)
-      print("qrUrl:", self.qrUrl)
-      print("categoryColor:", self.categoryColor)
-      print("dateCreated:", self.dateCreated)
-      print("dateUpdated:", self.dateUpdated)
-      print("dateStart:", self.dateStart)
-      print("dateExpires:", self.dateExpires)
-      print("timeStart:", self.timeStart)
-      print("timeEnd:", self.timeEnd)
-      print("---END ADDROP LOG---")
-    }
+//    public func log () -> Void {
+//      print("---START ADDROP LOG---")
+//      print("id:", self.id)
+//      print("advertisementId:", self.advertisementId)
+//      print("notificationId:", self.notificationId?)
+//      print("title:", self.title)
+//      print("description:", self.description!)
+//      print("category:", self.category!)
+//      print("isBookmarked:", self.isBookmarked)
+//      print("imageUrl:", self.imageUrl?)
+//      print("promoUrl:", self.promoUrl?)
+//      print("qrUrl:", self.qrUrl?)
+//      print("categoryColor:", self.categoryColor?)
+//      print("dateCreated:", self.dateCreated?)
+//      print("dateUpdated:", self.dateUpdated?)
+//      print("dateStart:", self.dateStart?)
+//      print("dateExpires:", self.dateExpires?)
+//      print("timeStart:", self.timeStart?)
+//      print("timeEnd:", self.timeEnd?)
+//      print("---END ADDROP LOG---")
+//    }
   }

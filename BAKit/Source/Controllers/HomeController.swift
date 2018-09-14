@@ -27,7 +27,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
   }()
   
   lazy var buttonClose: UIBarButtonItem = {
-    let img = UIImage(named: "icons-close-24", in: imgBundle, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+    let img = UIImage(named: "icons-delete-48.png", in: imgBundle, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
     
     let btn = UIBarButtonItem(image: img, style: UIBarButtonItemStyle.plain, target: self, action: #selector(HomeController.hideBoardActive(_:)))
     btn.tintColor = .black
@@ -55,7 +55,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     collectionView?.register(SavedCell.self, forCellWithReuseIdentifier: savedCellId)
   }
   
-  /* START: private functions */
+  // [START private functions]
   private func addSubviews() {
     view.addSubview(homeMenuBarBGMask)
     view.addSubview(homeMenuBar)
@@ -100,17 +100,17 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
       titleLabel.text = homeMenuBarTitles[index]
     }
   }
-  /* END: private functions */
+  // [END private functions]
   
-  /* START: public functions */
+  // [START public functions]
   public func scrollToHomeMenu(_ homeMenuIndex: Int) {
     let indexPath = IndexPath(item: homeMenuIndex, section: 0)
     collectionView?.scrollToItem(at: indexPath, at: [], animated: true)   // scroll bar to new location
     setHomeMenuBarTitleByIndex(homeMenuIndex)                             // update home menu bar title
   }
-  /* END: public functions */
+  // [END public functions]
   
-  /* START: collectionView functions */
+  // [START collectionView functions]
   override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
     let screenWidth = view.frame.width
     let screenOffset = targetContentOffset.pointee.x
@@ -148,7 +148,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
     return 0
   }
-  /* END: collectionView functions */
+  // [END collectionView functions]
   
   @objc func hideBoardActive(_ sender: UIBarButtonItem) {
     BA.hide()

@@ -22,7 +22,7 @@
   "source_files": "BAKit/Source/**/*",
   "resource_bundles": {
     "BAKit": [
-      "BAKit/Resources/Assets.xcassets"
+      "BAKit/Resources/Assets.bundle"
     ]
   },
   "dependencies": {

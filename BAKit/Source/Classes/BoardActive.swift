@@ -15,15 +15,7 @@ import FirebaseCore
 import FirebaseMessaging
 
 public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
-  // exposes public API
-  public static let client = BoardActive()
-  
-  let appDelegate = UIApplication.shared.delegate
-  let clientViewController: UIViewController = UINavigationController(rootViewController: HomeController(collectionViewLayout: UICollectionViewFlowLayout()))
-  var openingViewController: UIViewController?
-  let locationManager: CLLocationManager = CLLocationManager()
-  var mostRecentLocation: CLLocation?
-  var userId: String = ""
+  public static let client = BoardActive() // BA singleton
   let API = [
     "prod": "https://api.boardactive.com/mobile",
     "dev": "https://dev-api.boardactive.com/mobile",
@@ -31,39 +23,28 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
     "webDev": "https://dev-api.boardactive.com"
   ]
   
-  // Set to private so only "Client" can declare instances of itself
+  let appDelegate = UIApplication.shared.delegate
+  let locationManager: CLLocationManager = CLLocationManager()
+  let clientViewController: UIViewController = UINavigationController(rootViewController: HomeController(collectionViewLayout: UICollectionViewFlowLayout()))
+  var openingViewController: UIViewController?  // used to return to previous view controller after hide() is called
+  
+  // [START Init]
   private init() {
     super.init(nibName: nil, bundle: nil)
-    // initialize everything? reset props?
-    // set default values for props?
-    
-    
-    // TODO move to init?
-    FirebaseApp.configure()
+    FirebaseApp.configure() // TODO move to boot?
   }
-  
-//  required public init?(coder aDecoder: NSCoder) {
-//    fatalError("init(coder:) has not been implemented")
-//  }
   
   required public init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
   }
+  // [END Init]
   
-  // TODO do everything like  bootLocationManager
-  // - needs navigation controller
-  // - needs onesignal id?
-  // - needs advertiser id
-  // - location preferences?
-  // - other?
-  // needs to:
-  // -- configure notifications
-  // -- boot location
+  // [START Public API]
   public func boot(_ config: [String: Any]) {
-    self.bootLocationManager()
+    self.requestLocations()
   }
   
-  public func bootLocationManager () {
+  public func requestLocations () {
     locationManager.delegate = self
     
     // TODO.. using 10 so?
@@ -77,7 +58,7 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
     locationManager.startUpdatingLocation()
   }
   
-  public func registerForNotifications (_ application: UIApplication) {
+  public func requestNotifications (_ application: UIApplication) {
     // [START set_messaging_delegate]
     Messaging.messaging().delegate = self;
     // [END set_messaging_delegate]
@@ -104,13 +85,31 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
     // [END register_for_notifications]
   }
   
+  public func show() {
+    print("SHOW")
+    openingViewController = appDelegate?.window??.rootViewController
+    appDelegate?.window??.rootViewController = clientViewController
+  }
+  
+  public func hide() {
+    print("HIDE")
+    appDelegate?.window??.rootViewController = openingViewController
+  }
+  
+  public func onNotificationReceived(callback: ([String: Any]) -> Void) {
+    callback(["received": ["world": "test"]])
+  }
+  
+  public func onNotificationOpened(callback: ([String: Any]) -> Void) {
+    callback(["opened": ["world": "test"]])
+  }
+  
   public func stopUpdatingLocation() {
     locationManager.stopUpdatingLocation()
   }
   
   public func handleNotification(_ application: UIApplication, _ userInfo: [AnyHashable: Any]) {
     // TODO check if 3rd party notifications execute this callback
-    
     let a = AdDrop(userInfo as! [String: Any])
     
     if (a.isValidNotification()) {
@@ -129,8 +128,9 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
       }
     }
   }
+  // [END Public API]
   
-  // TODO put in another class and make private
+  // [START Overrides]
   public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
     for location in locations {
       updateLocation(location)
@@ -146,19 +146,21 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
     // TODO: If necessary send token to application server.
     // Note: This callback is fired at each app startup and whenever a new token is generated.
   }
+  // [END Overrides]
   
+  // [START Class Functions]
   private func getPath() -> String {
     return API["prod"]!
   }
   
-  // Set to lat/lng antartica by default if not exist
   private func getHeaders(latitude: String? = "82.8628", longitude: String? = "135.0000", advertiserId: String? = "*") -> HTTPHeaders {
+    // Sets lat/lng Antartica by default
     let headers: HTTPHeaders = [
       "Content-Type": "application/json",
       "Accept": "application/json",
       "X-BoardActive-Application-Key": "key",
       "X-BoardActive-Application-Secret": "secret",
-      "X-BoardActive-Advertiser-Id": "233",   //233 = knapsackmagic advertiser id // advertiserId!, TODO move to config within app delegate
+      "X-BoardActive-Advertiser-Id": "233",   // TODO move to config within app delegate, 233 = knapsackmagic advertiser id // advertiserId!,
       "X-BoardActive-Device-Id": "-1",        // TODO gutted onesignal soooo
       "X-BoardActive-Device-OS": "ios",       // its a cocoa pod...
       "X-BoardActive-Latitude": latitude!,
@@ -221,7 +223,7 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
             for adDrop in json {
               let adDrop = AdDrop(adDrop as! [String: Any])
               if (adDrop.isValidModel()) {
-                adDrop.isBookmarked = true      // TODO shouldn't hardcode this
+                adDrop.isBookmarked = true  // TODO should be set by backend
                 adDrops.append(adDrop)
               } else {
                 print("[BA:client:fetchAdDrops] INVALID : ", adDrop)
@@ -263,33 +265,26 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
   }
   
   public func createEvent(name: String, notificationId: String, advertisementId: String, promotionId: String) {
-    // first set member property
-    if (mostRecentLocation != nil) {
-      let path = getPath() + "/events"
-      let headers = getHeaders(latitude: String(describing: mostRecentLocation?.coordinate.latitude),
-                               longitude: String(describing: mostRecentLocation?.coordinate.longitude))
-      let body: [String: Any] = [
-        "name": name,
-        "params": [
-          //          "oneSignalNotificationId": notificationId,
-          "firebaseNotificationId": notificationId,
-          "advertisement_id": advertisementId,
-          "promotion_id": promotionId
-        ]
+    let path = getPath() + "/events"
+    let headers = getHeaders()
+    let body: [String: Any] = [
+      "name": name,
+      "params": [
+        "firebaseNotificationId": notificationId,
+        "advertisement_id": advertisementId,
+        "promotion_id": promotionId
       ]
-      
-      Alamofire.request(path, method: .post, parameters: body, encoding: JSONEncoding.default, headers: headers)
-        .validate()
-        .responseJSON { response in
-          switch response.result {
-          case .success(let json):
-            print("[BA:client:createEvent] OK : ", json)
-          case .failure(let error):
-            print("[BA:client:createEvent] ERR : ", error)
-          }
-      }
-    } else {
-      print("[BA:client:createEvent] ERR : No mostRecentLocation present")
+    ]
+    
+    Alamofire.request(path, method: .post, parameters: body, encoding: JSONEncoding.default, headers: headers)
+      .validate()
+      .responseJSON { response in
+        switch response.result {
+        case .success(let json):
+          print("[BA:client:createEvent] OK : ", json)
+        case .failure(let error):
+          print("[BA:client:createEvent] ERR : ", error)
+        }
     }
   }
   
@@ -304,7 +299,7 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
     let headers = getHeaders()
     let body: [String: Any] = [:]
     
-    // do we even need body?
+    // TODO do we even need body?
     return Promise { seal in
       Alamofire.request(path, method: .post, parameters: body, headers: headers)
         .responseJSON { response in
@@ -341,10 +336,7 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
   }
   
   
-  private func updateLocation(_ location: CLLocation) -> Void {
-    // first update mostRecentLocation property
-    mostRecentLocation = location
-    
+  func updateLocation(_ location: CLLocation) -> Void {
     let path = getPath() + "/mobile_geopoints"
     let headers = getHeaders(latitude: "\(location.coordinate.latitude)", longitude: "\(location.coordinate.longitude)")
     let body: [String: Any] = [:]
@@ -375,26 +367,5 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
     }
     return ""
   }
-  
-  // PUBLIC API
-  public func show() {
-    print("OPENING")
-    
-    openingViewController = appDelegate?.window??.rootViewController
-    appDelegate?.window??.rootViewController = clientViewController
-  }
-  
-  public func hide() {
-    appDelegate?.window??.rootViewController = openingViewController
-  }
-  
-  // when phone receives addrop notification
-  public func onAdDropReceived(callback: ([String: Any]) -> Void) {
-    callback(["received": ["world": "test"]])
-  }
-  
-  // when user opens notification on phone (or details view?)
-  public func onAdDropOpened(callback: ([String: Any]) -> Void) {
-    callback(["opened": ["world": "test"]])
-  }
+  // [END Class Functions]
 }
