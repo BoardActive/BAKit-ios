@@ -24,7 +24,6 @@ class ViewController: UIViewController {
   
   @IBAction func showBoardActive(_ sender: Any) {
     BoardActive.client.show()
-    BoardActive.client.stopUpdatingLocation()
   }
 }
 

@@ -101,24 +101,6 @@
       }
     }
     
-    public func isValidModel() -> Bool {
-      return (self.imageUrl != nil)
-      // TODO add more
-    }
-    
-    public func toggleAdDropBookmark() -> Void {
-      self.isBookmarked = !self.isBookmarked
-    }
-    
-    public func getClosestLocationDirectionsSlug() -> String {
-      var slug = ""
-      if !(locations?.isEmpty ?? true) {
-        let closestLocation = locations?.first
-        slug = closestLocation?.getDirectionsSlug() ?? ""
-      }
-      return slug
-    }
-    
     private func initLocations(locations: Array<[String: Any]>) -> Void {
       var newLocations = [Location]()
       
@@ -129,31 +111,27 @@
       self.locations = newLocations
     }
     
-    public func isValidNotification() -> Bool {
+    func getClosestLocationDirectionsSlug() -> String {
+      var slug = ""
+      if !(locations?.isEmpty ?? true) {
+        let closestLocation = locations?.first
+        slug = closestLocation?.getDirectionsSlug() ?? ""
+      }
+      return slug
+    }
+    
+    func isValidModel() -> Bool {
+      return (self.imageUrl != nil)
+      // TODO add more
+    }
+    
+    func isValidNotification() -> Bool {
       return !self.id.isEmpty &&
         self.notificationId != nil &&
         !self.advertisementId.isEmpty
     }
     
-//    public func log () -> Void {
-//      print("---START ADDROP LOG---")
-//      print("id:", self.id)
-//      print("advertisementId:", self.advertisementId)
-//      print("notificationId:", self.notificationId?)
-//      print("title:", self.title)
-//      print("description:", self.description!)
-//      print("category:", self.category!)
-//      print("isBookmarked:", self.isBookmarked)
-//      print("imageUrl:", self.imageUrl?)
-//      print("promoUrl:", self.promoUrl?)
-//      print("qrUrl:", self.qrUrl?)
-//      print("categoryColor:", self.categoryColor?)
-//      print("dateCreated:", self.dateCreated?)
-//      print("dateUpdated:", self.dateUpdated?)
-//      print("dateStart:", self.dateStart?)
-//      print("dateExpires:", self.dateExpires?)
-//      print("timeStart:", self.timeStart?)
-//      print("timeEnd:", self.timeEnd?)
-//      print("---END ADDROP LOG---")
-//    }
+    func toggleAdDropBookmark() -> Void {
+      self.isBookmarked = !self.isBookmarked
+    }
   }

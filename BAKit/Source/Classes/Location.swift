@@ -46,7 +46,7 @@ class Location {
   }
   
   // preference = address, alternate = latLng
-  public func getDirectionsSlug() -> String {
+  func getDirectionsSlug() -> String {
     var directionsSlug = getAddressSlug()
     if (directionsSlug.isEmpty) {
       directionsSlug = getLatLngSlug()
@@ -58,7 +58,7 @@ class Location {
    Returns lat long formatted string for Google map's api
    EXAMPLE: 42.585444,13.007813
    */
-  public func getLatLngSlug() -> String {
+  func getLatLngSlug() -> String {
     return self.latitude + "," + self.longitude
   }
   
@@ -67,7 +67,7 @@ class Location {
    EXAMPLE: John+F.+Kennedy+International+Airport,+Van+Wyck+Expressway,+Jamaica,+New+York
    AddressOne,+AddressTwo,+City,+State,+Country
    */
-  public func getAddressSlug() -> String {
+  func getAddressSlug() -> String {
     var addressSlug = ""
     let pAddressOne = self.addressOne?.replacingOccurrences(of: " ", with: "+")
     let pAddressTwo = self.addressTwo?.replacingOccurrences(of: " ", with: "+")
@@ -92,12 +92,5 @@ class Location {
     }
     
     return addressSlug
-  }
-  
-  public func isValid() -> Bool {
-    // TODO
-    //    return (!(self.addressOne?.isEmpty)! && !(self.city?.isEmpty)! && !(self.state?.isEmpty)! && !(self.zipCode?.isEmpty)! && !(self.country?.isEmpty)!) ||
-    //      (!(self.latitude?.isEmpty)! && !(self.longitude?.isEmpty)!)
-    return true
   }
 }

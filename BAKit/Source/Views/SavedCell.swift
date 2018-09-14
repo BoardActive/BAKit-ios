@@ -9,6 +9,9 @@
 import UIKit
 
 class SavedCell: FeedCell {
+  let SAVED_TEXT_EMPTY_STATE_TITLE: String = "Save deals you love"
+  let SAVED_TEXT_EMPTY_STATE_DESCRIPTION: String = "Click the heart to make the deals you love easier to access later"
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
   }
@@ -21,6 +24,11 @@ class SavedCell: FeedCell {
         // on fail revert
         self.setData([AdDrop]())
     }
+  }
+  
+  override func setEmptyStateText() {
+    emptyStateTitle.text = SAVED_TEXT_EMPTY_STATE_TITLE
+    emptyStateDescription.text = SAVED_TEXT_EMPTY_STATE_DESCRIPTION
   }
   
   required init?(coder aDecoder: NSCoder) {

@@ -173,7 +173,7 @@
 				607FACCD1AFB9204008FA782 /* Frameworks */,
 				607FACCE1AFB9204008FA782 /* Resources */,
 				0371353793455D5998B04945 /* [CP] Embed Pods Frameworks */,
-				BB7F105405CEB2A74F4D07B6 /* [CP] Copy Pods Resources */,
+				8834C313B0B883C4A3F27A90 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -219,10 +219,10 @@
 						LastSwiftMigration = 0900;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.Push = {
-								enabled = 1;
+								enabled = 0;
 							};
 						};
 					};
@@ -317,7 +317,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		BB7F105405CEB2A74F4D07B6 /* [CP] Copy Pods Resources */ = {
+		8834C313B0B883C4A3F27A90 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -508,7 +508,6 @@
 			baseConfigurationReference = D58689A4E122331593E5F145 /* Pods-BAKit_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = BAKit_Example.entitlements;
 				DEVELOPMENT_TEAM = DLP7NL6GNK;
 				INFOPLIST_FILE = BAKit/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -526,7 +525,6 @@
 			baseConfigurationReference = 3ED973D2FA23B6FBA9B5142A /* Pods-BAKit_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = BAKit_Example.entitlements;
 				DEVELOPMENT_TEAM = DLP7NL6GNK;
 				INFOPLIST_FILE = BAKit/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;

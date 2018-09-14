@@ -14,14 +14,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
   
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-    BoardActive.client.requestNotifications(application);
+//    BoardActive.client.requestNotifications(application);
     return true
   }
   
   // From Apple docs: Unlike the application(_:didReceiveRemoteNotification:) method, which is called only when your app is running in the foreground, the system calls this method when your app is running in the foreground or background. (Source: https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1623013-application)
   // [START receive_message]
   func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-    BoardActive.client.handleNotification(application, userInfo)
+//    BoardActive.client.handleNotification(application, userInfo)
     completionHandler(UIBackgroundFetchResult.newData)
   }
   // [END receive_message]

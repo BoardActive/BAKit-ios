@@ -99,17 +99,18 @@ class DetailsController: UIViewController {
   // [END UIButtons]
   
   // [START UILabels]
+  let labelTitle: UILabel = {
+    let lbl = UILabel()
+    lbl.font = UIFont.systemFont(ofSize: 20, weight: .heavy)
+    return lbl
+  }()
+  
   let labelCategory: UILabel = {
     let lbl = UILabel()
     lbl.font = UIFont.systemFont(ofSize: 12, weight: .heavy)
     return lbl
   }()
   
-  let labelTitle: UILabel = {
-    let lbl = UILabel()
-    lbl.font = UIFont.systemFont(ofSize: 20, weight: .heavy)
-    return lbl
-  }()
   
   let labelDescription: UILabel = {
     let lbl = UILabel()
@@ -234,7 +235,25 @@ class DetailsController: UIViewController {
   
   
   // [START Action *touch* handlers]
-  // buttonSave
+  @objc func openDirections(_ sender: UIButton) {
+    let directionsSlug = self.adDrop?.getClosestLocationDirectionsSlug() ?? ""
+    let googleUrl = "comgooglemaps://" + "?daddr=" + directionsSlug
+    UIApplication.shared.open(URL(string: googleUrl)!, options: [:], completionHandler: nil)
+  }
+  
+  @objc func openRedeemModal(_ sender: UIButton) {
+    let redeemController = RedeemController()
+    redeemController.modalPresentationStyle = .overCurrentContext
+    redeemController.qrUrl = adDrop?.qrUrl ?? ""
+    present(redeemController, animated: true, completion: nil)
+  }
+  
+  @objc func openUrl(_ sender: UIButton) {
+    if let url = URL(string: (adDrop?.promoUrl)!) {
+      UIApplication.shared.open(url, options: [:])
+    }
+  }
+  
   @objc func toggleSave(_ sender: UIButton) {
     adDrop?.toggleAdDropBookmark()
     refreshSaveBtnState()
@@ -248,27 +267,6 @@ class DetailsController: UIViewController {
         self.adDrop?.toggleAdDropBookmark()
         self.refreshSaveBtnState()
     }
-  }
-  
-  // buttonUrl
-  @objc func openUrl(_ sender: UIButton) {
-    if let url = URL(string: (adDrop?.promoUrl)!) {
-      UIApplication.shared.open(url, options: [:])
-    }
-  }
-  
-  // buttonRedeem
-  @objc func openRedeemModal(_ sender: UIButton) {
-    let redeemController = RedeemController()
-    redeemController.modalPresentationStyle = .overCurrentContext
-    redeemController.qrUrl = adDrop?.qrUrl ?? ""
-    present(redeemController, animated: true, completion: nil)
-  }
-  
-  @objc func openDirections(_ sender: UIButton) {
-    let directionsSlug = self.adDrop?.getClosestLocationDirectionsSlug() ?? ""
-    let googleUrl = "comgooglemaps://" + "?daddr=" + directionsSlug
-    UIApplication.shared.open(URL(string: googleUrl)!, options: [:], completionHandler: nil)
   }
   // [END Action *touch* handlers]
 }

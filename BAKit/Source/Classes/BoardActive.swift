@@ -128,6 +128,30 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
       }
     }
   }
+  
+  public func createEvent(name: String, notificationId: String, advertisementId: String, promotionId: String) {
+    let path = getPath() + "/events"
+    let headers = getHeaders()
+    let body: [String: Any] = [
+      "name": name,
+      "params": [
+        "firebaseNotificationId": notificationId,
+        "advertisement_id": advertisementId,
+        "promotion_id": promotionId
+      ]
+    ]
+    
+    Alamofire.request(path, method: .post, parameters: body, encoding: JSONEncoding.default, headers: headers)
+      .validate()
+      .responseJSON { response in
+        switch response.result {
+        case .success(let json):
+          print("[BA:client:createEvent] OK : ", json)
+        case .failure(let error):
+          print("[BA:client:createEvent] ERR : ", error)
+        }
+    }
+  }
   // [END Public API]
   
   // [START Overrides]
@@ -261,30 +285,6 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
             seal.reject(error)
           }
       }
-    }
-  }
-  
-  public func createEvent(name: String, notificationId: String, advertisementId: String, promotionId: String) {
-    let path = getPath() + "/events"
-    let headers = getHeaders()
-    let body: [String: Any] = [
-      "name": name,
-      "params": [
-        "firebaseNotificationId": notificationId,
-        "advertisement_id": advertisementId,
-        "promotion_id": promotionId
-      ]
-    ]
-    
-    Alamofire.request(path, method: .post, parameters: body, encoding: JSONEncoding.default, headers: headers)
-      .validate()
-      .responseJSON { response in
-        switch response.result {
-        case .success(let json):
-          print("[BA:client:createEvent] OK : ", json)
-        case .failure(let error):
-          print("[BA:client:createEvent] ERR : ", error)
-        }
     }
   }
   
