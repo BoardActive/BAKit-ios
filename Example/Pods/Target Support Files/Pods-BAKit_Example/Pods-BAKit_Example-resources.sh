@@ -92,9 +92,43 @@ EOM
   esac
 }
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/Contents.json"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-back-filled-48.imageset/Contents.json"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-back-filled-48.imageset/icons-back-filled-48.png"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-close-24.imageset/Contents.json"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-close-24.imageset/icons8-delete-24.png"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-delete-24.imageset/Contents.json"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-delete-24.imageset/icons-delete-24.png"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-delete-48.imageset/Contents.json"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-delete-48.imageset/icons-delete-48.png"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-external-link-48.imageset/Contents.json"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-external-link-48.imageset/icons-external-link-48.png"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-heart-48.imageset/Contents.json"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-heart-48.imageset/icons-heart-48.png"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-heart-filled-48.imageset/Contents.json"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-heart-filled-48.imageset/icons-heart-filled-48.png"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-home-48.imageset/Contents.json"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-home-48.imageset/icons-home-48.png"
   install_resource "${PODS_CONFIGURATION_BUILD_DIR}/BAKit/BAKit.bundle"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/Contents.json"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-back-filled-48.imageset/Contents.json"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-back-filled-48.imageset/icons-back-filled-48.png"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-close-24.imageset/Contents.json"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-close-24.imageset/icons8-delete-24.png"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-delete-24.imageset/Contents.json"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-delete-24.imageset/icons-delete-24.png"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-delete-48.imageset/Contents.json"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-delete-48.imageset/icons-delete-48.png"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-external-link-48.imageset/Contents.json"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-external-link-48.imageset/icons-external-link-48.png"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-heart-48.imageset/Contents.json"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-heart-48.imageset/icons-heart-48.png"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-heart-filled-48.imageset/Contents.json"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-heart-filled-48.imageset/icons-heart-filled-48.png"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-home-48.imageset/Contents.json"
+  install_resource "${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-home-48.imageset/icons-home-48.png"
   install_resource "${PODS_CONFIGURATION_BUILD_DIR}/BAKit/BAKit.bundle"
 fi
 

@@ -19,12 +19,13 @@
     "ios": "10.0"
   },
   "swift_version": "4.0",
-  "source_files": "BAKit/Source/**/*",
+  "source_files": "BAKit/Source/**/*.{swift}",
   "resource_bundles": {
     "BAKit": [
-      "BAKit/Resources/Assets.bundle"
+      "BAKit/**/*.xcassets"
     ]
   },
+  "resources": "BAKit/**/*.{png,json}",
   "dependencies": {
     "Alamofire": [
       "~> 4.7"

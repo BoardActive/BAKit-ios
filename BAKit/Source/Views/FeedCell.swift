@@ -67,15 +67,13 @@ class FeedCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionVi
   }
   
   func setData(_ adDrops: [AdDrop]) {
-    self.hadData = self.data.isEmpty
+    self.hadData = !self.data.isEmpty
     self.data = adDrops
     self.hasData = !self.data.isEmpty
     
     if (!self.hasData) {
-      print("showing empty state")
       self.showEmptyState()
     } else {
-      print("hiding empty state")
       self.hideEmptyState()
       self.collectionView.reloadData()
     }

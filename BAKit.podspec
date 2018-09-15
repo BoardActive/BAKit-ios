@@ -19,14 +19,12 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '10.0'
   s.swift_version         = '4.0'
   
-  s.source_files = 'BAKit/Source/**/*'
+  s.source_files = 'BAKit/Source/**/*.{swift}'
   
   
-  s.resource_bundle =  { 'BAKit' => ['BAKit/Resources/Assets.bundle'] }
-  # s.subspec 'Resources' do |resources|
-  #  resources.resource_bundle =  { 'BAKit' => ['BAKit/*.bundle'] }
-  #end
-  # s.resource_bundles = { 'BAKit' => ['*.bundle'] }
+  # s.resource_bundles = { 'BAKitAssets' => 'BAKit/Assets/*.png' }
+  s.resource_bundles = { 'BAKit' => ['BAKit/**/*.xcassets'] }
+  s.resources = "BAKit/**/*.{png,json}"
   
   s.dependency 'Alamofire', '~> 4.7'
   s.dependency 'PromiseKit/Alamofire', '~> 6.0'

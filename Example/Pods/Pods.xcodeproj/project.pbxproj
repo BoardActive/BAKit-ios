@@ -23,7 +23,6 @@
 		1047D4E6CAC2874EE678E54E705FB97F /* FIRMessagingConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 258C1BDDCA2B2C5A9DBD01F476B974A7 /* FIRMessagingConstants.m */; };
 		10EB23E9ECC4B33E16933BB1EA560B6A /* Timeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6829DCCB8D9A24BD28D0A5849B47D76F /* Timeline.swift */; };
 		123502CF9A06352F7FD4B2D0FD8E3577 /* Pods-BAKit_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 2945404086B56BDC3E8B62DF558DB8E2 /* Pods-BAKit_Tests-dummy.m */; };
-		123C08492FB688546303764D638CBFE6 /* Assets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E062381307DD5B1D6531C902CD3244DA /* Assets.bundle */; };
 		124D6D73FC5B03AD572EB5298ED1037A /* GPBExtensionInternals.m in Sources */ = {isa = PBXBuildFile; fileRef = 8032234BFF0692F52BD7AFC8CAB193FE /* GPBExtensionInternals.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		13AE1A1124780B9D7D3F55413384ABEA /* GPBWellKnownTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = F1144DA9AA4B606600086933157812C5 /* GPBWellKnownTypes.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		142113A107DB2A3EF0B231C73BC046DF /* AdDropCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13BEE93314C14D196C9BB97F0B7D4C68 /* AdDropCardCell.swift */; };
@@ -293,6 +292,7 @@
 		FB122D4049F6D2F9AC1972117AB516A6 /* GPBUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 9443B6FF65A3E15D32BCB918618BC505 /* GPBUtilities.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		FB39578CB38CC3C1268F7DF1670921EF /* FIRMessagingRemoteNotificationsProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = B881779FCEB34B4BB504F64BA5FB93B0 /* FIRMessagingRemoteNotificationsProxy.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		FD026FF52A85C92B6FAF1D181E9A3D3D /* FIRMessagingReceiver.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D6F91E74136A009180B12A7213784A4 /* FIRMessagingReceiver.h */; settings = {ATTRIBUTES = (Project, ); }; };
+		FDE130688CB3109AA4C1770E6AA00F20 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 411AC18256D1318D40BD5BEB1574C801 /* Assets.xcassets */; };
 		FE7E5062EB618C12D3A722C01B4B0D83 /* Api.pbobjc.h in Headers */ = {isa = PBXBuildFile; fileRef = 52DDC0F2A25B2C01A24ED4B5256E2200 /* Api.pbobjc.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FED72370A361AFC8B7E8059F3A44453F /* FIRComponentContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 650835B0A7F70083246ECAACBEA372E3 /* FIRComponentContainer.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		FF3FC459B172091A6F923199A99BE769 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8F38E8AA7250F579486A53D0B392BF4 /* Foundation.framework */; };
@@ -546,6 +546,7 @@
 		3E576286871DE2C7AF61044025C520D5 /* FIRAnalyticsConfiguration+Internal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "FIRAnalyticsConfiguration+Internal.h"; path = "Firebase/Core/Private/FIRAnalyticsConfiguration+Internal.h"; sourceTree = "<group>"; };
 		3EFEF8007C46D7CFFE6BD6CE3040DE6B /* GULMutableDictionary.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GULMutableDictionary.m; path = GoogleUtilities/Network/GULMutableDictionary.m; sourceTree = "<group>"; };
 		3FDF9660A95BA4BB9F6378A7099ACAA8 /* SavedCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SavedCell.swift; sourceTree = "<group>"; };
+		411AC18256D1318D40BD5BEB1574C801 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = BAKit/Assets.xcassets; sourceTree = "<group>"; };
 		421E4B873CDF0E1A541F5012ABA90C68 /* BAKit-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "BAKit-prefix.pch"; sourceTree = "<group>"; };
 		43550DCD9556E8AD14A0E45464D7ECF1 /* GPBExtensionRegistry.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GPBExtensionRegistry.m; path = objectivec/GPBExtensionRegistry.m; sourceTree = "<group>"; };
 		43795EAAA04EDE50EA02F6C1F0846A94 /* GPBMessage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GPBMessage.h; path = objectivec/GPBMessage.h; sourceTree = "<group>"; };
@@ -752,7 +753,6 @@
 		DC48A2C30006542F0B52EF874E208319 /* hang.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = hang.swift; path = Sources/hang.swift; sourceTree = "<group>"; };
 		DC9C914E8867B55FCDEE750E2E9B5397 /* GPBDescriptor_PackagePrivate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = GPBDescriptor_PackagePrivate.h; path = objectivec/GPBDescriptor_PackagePrivate.h; sourceTree = "<group>"; };
 		DE18B70694866B8F9C08D65E6655DDA1 /* NSDictionary+FIRMessaging.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSDictionary+FIRMessaging.m"; path = "Firebase/Messaging/NSDictionary+FIRMessaging.m"; sourceTree = "<group>"; };
-		E062381307DD5B1D6531C902CD3244DA /* Assets.bundle */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "wrapper.plug-in"; name = Assets.bundle; path = BAKit/Resources/Assets.bundle; sourceTree = "<group>"; };
 		E0C3D9F63C8CB0DF937D27937832C3BB /* FIRConfiguration.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FIRConfiguration.h; path = Firebase/Core/Public/FIRConfiguration.h; sourceTree = "<group>"; };
 		E17761B0E657E7104C048352D339C99C /* FIRMessagingSecureSocket.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FIRMessagingSecureSocket.h; path = Firebase/Messaging/FIRMessagingSecureSocket.h; sourceTree = "<group>"; };
 		E40675D0FA03ECBE5B0660E7BB172F26 /* Protobuf.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Protobuf.modulemap; sourceTree = "<group>"; };
@@ -903,7 +903,7 @@
 				E60CB95C3AA9AF604C478D98E758EB48 /* Controllers */,
 				C575544A468F258C253A6A174E6E0046 /* Helpers */,
 				070497D5D933E680D098CFC406DD2386 /* Pod */,
-				5A3E0294557DCF0F91EE26BC07B9CA05 /* Resources */,
+				E38775C3CA2EB43DA50B95156BCFE3AF /* Resources */,
 				FD43B7E7765775A04E30712DDD68CCED /* Support Files */,
 				382ABB8CB68A3F76D7B9E4DF3E83B8EE /* Views */,
 			);
@@ -1141,14 +1141,6 @@
 				6B23DB471B52FBD4C4B109EE578D3834 /* GULNSData+zlib.m */,
 			);
 			name = "NSData+zlib";
-			sourceTree = "<group>";
-		};
-		5A3E0294557DCF0F91EE26BC07B9CA05 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				E062381307DD5B1D6531C902CD3244DA /* Assets.bundle */,
-			);
-			name = Resources;
 			sourceTree = "<group>";
 		};
 		5B38230B1821674DF5B5FD1F0E27E449 /* Logger */ = {
@@ -1592,6 +1584,14 @@
 			);
 			name = GoogleAppMeasurement;
 			path = GoogleAppMeasurement;
+			sourceTree = "<group>";
+		};
+		E38775C3CA2EB43DA50B95156BCFE3AF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				411AC18256D1318D40BD5BEB1574C801 /* Assets.xcassets */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		E60CB95C3AA9AF604C478D98E758EB48 /* Controllers */ = {
@@ -2069,7 +2069,7 @@
 			buildPhases = (
 				CE412908C0300FC4F72FE0EFD599A1FD /* Sources */,
 				C2B4828218B72C438C1EF5BD38161755 /* Frameworks */,
-				77929C7F2DDF5076B2B7E7D2CE307537 /* Resources */,
+				FADBCBF761F6A05A04D0C346B1447D3B /* Resources */,
 			);
 			buildRules = (
 			);
@@ -2117,19 +2117,19 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		77929C7F2DDF5076B2B7E7D2CE307537 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				123C08492FB688546303764D638CBFE6 /* Assets.bundle in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		DA609F6C3976CD5FEAF7915A5388EC3B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				7B4D0F10AAD842D19DB271AB76FFAC6A /* BAKit.bundle in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FADBCBF761F6A05A04D0C346B1447D3B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FDE130688CB3109AA4C1770E6AA00F20 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

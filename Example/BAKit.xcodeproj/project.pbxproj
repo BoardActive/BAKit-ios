@@ -324,10 +324,36 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-BAKit_Example/Pods-BAKit_Example-resources.sh",
+				"${PODS_ROOT}/../../BAKit/Assets.xcassets/Contents.json",
+				"${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-back-filled-48.imageset/Contents.json",
+				"${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-back-filled-48.imageset/icons-back-filled-48.png",
+				"${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-close-24.imageset/Contents.json",
+				"${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-close-24.imageset/icons8-delete-24.png",
+				"${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-delete-24.imageset/Contents.json",
+				"${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-delete-24.imageset/icons-delete-24.png",
+				"${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-delete-48.imageset/Contents.json",
+				"${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-delete-48.imageset/icons-delete-48.png",
+				"${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-external-link-48.imageset/Contents.json",
+				"${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-external-link-48.imageset/icons-external-link-48.png",
+				"${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-heart-48.imageset/Contents.json",
+				"${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-heart-48.imageset/icons-heart-48.png",
+				"${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-heart-filled-48.imageset/Contents.json",
+				"${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-heart-filled-48.imageset/icons-heart-filled-48.png",
+				"${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-home-48.imageset/Contents.json",
+				"${PODS_ROOT}/../../BAKit/Assets.xcassets/icons-home-48.imageset/icons-home-48.png",
 				"${PODS_CONFIGURATION_BUILD_DIR}/BAKit/BAKit.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Contents.json",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/icons-back-filled-48.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/icons8-delete-24.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/icons-delete-24.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/icons-delete-48.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/icons-external-link-48.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/icons-heart-48.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/icons-heart-filled-48.png",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/icons-home-48.png",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/BAKit.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;

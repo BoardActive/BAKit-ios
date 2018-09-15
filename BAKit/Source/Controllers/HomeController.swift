@@ -9,16 +9,13 @@
 import UIKit
 
 class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-  let imgBundle = Bundle(identifier: "org.cocoapods.BAKit")
+  lazy var BA = BoardActive.client
+  let ID_CELL_FEED = "feedcell"
+  let ID_CELL_SAVED = "savedcell"
+  let TITLES_HOME_MENU = ["Home", "Saved"]
+  let IMG_BUNDLE = Bundle(identifier: "org.cocoapods.BAKit")
   
   let homeMenuBarBGMask = UIView()
-  let homeMenuBarTitles = ["Home", "Saved"]
-  
-  let feedCellId = "feedcell"
-  let savedCellId = "savedcell"
-  let cardCellId = "addropcell"
-  
-  lazy var BA = BoardActive.client
   
   lazy var homeMenuBar: HomeMenuBar = {
     let hmb = HomeMenuBar()
@@ -27,8 +24,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
   }()
   
   lazy var buttonClose: UIBarButtonItem = {
-    let img = UIImage(named: "icons-delete-48.png", in: imgBundle, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
-    
+    let img = UIImage(named: "icons-delete-24", in: IMG_BUNDLE, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
     let btn = UIBarButtonItem(image: img, style: UIBarButtonItemStyle.plain, target: self, action: #selector(HomeController.hideBoardActive(_:)))
     btn.tintColor = .black
     return btn
@@ -50,9 +46,9 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     setupStyles()
     
     // Default feed collection view collection
-    collectionView?.register(FeedCell.self, forCellWithReuseIdentifier: feedCellId)
+    collectionView?.register(FeedCell.self, forCellWithReuseIdentifier: ID_CELL_FEED)
     // Saved feed collection view
-    collectionView?.register(SavedCell.self, forCellWithReuseIdentifier: savedCellId)
+    collectionView?.register(SavedCell.self, forCellWithReuseIdentifier: ID_CELL_SAVED)
   }
   
   // [START private functions]
@@ -97,7 +93,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
   
   private func setHomeMenuBarTitleByIndex(_ index: Int) {
     if let titleLabel = navigationItem.titleView as? UILabel {
-      titleLabel.text = homeMenuBarTitles[index]
+      titleLabel.text = TITLES_HOME_MENU[index]
     }
   }
   // [END private functions]
@@ -131,11 +127,11 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
   
   override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     if indexPath.item == 0 {
-      let cell = collectionView.dequeueReusableCell(withReuseIdentifier: feedCellId, for: indexPath) as! FeedCell
+      let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ID_CELL_FEED, for: indexPath) as! FeedCell
       cell.navCtrl = navigationController
       return cell
     } else {
-      let cell = collectionView.dequeueReusableCell(withReuseIdentifier: savedCellId, for: indexPath) as! SavedCell
+      let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ID_CELL_SAVED, for: indexPath) as! SavedCell
       cell.navCtrl = navigationController
       return cell
     }
