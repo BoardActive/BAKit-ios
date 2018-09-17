@@ -8,8 +8,18 @@
 
 import UIKit
 
+/**
+ HomeMenuCell:
+ 
+ This is the UIViewCell for the tabs within the HomeMenuBar. There are 2 total: one for "Home" (which
+ is all AdDrops) and second for "Saved" (which is only AdDrops that have isBookmarked = true)
+ 
+ 
+ */
+
 class HomeMenuCell: UICollectionViewCell {
   
+  // [START Declare view elements]
   let imageView: UIImageView = {
     let imgBundle = Bundle(identifier: "org.cocoapods.BAKit")
     let iv = UIImageView()
@@ -17,14 +27,9 @@ class HomeMenuCell: UICollectionViewCell {
     iv.tintColor = .lightGray
     return iv
   }()
+  // [END]
   
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-    backgroundColor = .white
-    addSubviews()
-    setupStyles()
-  }
-  
+  // [START Declare variables]
   override var isHighlighted: Bool {
     didSet {
       imageView.tintColor = isHighlighted ? .darkGray : .lightGray
@@ -36,7 +41,21 @@ class HomeMenuCell: UICollectionViewCell {
       imageView.tintColor = isSelected ? .black : .lightGray
     }
   }
+  // [END]
   
+  
+  // [START Initialize view]
+  override init(frame: CGRect) {
+    super.init(frame: frame)
+    backgroundColor = .white
+    addSubviews()
+    setupStyles()
+  }
+  
+  required init?(coder aDecoder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  // [END]
   private func addSubviews() {
     addSubview(imageView)
   }
@@ -48,9 +67,5 @@ class HomeMenuCell: UICollectionViewCell {
     // align center X, align center Y
     addConstraint(NSLayoutConstraint(item: imageView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0))
     addConstraint(NSLayoutConstraint(item: imageView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
-  }
-  
-  required init?(coder aDecoder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
   }
 }

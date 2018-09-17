@@ -8,14 +8,30 @@
 
 import UIKit
 
+/**
+ HomeMenuBar:
+ 
+ This is the UIView for the bar at the top of BoardActive that houses the
+ tabs to switch between the two primary lists: "Home" and "Saved"
+ 
+ 
+ */
+
 class HomeMenuBar: UIView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-  /* START: variables */
-  let imgBundle = Bundle(identifier: "org.cocoapods.BAKit")
-  let homeMenuBtnId = "homeMenuBtnId"
-  let homeMenuBtnImgNames = ["icons-home-48", "icons-heart-filled-48"]
-  let homeMenuBtnsBarView = UIView()
-  var leftAnchorConstraint: NSLayoutConstraint?
   
+  // [START Declare constants]
+  let IMG_BUNDLE = Bundle(identifier: "org.cocoapods.BAKit")
+  let ID_HOME_MENU = "homeMenuBtnId"
+  let TITLES_HOME_MENU = ["icons-home-48", "icons-heart-filled-48"]
+  // [END]
+  
+  // [START Declare variables]
+  var homeMenuBtnsBarView = UIView()
+  var leftAnchorConstraint: NSLayoutConstraint?
+  var homeController: HomeController?
+  // [END]
+  
+  // [START Declare view elements]
   lazy var homeMenuBtnsView: UICollectionView = {
     let layout = UICollectionViewFlowLayout()
     let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -23,19 +39,22 @@ class HomeMenuBar: UIView, UICollectionViewDelegate, UICollectionViewDataSource,
     cv.delegate = self
     return cv
   }()
+  // [END]
   
-  var homeController: HomeController?
-  /* END: variables */
-  
+  // [START Initialize view]
   override init(frame: CGRect) {
     super.init(frame: frame)
-    homeMenuBtnsView.register(HomeMenuCell.self, forCellWithReuseIdentifier: homeMenuBtnId)
+    homeMenuBtnsView.register(HomeMenuCell.self, forCellWithReuseIdentifier: ID_HOME_MENU)
     
     addSubviews()
     setupStyles()
   }
   
-  /* START: private functions */
+  required init?(coder aDecoder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  // [END]
+  
   private func addSubviews() {
     addSubview(homeMenuBtnsView)
     addSubview(homeMenuBtnsBarView)
@@ -63,9 +82,8 @@ class HomeMenuBar: UIView, UICollectionViewDelegate, UICollectionViewDataSource,
     homeMenuBtnsBarView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 1/2).isActive = true
     homeMenuBtnsBarView.heightAnchor.constraint(equalToConstant: 2).isActive = true
   }
-  /* END: private functions */
   
-  /* START: collectionView functions */
+  // [START collectionView functions]
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return 2
   }
@@ -77,7 +95,7 @@ class HomeMenuBar: UIView, UICollectionViewDelegate, UICollectionViewDataSource,
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = homeMenuBtnsView.dequeueReusableCell(withReuseIdentifier: homeMenuBtnId, for: indexPath) as! HomeMenuCell
-    cell.imageView.image = UIImage(named: homeMenuBtnImgNames[indexPath.row], in: imgBundle, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+    cell.imageView.image = UIImage(named: TITLES_HOME_MENU[indexPath.row], in: IMG_BUNDLE, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
     cell.tintColor = .lightGray
     return cell
   }
@@ -89,9 +107,5 @@ class HomeMenuBar: UIView, UICollectionViewDelegate, UICollectionViewDataSource,
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
     return 0
   }
-  /* END: collectionView functions */
-  
-  required init?(coder aDecoder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
+  // [END]
 }

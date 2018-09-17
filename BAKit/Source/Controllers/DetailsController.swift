@@ -8,9 +8,25 @@
 
 import UIKit
 
+/**
+ DetailsController:
+ 
+ This is the UIViewController for the details view of an AdDrop. There are 2 ways to get
+ to the details view of an AdDrop:
+ 1) Tap on an AdDrop from within the Home or Saved list views.
+ 2) Tap on an AdDrop's Notification within the Notification Center.
+ 
+ 
+ */
+
 class DetailsController: UIViewController {
-  let imgBundle = Bundle(identifier: "org.cocoapods.BAKit")
-  let BA = BoardActive.client
+  
+  // [START Declare constants]
+  let IMG_BUNDLE = Bundle(identifier: "org.cocoapods.BAKit")
+  // [END]
+  
+  // [START Declare variables]
+  lazy var BA = BoardActive.client
   var adDrop: AdDrop? {
     didSet {
       if let a = adDrop {
@@ -18,17 +34,13 @@ class DetailsController: UIViewController {
       }
     }
   }
-  weak var feed: FeedCell?
   var hasUrlPromo: Bool = false
   var hasUrlQR: Bool = false
   var hasDirections: Bool = false
+  weak var feed: FeedCell?
+  // [END]
   
-  // restrict to portrait mode
-  override var shouldAutorotate: Bool {
-    return false
-  }
-  
-  // [START UIImageView]
+  // [START Declare view elements]
   let viewImage: UIImageView = {
     let imageHeight = (UIScreen.main.bounds.width * (9/16)) // 16:9 aspect ratio
     let iv = UIImageView(frame: CGRect(x:0, y: 0, width: UIScreen.main.bounds.width, height: imageHeight))
@@ -36,12 +48,10 @@ class DetailsController: UIViewController {
     iv.contentMode = UIViewContentMode.scaleAspectFit
     return iv
   }()
-  // [END UIImageView]
   
-  // [START UIButtons]
   lazy var buttonUrl: UIButton = {
     let btn = UIButton()
-    if let img = UIImage(named: "icons-external-link-48", in: imgBundle, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate) {
+    if let img = UIImage(named: "icons-external-link-48", in: IMG_BUNDLE, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate) {
       btn.setImage(img, for: .normal)
     }
     btn.tintColor = .black
@@ -51,7 +61,7 @@ class DetailsController: UIViewController {
   
   lazy var buttonSave: UIButton = {
     let btn = UIButton()
-    if let img = UIImage(named: "icons-heart-48", in: imgBundle, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate) {
+    if let img = UIImage(named: "icons-heart-48", in: IMG_BUNDLE, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate) {
       btn.setImage(img, for: .normal)
     }
     btn.tintColor = .black
@@ -96,9 +106,7 @@ class DetailsController: UIViewController {
     btn.addTarget(self, action: #selector(DetailsController.openDirections(_:)), for: .touchUpInside)
     return btn
   }()
-  // [END UIButtons]
   
-  // [START UILabels]
   let labelTitle: UILabel = {
     let lbl = UILabel()
     lbl.font = UIFont.systemFont(ofSize: 20, weight: .heavy)
@@ -117,16 +125,23 @@ class DetailsController: UIViewController {
     lbl.font = UIFont.systemFont(ofSize: 16)
     return lbl
   }()
-  // [END UILabels]
+  // [END]
   
-  required init?(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
+  // [START Override to force "portrait" mode programatically]
+  override var shouldAutorotate: Bool {
+    return false
   }
+  // [END]
   
   init() {
     super.init(nibName: nil, bundle: nil)
   }
   
+  required init?(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
+  }
+  
+  // [START Initialize view on load]
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -136,8 +151,10 @@ class DetailsController: UIViewController {
     addSubviews()
     setupConstraints()
   }
+  // [END]
   
-  func fetchData() {
+  // [START Get details of an AdDrop]
+  private func fetchData() {
     if let id = self.adDrop?.id {
       _ = BA.fetchAdDropById(id)
         .done { adDrop -> Void in
@@ -148,6 +165,7 @@ class DetailsController: UIViewController {
       print("[BA:DetailsController:fetchData] ERR: No AdDrop id")
     }
   }
+  // [END]
   
   private func addSubviews() {
     // primary image
@@ -206,8 +224,6 @@ class DetailsController: UIViewController {
     }
     view.layoutIfNeeded()
   }
-  
-  
   
   private func resetView(_ a: AdDrop) {
     // images
@@ -268,5 +284,5 @@ class DetailsController: UIViewController {
         self.refreshSaveBtnState()
     }
   }
-  // [END Action *touch* handlers]
+  // [END]
 }

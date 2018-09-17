@@ -8,22 +8,42 @@
 
 import UIKit
 
+/**
+ FeedCell:
+ 
+ This is the UIViewCell + DataSource/Delegate for an AdDrop "card" within
+ the AdDrop list views (i.e. "HomeController").
+ 
+ 
+  TODO:
+    TAG_EMPTY_STATE_TITLE be configurable by SDK
+    TAG_EMPTY_STATE_DESCRIPTION be configurable by SDK
+ 
+ 
+ */
+
 class FeedCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+  
+  // [START Declare constants]
   let imgBundle = Bundle(identifier: "org.cocoapods.BAKit")
-  let BA = BoardActive.client
   let ID_FEED_CELL = "addropcardcell"
   let TAG_COLLECTION_VIEW: Int = 679569
   let TAG_EMPTY_STATE_TITLE: Int = 679567
   let TAG_EMPTY_STATE_DESCRIPTION: Int = 679568
   let TEXT_EMPTY_STATE_TITLE: String = "You have 0 deals"
   let TEXT_EMPTY_STATE_DESCRIPTION: String = "Deals are tied to locations, so the more you move the more deals you get"
+  // [END]
   
+  // [START Declare variables]
+  lazy var BA = BoardActive.client
   var data = [AdDrop]()
   var hasData: Bool = false
   var hadData: Bool = false
   weak var navCtrl: UINavigationController?
   weak var homeController: HomeController?
+  // [END]
   
+  // [START Declare view elements]
   lazy var collectionView: UICollectionView = {
     let layout = UICollectionViewFlowLayout()
     let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)   // frame = .zero because we are using constraints to specify demensions
@@ -34,7 +54,6 @@ class FeedCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionVi
     return cv
   }()
   
-  // TODO empty state title be configurable by SDK
   lazy var emptyStateTitle: UILabel = {
     let lbl = UILabel()
     lbl.tag = self.TAG_EMPTY_STATE_TITLE
@@ -42,7 +61,6 @@ class FeedCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionVi
     return lbl
   }()
   
-  // TODO empty state description be configurable by SDK
   lazy var emptyStateDescription: UILabel = {
     let lbl = UILabel()
     lbl.tag = self.TAG_EMPTY_STATE_DESCRIPTION
@@ -51,11 +69,18 @@ class FeedCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionVi
     lbl.font = UIFont.systemFont(ofSize: 16)
     return lbl
   }()
+  // [END]
   
+  // [START Initialize view]
   override init(frame: CGRect) {
     super.init(frame: frame)
     fetchData()
   }
+  
+  required init?(coder aDecoder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  // [END]
   
   func fetchData() {
     BA.fetchAdDrops()
@@ -97,9 +122,6 @@ class FeedCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionVi
   func removeSubview (tagNumber: Int) {
     if let viewWithTag = self.viewWithTag(tagNumber) {
       viewWithTag.removeFromSuperview()
-    } else {
-      // TODO, when initially an empty state, cannot collectionView because does not exist...
-      print("Cannot remove subview: ", tagNumber)
     }
   }
   
@@ -155,9 +177,5 @@ class FeedCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionVi
     let height = 16 + imageHeight + 8 + 28 + 8 + 13 + 8 + 15 + 8 + 15 + 16 // vertical labels / constraints
     return CGSize(width: frame.width, height: height)
   }
-  // [END collectionView functions]
-  
-  required init?(coder aDecoder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
+  // [END]
 }

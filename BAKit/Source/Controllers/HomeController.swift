@@ -8,15 +8,31 @@
 
 import UIKit
 
+/**
+ HomeController:
+ 
+ This is the UIViewController for the 2 list views within BoardActive:
+ 1) Home
+ 2) Saved
+ 
+ 
+ */
+
 class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
-  lazy var BA = BoardActive.client
+  
+  // [START Declare constants]
+  let IMG_BUNDLE = Bundle(identifier: "org.cocoapods.BAKit")
+  let TITLES_HOME_MENU = ["Home", "Saved"]
   let ID_CELL_FEED = "feedcell"
   let ID_CELL_SAVED = "savedcell"
-  let TITLES_HOME_MENU = ["Home", "Saved"]
-  let IMG_BUNDLE = Bundle(identifier: "org.cocoapods.BAKit")
+  // [END]
   
-  let homeMenuBarBGMask = UIView()
+  // [START Declare variables]
+  lazy var BA = BoardActive.client
+  var homeMenuBarBGMask = UIView()
+  // [END]
   
+  // [START Declare view elements]
   lazy var homeMenuBar: HomeMenuBar = {
     let hmb = HomeMenuBar()
     hmb.homeController = self
@@ -29,12 +45,15 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     btn.tintColor = .black
     return btn
   }()
+  // [END]
   
-  // Restricts to portrait mode
+  // [START Override to force "portrait" mode programatically]
   override var shouldAutorotate: Bool {
     return false
   }
+  // [END]
   
+  // [START Initialize view on load]
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -50,8 +69,8 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     // Saved feed collection view
     collectionView?.register(SavedCell.self, forCellWithReuseIdentifier: ID_CELL_SAVED)
   }
+  // [END]
   
-  // [START private functions]
   private func addSubviews() {
     view.addSubview(homeMenuBarBGMask)
     view.addSubview(homeMenuBar)
@@ -96,17 +115,22 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
       titleLabel.text = TITLES_HOME_MENU[index]
     }
   }
-  // [END private functions]
   
-  // [START public functions]
+  // [START Public functions]
   public func scrollToHomeMenu(_ homeMenuIndex: Int) {
     let indexPath = IndexPath(item: homeMenuIndex, section: 0)
     collectionView?.scrollToItem(at: indexPath, at: [], animated: true)   // scroll bar to new location
     setHomeMenuBarTitleByIndex(homeMenuIndex)                             // update home menu bar title
   }
-  // [END public functions]
+  // [END]
   
-  // [START collectionView functions]
+  // [START Action *touch* handlers]
+  @objc func hideBoardActive(_ sender: UIBarButtonItem) {
+    BA.hide()
+  }
+  // [END]
+  
+  // [START Horizontal scroll overrides to switch AdDrop lists]
   override func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
     let screenWidth = view.frame.width
     let screenOffset = targetContentOffset.pointee.x
@@ -120,7 +144,9 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
   override func scrollViewDidScroll(_ scrollView: UIScrollView) {
     homeMenuBar.leftAnchorConstraint?.constant = (scrollView.contentOffset.x / 2)
   }
+  // [END]
   
+  // [START collectionView functions]
   override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return 2
   }
@@ -144,9 +170,5 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
     return 0
   }
-  // [END collectionView functions]
-  
-  @objc func hideBoardActive(_ sender: UIBarButtonItem) {
-    BA.hide()
-  }
+  // [END]
 }

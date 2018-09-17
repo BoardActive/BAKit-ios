@@ -9,9 +9,13 @@
 import UIKit
 
 class AdDropCardCell: UICollectionViewCell {
-  let BA = BoardActive.client
-  let imgBundle = Bundle(identifier: "org.cocoapods.BAKit")
   
+  // [START Declare constants]
+  let IMG_BUNDLE = Bundle(identifier: "org.cocoapods.BAKit")
+  // [END]
+  
+  // [START Declare variables]
+  lazy var BA = BoardActive.client
   var adDrop: AdDrop? {
     didSet {
       if let a = adDrop {
@@ -33,7 +37,9 @@ class AdDropCardCell: UICollectionViewCell {
       }
     }
   }
+  // [END]
   
+  // [START Declare view elements]
   let viewImage: UIImageView = {
     let imageHeight = (UIScreen.main.bounds.width * (9/16)) // 16:9 aspect ratio, 32 = spacing
     let iv = UIImageView(frame: CGRect(x:0, y: 0, width: UIScreen.main.bounds.width, height: imageHeight))
@@ -43,7 +49,7 @@ class AdDropCardCell: UICollectionViewCell {
   
   lazy var buttonSave: UIButton = {
     let btn = UIButton()
-    if let img = UIImage(named: "icons-heart-48", in: imgBundle, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate) {
+    if let img = UIImage(named: "icons-heart-48", in: IMG_BUNDLE, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate) {
       btn.setImage(img, for: .normal)
     }
     btn.tintColor = .black
@@ -67,13 +73,20 @@ class AdDropCardCell: UICollectionViewCell {
     lbl.font = UIFont.systemFont(ofSize: 14)
     return lbl
   }()
+  // [END]
   
+  // [START Initialize view on load]
   override init(frame: CGRect) {
     super.init(frame: frame)
     
     addSubviews()
     setupStyles()
   }
+  
+  required init?(coder aDecoder: NSCoder) {
+    fatalError("init(coder) has not been implemented")
+  }
+  // [END]
   
   private func addSubviews() {
     addSubview(viewImage)
@@ -87,12 +100,12 @@ class AdDropCardCell: UICollectionViewCell {
   
   private func refreshSaveBtnState() {
     if adDrop?.isBookmarked != nil && (adDrop?.isBookmarked)! {
-      if let img = UIImage(named: "icons-heart-filled-48", in: imgBundle, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate) {
+      if let img = UIImage(named: "icons-heart-filled-48", in: IMG_BUNDLE, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate) {
         buttonSave.setImage(img, for: .normal)
         buttonSave.tintColor = .red
       }
     } else {
-      if let img = UIImage(named: "icons-heart-48", in: imgBundle, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate) {
+      if let img = UIImage(named: "icons-heart-48", in: IMG_BUNDLE, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate) {
         buttonSave.setImage(img, for: .normal)
         buttonSave.tintColor = .black
       }
@@ -132,6 +145,7 @@ class AdDropCardCell: UICollectionViewCell {
                              views: viewImage, buttonSave, labelCategory, labelTitle, labelDescription)
   }
   
+  // [START Action *touch* handlers]
   @objc func toggleSave (_ sender: UIButton) {
     adDrop?.toggleAdDropBookmark()
     refreshSaveBtnState()
@@ -143,8 +157,5 @@ class AdDropCardCell: UICollectionViewCell {
         self.refreshSaveBtnState()
     }
   }
-  
-  required init?(coder aDecoder: NSCoder) {
-    fatalError("init(coder) has not been implemented")
-  }
+  // [END]
 }
