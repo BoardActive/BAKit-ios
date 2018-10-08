@@ -94,7 +94,7 @@ class HomeMenuBar: UIView, UICollectionViewDelegate, UICollectionViewDataSource,
   }
   
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    let cell = homeMenuBtnsView.dequeueReusableCell(withReuseIdentifier: homeMenuBtnId, for: indexPath) as! HomeMenuCell
+    let cell = homeMenuBtnsView.dequeueReusableCell(withReuseIdentifier: ID_HOME_MENU, for: indexPath) as! HomeMenuCell
     cell.imageView.image = UIImage(named: TITLES_HOME_MENU[indexPath.row], in: IMG_BUNDLE, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
     cell.tintColor = .lightGray
     return cell
