@@ -174,7 +174,22 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
   
   // [START Class Functions]
   private func getPath() -> String {
-    return API["prod"]!
+    return API["dev"]!
+  }
+  
+  // Handles casting raw json from Number to String before AdDrop initialization
+  private func castAdDropJsonNumbersToStrings (json: [String: Any]) -> [String: Any] {
+    var mutatedJson = json
+    if let promotionIdNumber = json["promotion_id"] as? NSNumber
+    {
+      mutatedJson["promotion_id"] = "\(promotionIdNumber)"
+    }
+    
+    if let advertisementIdNumber = json["advertisement_id"] as? NSNumber
+    {
+      mutatedJson["advertisement_id"] = "\(advertisementIdNumber)"
+    }
+    return mutatedJson
   }
   
   private func getHeaders(latitude: String? = "82.8628", longitude: String? = "135.0000", advertiserId: String? = "*") -> HTTPHeaders {
@@ -184,8 +199,8 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
       "Accept": "application/json",
       "X-BoardActive-Application-Key": "key",
       "X-BoardActive-Application-Secret": "secret",
-      "X-BoardActive-Advertiser-Id": "233",   // TODO move to config within app delegate, 233 = knapsackmagic advertiser id // advertiserId!,
-      "X-BoardActive-Device-Id": "-1",        // TODO gutted onesignal soooo
+      "X-BoardActive-Advertiser-Id": "333",   // TODO move to config within app delegate, 233 = knapsackmagic advertiser id // advertiserId!,
+      "X-BoardActive-Device-Token": "cY0AwQggE4w:APA91bGbR8XaRTgor9fdJROoppVU-e7gezSxsCTqWea7ohavZXaA-c3df77AGWSoFSutFxJAzaX5GhISeQjrSN0LmfnRclBvTU6SRF6ejAsw83Yir0cBXtbnCTYRYNXdcQt82hlSNCdv",
       "X-BoardActive-Device-OS": "ios",       // its a cocoa pod...
       "X-BoardActive-Latitude": latitude!,
       "X-BoardActive-Longitude": longitude!
@@ -205,17 +220,20 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
         .responseJSON { response in
           switch response.result {
           case .success(let json):
+            
             guard let json = json as? NSArray else {
-              print("[BA:client:fetchAdDrops] ERR : no json")
+              print("[BA:client:fetchAdDrops] SUCCESS ERR : no json")
               return seal.reject(AFError.responseValidationFailed(reason: .dataFileNil))
             }
             
             for adDrop in json {
-              let adDrop = AdDrop(adDrop as! [String: Any])
-              if (adDrop.isValidModel()) {
-                adDrops.append(adDrop)
+              var adDropJson = adDrop as! [String: Any]
+              adDropJson = self.castAdDropJsonNumbersToStrings(json: adDropJson)
+              let drop = AdDrop(adDropJson)
+              if (drop.isValidModel()) {
+                adDrops.append(drop)
               } else {
-                print("[BA:client:fetchAdDrops] INVALID : ", adDrop)
+                print("[BA:client:fetchAdDrops] INVALID : ", drop)
               }
             }
             
@@ -239,13 +257,16 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
         .responseJSON { response in
           switch response.result {
           case .success(let json):
+            
             guard let json = json as? NSArray else {
               print("[BA:client:fetchAdDrops] ERR : no json")
               return seal.reject(AFError.responseValidationFailed(reason: .dataFileNil))
             }
             
             for adDrop in json {
-              let adDrop = AdDrop(adDrop as! [String: Any])
+              var adDropJson = adDrop as! [String: Any]
+              adDropJson = self.castAdDropJsonNumbersToStrings(json: adDropJson)
+              let adDrop = AdDrop(adDropJson)
               if (adDrop.isValidModel()) {
                 adDrop.isBookmarked = true  // TODO should be set by backend
                 adDrops.append(adDrop)
@@ -277,7 +298,9 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
               print("[BA:client:fetchAdDrop] ERR : no json")
               return seal.reject(AFError.responseValidationFailed(reason: .dataFileNil))
             }
-            let adDrop = AdDrop(json)
+            var mutatedJson = json
+            mutatedJson = self.castAdDropJsonNumbersToStrings(json: mutatedJson)
+            let adDrop = AdDrop(mutatedJson)
             print("[BA:client:fetchAdDrop] OK : ", adDrop)
             seal.fulfill(adDrop)
           case .failure(let error):
