@@ -14,14 +14,15 @@ import PromiseKit
 import FirebaseCore
 import FirebaseMessaging
 
+public enum EndPoints: String {
+    case prod = "https://springer-api.boardactive.com/mobile/v1"
+    case events = "/events"
+    case me = "/me"
+    case locations = "/locations"
+}
+
 public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
   public static let client = BoardActive() // BA singleton
-  let API = [
-    "prod": "https://api.boardactive.com/mobile",
-    "dev": "https://dev-api.boardactive.com/mobile",
-    "webProd": "https://api.boardactive.com",
-    "webDev": "https://dev-api.boardactive.com"
-  ]
   
   let appDelegate = UIApplication.shared.delegate
   let locationManager: CLLocationManager = CLLocationManager()
@@ -40,9 +41,9 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
   // [END Init]
   
   // [START Public API]
-  public func boot(_ config: [String: Any]) {
-    self.requestLocations()
-  }
+//  public func boot(_ config: [String: Any]) {
+//    self.requestLocations()
+//  }
   
   public func requestLocations () {
     locationManager.delegate = self
@@ -110,7 +111,7 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
   
   public func handleNotification(_ application: UIApplication, _ userInfo: [AnyHashable: Any]) {
     // TODO check if 3rd party notifications execute this callback
-    let a = AdDrop(userInfo as! [String: Any])
+    let a = Message(userInfo as! [String: Any])
     
     if (a.isValidNotification()) {
       if (application.applicationState == UIApplicationState.active) {
@@ -130,7 +131,7 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
   }
   
   public func createEvent(name: String, notificationId: String, advertisementId: String, promotionId: String) {
-    let path = getPath() + "/events"
+    let path = getPath() + EndPoints.events.raw
     let headers = getHeaders()
     let body: [String: Any] = [
       "name": name,
@@ -174,7 +175,7 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
   
   // [START Class Functions]
   private func getPath() -> String {
-    return API["dev"]!
+    return EndPoints.prod.rawValue
   }
   
   // Handles casting raw json from Number to String before AdDrop initialization
@@ -192,177 +193,180 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
     return mutatedJson
   }
   
-  private func getHeaders(latitude: String? = "82.8628", longitude: String? = "135.0000", advertiserId: String? = "*") -> HTTPHeaders {
+  private func getHeaders() -> HTTPHeaders {
     // Sets lat/lng Antartica by default
     let headers: HTTPHeaders = [
       "Content-Type": "application/json",
       "Accept": "application/json",
-      "X-BoardActive-Application-Key": "key",
-      "X-BoardActive-Application-Secret": "secret",
-      "X-BoardActive-Advertiser-Id": "333",   // TODO move to config within app delegate, 233 = knapsackmagic advertiser id // advertiserId!,
-      "X-BoardActive-Device-Token": "cY0AwQggE4w:APA91bGbR8XaRTgor9fdJROoppVU-e7gezSxsCTqWea7ohavZXaA-c3df77AGWSoFSutFxJAzaX5GhISeQjrSN0LmfnRclBvTU6SRF6ejAsw83Yir0cBXtbnCTYRYNXdcQt82hlSNCdv",
+      "X-BoardActive-App-Key": "1",
+      "X-BoardActive-App-Id": "AIzaSyCw-SfR0bVG_r8iX6Wk_ZpPxXF-tBsD7Ug",
+      "X-BoardActive-App-Version": "4.7.3",
+      "X-BoardActive-Device-Token": "dY59sXItaXM:APA91bFUlizdcT3HEDaDyIFJoGvPs8R-aiZCW20sgJa_1Tx5nM2llKcyHU1rUCSFAvqZHXFBXU7h72sLBmwsae3gqc-UZwmPXU3EI7dDV9JV_qRpLBtbWplNmlYurBY77d6GnLsLEIFI",
       "X-BoardActive-Device-OS": "ios",       // its a cocoa pod...
-      "X-BoardActive-Latitude": latitude!,
-      "X-BoardActive-Longitude": longitude!
+      "X-BoardActive-Device-OS-Versione": "IOS_12.1.4",
+      "X-BoardActive-Is-Test-App": "1"
     ]
     return headers;
   }
   
-  func fetchAdDrops() -> Promise<[AdDrop]>{
-    let path = getPath() + "/promotions"
-    let headers = getHeaders()
-    var adDrops = [AdDrop]()
-    
-    print("[BA:client:fetchAdDrops] fetching...")
-    
-    return Promise { seal in
-      Alamofire.request(path, headers: headers)
-        .responseJSON { response in
-          switch response.result {
-          case .success(let json):
-            
-            guard let json = json as? NSArray else {
-              print("[BA:client:fetchAdDrops] SUCCESS ERR : no json")
-              return seal.reject(AFError.responseValidationFailed(reason: .dataFileNil))
-            }
-            
-            for adDrop in json {
-              var adDropJson = adDrop as! [String: Any]
-              adDropJson = self.castAdDropJsonNumbersToStrings(json: adDropJson)
-              let drop = AdDrop(adDropJson)
-              if (drop.isValidModel()) {
-                adDrops.append(drop)
-              } else {
-                print("[BA:client:fetchAdDrops] INVALID : ", drop)
-              }
-            }
-            
-            print("[BA:client:fetchAdDrops] OK : ", adDrops)
-            seal.fulfill(adDrops)
-          case .failure(let error):
-            print("[BA:client:fetchAdDrops] ERR : ", error)
-            seal.reject(error)
-          }
-      }
-    }
-  }
+//  func fetchAdDrops() -> Promise<[AdDrop]>{
+//    let path = getPath() + "/promotions"
+//    let headers = getHeaders()
+//    var adDrops = [AdDrop]()
+//    
+//    print("[BA:client:fetchAdDrops] fetching...")
+//    
+//    return Promise { seal in
+//      Alamofire.request(path, headers: headers)
+//        .responseJSON { response in
+//          switch response.result {
+//          case .success(let json):
+//            
+//            guard let json = json as? NSArray else {
+//              print("[BA:client:fetchAdDrops] SUCCESS ERR : no json")
+//              return seal.reject(AFError.responseValidationFailed(reason: .dataFileNil))
+//            }
+//            
+//            for adDrop in json {
+//              var adDropJson = adDrop as! [String: Any]
+//              adDropJson = self.castAdDropJsonNumbersToStrings(json: adDropJson)
+//              let drop = AdDrop(adDropJson)
+//              if (drop.isValidModel()) {
+//                adDrops.append(drop)
+//              } else {
+//                print("[BA:client:fetchAdDrops] INVALID : ", drop)
+//              }
+//            }
+//            
+//            print("[BA:client:fetchAdDrops] OK : ", adDrops)
+//            seal.fulfill(adDrops)
+//          case .failure(let error):
+//            print("[BA:client:fetchAdDrops] ERR : ", error)
+//            seal.reject(error)
+//          }
+//      }
+//    }
+//  }
+//  
+//  func fetchBookmarkedAdDrops() -> Promise<[AdDrop]>{
+//    let path = getPath() + "/promotions/bookmarks"
+//    let headers = getHeaders()
+//    var adDrops = [AdDrop]()
+//    
+//    return Promise { seal in
+//      Alamofire.request(path, headers: headers)
+//        .responseJSON { response in
+//          switch response.result {
+//          case .success(let json):
+//            
+//            guard let json = json as? NSArray else {
+//              print("[BA:client:fetchAdDrops] ERR : no json")
+//              return seal.reject(AFError.responseValidationFailed(reason: .dataFileNil))
+//            }
+//            
+//            for adDrop in json {
+//              var adDropJson = adDrop as! [String: Any]
+//              adDropJson = self.castAdDropJsonNumbersToStrings(json: adDropJson)
+//              let adDrop = AdDrop(adDropJson)
+//              if (adDrop.isValidModel()) {
+//                adDrop.isBookmarked = true  // TODO should be set by backend
+//                adDrops.append(adDrop)
+//              } else {
+//                print("[BA:client:fetchAdDrops] INVALID : ", adDrop)
+//              }
+//            }
+//            
+//            print("[BA:client:fetchAdDrops] OK : ", adDrops)
+//            seal.fulfill(adDrops)
+//          case .failure(let error):
+//            print("[BA:client:fetchAdDrops] ERR : ", error)
+//            seal.reject(error)
+//          }
+//      }
+//    }
+//  }
+//  
+//  func fetchAdDropById(_ id: String) -> Promise<AdDrop> {
+//    let path = getPath() + "/promotions/" + id
+//    let headers = getHeaders()
+//    
+//    return Promise { seal in
+//      Alamofire.request(path, headers: headers)
+//        .responseJSON { response in
+//          switch response.result {
+//          case .success(let json):
+//            guard let json = json as? [String: Any] else {
+//              print("[BA:client:fetchAdDrop] ERR : no json")
+//              return seal.reject(AFError.responseValidationFailed(reason: .dataFileNil))
+//            }
+//            var mutatedJson = json
+//            mutatedJson = self.castAdDropJsonNumbersToStrings(json: mutatedJson)
+//            let adDrop = AdDrop(mutatedJson)
+//            print("[BA:client:fetchAdDrop] OK : ", adDrop)
+//            seal.fulfill(adDrop)
+//          case .failure(let error):
+//            print("[BA:client:fetchAdDrop] ERR : ", error)
+//            seal.reject(error)
+//          }
+//      }
+//    }
+//  }
   
-  func fetchBookmarkedAdDrops() -> Promise<[AdDrop]>{
-    let path = getPath() + "/promotions/bookmarks"
-    let headers = getHeaders()
-    var adDrops = [AdDrop]()
-    
-    return Promise { seal in
-      Alamofire.request(path, headers: headers)
-        .responseJSON { response in
-          switch response.result {
-          case .success(let json):
-            
-            guard let json = json as? NSArray else {
-              print("[BA:client:fetchAdDrops] ERR : no json")
-              return seal.reject(AFError.responseValidationFailed(reason: .dataFileNil))
-            }
-            
-            for adDrop in json {
-              var adDropJson = adDrop as! [String: Any]
-              adDropJson = self.castAdDropJsonNumbersToStrings(json: adDropJson)
-              let adDrop = AdDrop(adDropJson)
-              if (adDrop.isValidModel()) {
-                adDrop.isBookmarked = true  // TODO should be set by backend
-                adDrops.append(adDrop)
-              } else {
-                print("[BA:client:fetchAdDrops] INVALID : ", adDrop)
-              }
-            }
-            
-            print("[BA:client:fetchAdDrops] OK : ", adDrops)
-            seal.fulfill(adDrops)
-          case .failure(let error):
-            print("[BA:client:fetchAdDrops] ERR : ", error)
-            seal.reject(error)
-          }
-      }
-    }
-  }
+//  func toggleAdDropBookmark(_ adDrop: Message) -> Promise<AdDrop> {
+//    return adDrop.isBookmarked
+//      ? createAdDropBookmark(adDrop)
+//      : deleteAdDropBookmark(adDrop)
+//  }
   
-  func fetchAdDropById(_ id: String) -> Promise<AdDrop> {
-    let path = getPath() + "/promotions/" + id
-    let headers = getHeaders()
-    
-    return Promise { seal in
-      Alamofire.request(path, headers: headers)
-        .responseJSON { response in
-          switch response.result {
-          case .success(let json):
-            guard let json = json as? [String: Any] else {
-              print("[BA:client:fetchAdDrop] ERR : no json")
-              return seal.reject(AFError.responseValidationFailed(reason: .dataFileNil))
-            }
-            var mutatedJson = json
-            mutatedJson = self.castAdDropJsonNumbersToStrings(json: mutatedJson)
-            let adDrop = AdDrop(mutatedJson)
-            print("[BA:client:fetchAdDrop] OK : ", adDrop)
-            seal.fulfill(adDrop)
-          case .failure(let error):
-            print("[BA:client:fetchAdDrop] ERR : ", error)
-            seal.reject(error)
-          }
-      }
-    }
-  }
+//  func createAdDropBookmark(_ adDrop: AdDrop) -> Promise<AdDrop> {
+//    let path = getPath() + "/promotions/" + String(adDrop.id) + "/bookmarks"
+//    let headers = getHeaders()
+//    let body: [String: Any] = [:]
+//    
+//    // TODO do we even need body?
+//    return Promise { seal in
+//      Alamofire.request(path, method: .post, parameters: body, headers: headers)
+//        .responseJSON { response in
+//          switch response.result {
+//          case .success(let json):
+//            print("[BA:client:createAdDropBookmark] OK : ", json)
+//            seal.fulfill(adDrop)
+//          case .failure(let error):
+//            print("[BA:client:createAdDropBookmark] ERR : ", error)
+//            seal.reject(error)
+//          }
+//      }
+//    }
+//  }
   
-  func toggleAdDropBookmark(_ adDrop: AdDrop) -> Promise<AdDrop> {
-    return adDrop.isBookmarked
-      ? createAdDropBookmark(adDrop)
-      : deleteAdDropBookmark(adDrop)
-  }
-  
-  func createAdDropBookmark(_ adDrop: AdDrop) -> Promise<AdDrop> {
-    let path = getPath() + "/promotions/" + String(adDrop.id) + "/bookmarks"
-    let headers = getHeaders()
-    let body: [String: Any] = [:]
-    
-    // TODO do we even need body?
-    return Promise { seal in
-      Alamofire.request(path, method: .post, parameters: body, headers: headers)
-        .responseJSON { response in
-          switch response.result {
-          case .success(let json):
-            print("[BA:client:createAdDropBookmark] OK : ", json)
-            seal.fulfill(adDrop)
-          case .failure(let error):
-            print("[BA:client:createAdDropBookmark] ERR : ", error)
-            seal.reject(error)
-          }
-      }
-    }
-  }
-  
-  func deleteAdDropBookmark(_ adDrop: AdDrop) -> Promise<AdDrop> {
-    let path = getPath() + "/promotions/" + String(adDrop.id) + "/bookmarks"
-    let headers = getHeaders()
-    let body: [String: Any] = [:]
-    
-    return Promise { seal in
-      Alamofire.request(path, method: .delete, parameters: body, headers: headers)
-        .responseJSON { response in
-          switch response.result {
-          case .success(let json):
-            print("[BA:client:deleteAdDropBookmark] OK : ", json)
-            seal.fulfill(adDrop)
-          case .failure(let error):
-            print("[BA:client:deleteAdDropBookmark] ERR : ", error)
-            seal.reject(error)
-          }
-      }
-    }
-  }
-  
+//  func deleteAdDropBookmark(_ adDrop: Message) -> Promise<AdDrop> {
+//    let path = getPath() + "/promotions/" + String(adDrop.id) + "/bookmarks"
+//    let headers = getHeaders()
+//    let body: [String: Any] = [:]
+//    
+//    return Promise { seal in
+//      Alamofire.request(path, method: .delete, parameters: body, headers: headers)
+//        .responseJSON { response in
+//          switch response.result {
+//          case .success(let json):
+//            print("[BA:client:deleteAdDropBookmark] OK : ", json)
+//            seal.fulfill(adDrop)
+//          case .failure(let error):
+//            print("[BA:client:deleteAdDropBookmark] ERR : ", error)
+//            seal.reject(error)
+//          }
+//      }
+//    }
+//  }
   
   func updateLocation(_ location: CLLocation) -> Void {
     let path = getPath() + "/mobile_geopoints"
-    let headers = getHeaders(latitude: "\(location.coordinate.latitude)", longitude: "\(location.coordinate.longitude)")
-    let body: [String: Any] = [:]
+    let headers = getHeaders()
+    let body: [String: Any] = [
+        "latitude":location.coordinate.latitude as! String,
+        "longitude":location.coordinate.longitude as! String,
+        "deviceTime":Date() as! String
+    ]
     
     Alamofire.request(path, method: .post, parameters: body, headers: headers)
       .responseJSON { response in
@@ -374,6 +378,26 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
         }
     }
   }
+    
+    func updateUserInfo(email: String) -> Void {
+        let path = getPath() + EndPoints.me.rawValue
+        let headers = getHeaders()
+        let body: [String: Any] = [
+            "email": email,
+            "deviceOS": "ios",
+            "deviceOSVersion": "IOS_12.1.4"
+        ]
+        
+        Alamofire.request(path, method: .post, parameters: body, headers: headers)
+            .responseJSON { response in
+                switch response.result {
+                case .success(let json):
+                    print("[BA:client:updateLocation] OK : ", json)
+                case .failure(let error):
+                    print("[BA:client:updateLocation] ERR : ", error)
+                }
+        }
+    }
   
   private func JSONStringify(value: [String: Any], prettyPrinted: Bool = false) -> String {
     let options = prettyPrinted ? JSONSerialization.WritingOptions.prettyPrinted : JSONSerialization.WritingOptions(rawValue: 0)

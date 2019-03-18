@@ -16,7 +16,7 @@ class AdDropCardCell: UICollectionViewCell {
   
   // [START Declare variables]
   lazy var BA = BoardActive.client
-  var adDrop: AdDrop? {
+  var adDrop: Message? {
     didSet {
       if let a = adDrop {
         // images

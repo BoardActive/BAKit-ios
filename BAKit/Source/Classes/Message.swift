@@ -9,25 +9,25 @@
   import Foundation
   import UIKit
   
-  class AdDrop {
+  class Message {
     
     // Meta members
     var id: String = ""
-    var advertisementId: String = ""
+    var messageId: String = ""
     var notificationId: String? = ""
     var dateCreated: String?       // TODO set to String?
     var dateUpdated: String?       // "
     
     // Visible members
-    var title: String
-    var description: String
-    var category: String
+//    var title: String
+//    var description: String
+//    var category: String
     
     // Date members
-    var dateStart: String?       // TODO set to String?
-    var dateExpires: String?     // "
-    var timeStart: String?
-    var timeEnd: String?
+//    var dateStart: String?       // TODO set to String?
+//    var dateExpires: String?     // "
+//    var timeStart: String?
+//    var timeEnd: String?
     // TODO combine into single prop?
     
     // GET /promotions/:id members
@@ -45,7 +45,7 @@
     
     init(_ json: [String: Any]) {
       self.id = json["promotion_id"] as! String
-      self.advertisementId = json["advertisement_id"] as! String
+      self.messageId = json["advertisement_id"] as! String
       self.notificationId = json["gcm.message_id"] as? String
       
       // Visible members
@@ -131,7 +131,7 @@
         !self.advertisementId.isEmpty
     }
     
-    func toggleAdDropBookmark() -> Void {
-      self.isBookmarked = !self.isBookmarked
-    }
+//    func toggleAdDropBookmark() -> Void {
+//      self.isBookmarked = !self.isBookmarked
+//    }
   }

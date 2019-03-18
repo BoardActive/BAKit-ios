@@ -27,7 +27,7 @@ class DetailsController: UIViewController {
   
   // [START Declare variables]
   lazy var BA = BoardActive.client
-  var adDrop: AdDrop? {
+  var adDrop: Message? {
     didSet {
       if let a = adDrop {
         resetView(a)
@@ -225,7 +225,7 @@ class DetailsController: UIViewController {
     view.layoutIfNeeded()
   }
   
-  private func resetView(_ a: AdDrop) {
+  private func resetView(_ a: Message) {
     // images
     viewImage.loadImageUsingCache(withUrl: a.imageUrl!)
     

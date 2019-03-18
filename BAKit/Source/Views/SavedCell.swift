@@ -46,7 +46,7 @@ class SavedCell: FeedCell {
         self.setData(adDrops)
       }.catch { error in
         // on fail revert
-        self.setData([AdDrop]())
+        self.setData([Message]())
     }
   }
   

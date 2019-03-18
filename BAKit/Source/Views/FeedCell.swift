@@ -36,7 +36,7 @@ class FeedCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionVi
   
   // [START Declare variables]
   lazy var BA = BoardActive.client
-  var data = [AdDrop]()
+  var data = [Message]()
   var hasData: Bool = false
   var hadData: Bool = false
   weak var navCtrl: UINavigationController?
@@ -87,11 +87,11 @@ class FeedCell: UICollectionViewCell, UICollectionViewDataSource, UICollectionVi
       .done { adDrops -> Void in
         self.setData(adDrops)
       }.catch { error in
-        self.setData([AdDrop]())
+        self.setData([Message]())
     }
   }
   
-  func setData(_ adDrops: [AdDrop]) {
+  func setData(_ adDrops: [Message]) {
     self.hadData = !self.data.isEmpty
     self.data = adDrops
     self.hasData = !self.data.isEmpty
