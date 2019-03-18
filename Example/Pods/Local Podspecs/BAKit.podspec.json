@@ -1,6 +1,6 @@
 {
   "name": "BAKit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "summary": "Location-based notifications for personalized user engagement and retention campaigns",
   "description": "Board Active iOS SDK, for integrating BoardActive into your iOS application. The SDK supports iOS 10+",
   "homepage": "https://github.com/boardactive/BAKit-ios",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/boardactive/BAKit-ios.git",
-    "tag": "0.1.0"
+    "tag": "0.1.1"
   },
   "platforms": {
     "ios": "10.0"

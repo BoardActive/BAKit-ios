@@ -48,53 +48,53 @@
       self.messageId = json["advertisement_id"] as! String
       self.notificationId = json["gcm.message_id"] as? String
       
-      // Visible members
-      self.title = json["title"] as! String
-      self.description = json["description"] as! String
-      self.category = json["category"] as! String
+//      // Visible members
+//      self.title = json["title"] as! String
+//      self.description = json["description"] as! String
+//      self.category = json["category"] as! String
       
       // Example date: "2018-09-01T00:00:00.000Z"
       self.dateCreated = json["created_at"] as? String
       self.dateUpdated = json["updated_at"] as? String
-      self.dateStart = json["start_at"] as? String
-      self.dateExpires = json["expire_at"] as? String
-      
-      self.timeStart = json["time_start"] as? String
-      self.timeEnd = json["time_end"] as? String
+//      self.dateStart = json["start_at"] as? String
+//      self.dateExpires = json["expire_at"] as? String
+//      
+//      self.timeStart = json["time_start"] as? String
+//      self.timeEnd = json["time_end"] as? String
       
       // URLs
-      if let promoUrlString = json["promotion_link_url"] as? String {
-        self.promoUrl = promoUrlString //URL(string: promoUrlString)
-      }
-      if let imageUrlString = json["image_url"] as? String {
-        self.imageUrl = imageUrlString //URL(string: imageUrlString)
-      }
+//      if let promoUrlString = json["promotion_link_url"] as? String {
+//        self.promoUrl = promoUrlString //URL(string: promoUrlString)
+//      }
+//      if let imageUrlString = json["image_url"] as? String {
+//        self.imageUrl = imageUrlString //URL(string: imageUrlString)
+//      }
       
       // GET /promotions/:id members
-      if json["isBookmarked"] != nil {
-        self.isBookmarked = json["isBookmarked"] as! Bool
-      } else {
-        self.isBookmarked = false
-      }
+//      if json["isBookmarked"] != nil {
+//        self.isBookmarked = json["isBookmarked"] as! Bool
+//      } else {
+//        self.isBookmarked = false
+//      }
       
       if let qrUrlString = json["qrUrl"] as? String {
         self.qrUrl = qrUrlString // URL(string: qrUrlString)
       }
       
-      switch category {
-      case "Food":
-        self.categoryColor = .blue
-      case "Health and Fitness":
-        self.categoryColor = .green
-      case "Music":
-        self.categoryColor = .green
-      case "Lifestyles":
-        self.categoryColor = .brown
-      case "Entertainment":
-        self.categoryColor = .red
-      default:
-        self.categoryColor = .darkGray
-      }
+//      switch category {
+//      case "Food":
+//        self.categoryColor = .blue
+//      case "Health and Fitness":
+//        self.categoryColor = .green
+//      case "Music":
+//        self.categoryColor = .green
+//      case "Lifestyles":
+//        self.categoryColor = .brown
+//      case "Entertainment":
+//        self.categoryColor = .red
+//      default:
+//        self.categoryColor = .darkGray
+//      }
       
       if (json["locations"] != nil) {
         initLocations(locations: json["locations"] as! Array<[String: Any]>)
@@ -111,25 +111,25 @@
       self.locations = newLocations
     }
     
-    func getClosestLocationDirectionsSlug() -> String {
-      var slug = ""
-      if !(locations?.isEmpty ?? true) {
-        let closestLocation = locations?.first
-        slug = closestLocation?.getDirectionsSlug() ?? ""
-      }
-      return slug
-    }
-    
-    func isValidModel() -> Bool {
-      return (self.imageUrl != nil)
-      // TODO add more
-    }
-    
-    func isValidNotification() -> Bool {
-      return !self.id.isEmpty &&
-        self.notificationId != nil &&
-        !self.advertisementId.isEmpty
-    }
+//    func getClosestLocationDirectionsSlug() -> String {
+//      var slug = ""
+//      if !(locations?.isEmpty ?? true) {
+//        let closestLocation = locations?.first
+//        slug = closestLocation?.getDirectionsSlug() ?? ""
+//      }
+//      return slug
+//    }
+////    
+//    func isValidModel() -> Bool {
+//      return (self.imageUrl != nil)
+//      // TODO add more
+//    }
+//    
+//    func isValidNotification() -> Bool {
+//      return !self.id.isEmpty &&
+//        self.notificationId != nil &&
+//        !self.advertisementId.isEmpty
+//    }
     
 //    func toggleAdDropBookmark() -> Void {
 //      self.isBookmarked = !self.isBookmarked
