@@ -32,7 +32,7 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
     var locationManager: CLLocationManager = CLLocationManager()
     let clientViewController: UIViewController = UINavigationController(rootViewController: HomeController(collectionViewLayout: UICollectionViewFlowLayout()))
     var openingViewController: UIViewController? // used to return to previous view controller after hide() is called
-    var coveringWindow = UIWindow(frame: (UIApplication.shared.keyWindow?.screen.bounds)!)
+    var coveringWindow: UIWindow = UIWindow(frame: (UIApplication.shared.keyWindow?.screen.bounds)!)
 
     private init() {
         super.init(nibName: nil, bundle: nil)
@@ -199,7 +199,7 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
 
         // Print full message.
         print(userInfo)
-        
+
         completionHandler()
     }
 
@@ -220,11 +220,7 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
     }
 
     private func getHeaders() -> HTTPHeaders {
-        guard let mePayloadDictionary = UserDefaults.standard.object(forKey: "MePayload") as? Dictionary<String, Any> else {
-            return HTTPHeaders()
-        }
-
-        let tokenString = mePayloadDictionary["deviceToken"] as! String
+        let tokenString = UserDefaults.standard.object(forKey: "deviceToken") as! String
 
         let headers: HTTPHeaders = [
             "Content-Type": "application/json",
@@ -246,22 +242,22 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
 
         return Promise { seal in
             Alamofire.request(path, headers: headers).responseJSON { response in
-                    switch response.result {
-                    case let .success(json):
-                        guard let json = json as? [String: Any] else {
-                            print("[BA:client:fetchAdDrop] ERR : no json")
-                            return seal.reject(AFError.responseValidationFailed(reason: .dataFileNil))
-                        }
-                        var mutatedJson = json
-                        mutatedJson = self.castAdDropJsonNumbersToStrings(json: mutatedJson)
-                        let adDrop = Message(mutatedJson)
-                        print("[BA:client:fetchAdDrop] OK : ", adDrop)
-                        seal.fulfill(adDrop)
-                    case let .failure(error):
-                        print("[BA:client:fetchAdDrop] ERR : ", error)
-                        seal.reject(error)
+                switch response.result {
+                case let .success(json):
+                    guard let json = json as? [String: Any] else {
+                        print("[BA:client:fetchAdDrop] ERR : no json")
+                        return seal.reject(AFError.responseValidationFailed(reason: .dataFileNil))
                     }
+                    var mutatedJson = json
+                    mutatedJson = self.castAdDropJsonNumbersToStrings(json: mutatedJson)
+                    let adDrop = Message(mutatedJson)
+                    print("[BA:client:fetchAdDrop] OK : ", adDrop)
+                    seal.fulfill(adDrop)
+                case let .failure(error):
+                    print("[BA:client:fetchAdDrop] ERR : ", error)
+                    seal.reject(error)
                 }
+            }
         }
     }
 
@@ -275,14 +271,14 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
         ]
 
         Alamofire.request(path, method: .post, parameters: body, headers: headers).responseJSON { response in
-                switch response.result {
-                case .success(let json):
-                    print("[BA:client:updateLocation] OK : ", json)
-                case .failure(let error):
-                    print("[BA:client:updateLocation] ERR : ", error)
-                }
-                print((response.value as AnyObject).debugDescription!)
+            switch response.result {
+            case let .success(json):
+                print("[BA:client:updateLocation] OK : ", json)
+            case let .failure(error):
+                print("[BA:client:updateLocation] ERR : ", error)
             }
+            print((response.value as AnyObject).debugDescription!)
+        }
     }
 
     public func retrieveMe() {
@@ -290,14 +286,15 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
         let headers = getHeaders()
         Alamofire.request(path, method: .get, parameters: nil, headers: headers).responseSwiftyJSON(completionHandler: { response in
             switch response.result {
-            case .success(let json):
+            case let .success(json):
                 print("[BA:client:me] OK : ", json)
-            case .failure(let error):
+            case let .failure(error):
                 print("[BA:client:me] OK : ", error)
                 return
             }
 
             let parsedJSON = MePayload(fromJson: response.result.value)
+            UserDefaults.standard.setValue(parsedJSON.deviceToken, forKey: "deviceToken")
             UserDefaults.standard.setValue(parsedJSON.toDictionary(), forKey: "MePayload")
             UserDefaults.standard.synchronize()
         })
@@ -314,9 +311,9 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
 
         Alamofire.request(path, method: .post, parameters: body, headers: headers).responseSwiftyJSON(completionHandler: { response in
             switch response.result {
-            case .success(let json):
+            case let .success(json):
                 print("[BA:client:updateUserInfo] OK : ", json)
-            case .failure(let error):
+            case let .failure(error):
                 print("[BA:client:updateUserInfo] ERR : ", error)
                 return
             }
@@ -325,7 +322,7 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
 
     private func JSONStringify(value: [String: Any], prettyPrinted: Bool = false) -> String {
         let options = prettyPrinted ? JSONSerialization.WritingOptions.prettyPrinted : JSONSerialization.WritingOptions(rawValue: 0)
-        
+
         if JSONSerialization.isValidJSONObject(value) {
             do {
                 let data = try JSONSerialization.data(withJSONObject: value, options: options)
@@ -339,7 +336,6 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
         return ""
     }
 }
-       
 
 //  func toggleAdDropBookmark(_ adDrop: Message) -> Promise<AdDrop> {
 //    return adDrop.isBookmarked
@@ -386,7 +382,7 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
 //          }
 //      }
 //    }
-//  }             
+//  }
 
 //    func fetchAdDrops() -> Promise<[Message]> {
 //        let path = getPath() + "/promotions"

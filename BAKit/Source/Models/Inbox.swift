@@ -24,7 +24,7 @@ class Inbox : NSObject, NSCoding{
 	 */
 	func toDictionary() -> [String:Any]
 	{
-		var dictionary = [String:Any]()
+		let dictionary = [String:Any]()
 		return dictionary
 	}
 

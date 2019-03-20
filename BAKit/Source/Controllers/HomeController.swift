@@ -107,7 +107,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     // Home menu bar
     view.addConstraintsWithFormat(format: "H:|[v0]|", views: homeMenuBar)
     view.addConstraintsWithFormat(format: "V:[v0(50)]", views: homeMenuBar)
-    homeMenuBar.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor).isActive = true
+    homeMenuBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
   }
   
   private func setHomeMenuBarTitleByIndex(_ index: Int) {
