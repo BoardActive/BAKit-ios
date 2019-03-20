@@ -36,11 +36,15 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
 
     private init() {
         super.init(nibName: nil, bundle: nil)
-        FirebaseApp.configure() // TODO: move to boot?\
-        retrieveMe()
-        requestLocations()
+        setupEnvironment()
     }
 
+    private func setupEnvironment() {
+        FirebaseApp.configure() 
+        retrieveMe()
+        requestLocations()        
+    }
+    
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -180,8 +184,8 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
         print("Firebase registration token: \(fcmToken)")
         UserDefaults.standard.setValue(fcmToken, forKey: "deviceToken")
         UserDefaults.standard.synchronize()
-//        let dataDict: [String: String] = ["token": fcmToken]
-//        NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
+        //        let dataDict: [String: String] = ["token": fcmToken]
+        //        NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
         // TODO: If necessary send token to application server.
         // Note: This callback is fired at each app startup and whenever a new token is generated.
     }
@@ -220,15 +224,24 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
     }
 
     private func getHeaders() -> HTTPHeaders {
-        let tokenString = UserDefaults.standard.object(forKey: "deviceToken") as! String
-
+        var tokenString: String?
+        if (UserDefaults.standard.object(forKey: "deviceToken") as? String) == nil {
+            tokenString = "e9t-X4atGnY:APA91bFv7X65OcEgSlgxVUhFQhM6Skrk4mS1j4-5q9wy3Di1YZJSL9bWvFymYLncYPYp0X-V7mG8aOvas6A_Jv4AVFeUHbRrrcxjGPtPI39WmlS1gyX_3csbLwiNZJnQtODYNAH1qFw0"
+        } else {
+            tokenString = UserDefaults.standard.object(forKey: "deviceToken") as? String
+        }
+//        if tokenString !tokenString != nil else {
+//            tokenString = "e9t-X4atGnY:APA91bFv7X65OcEgSlgxVUhFQhM6Skrk4mS1j4-5q9wy3Di1YZJSL9bWvFymYLncYPYp0X-V7mG8aOvas6A_Jv4AVFeUHbRrrcxjGPtPI39WmlS1gyX_3csbLwiNZJnQtODYNAH1qFw0"
+//            
+//        }
+        
         let headers: HTTPHeaders = [
             "Content-Type": "application/json",
             "Accept": "application/json",
             "X-BoardActive-App-Key": "1",
             "X-BoardActive-App-Id": "1", // needs to be passed in
             "X-BoardActive-App-Version": "4.7.3",
-            "X-BoardActive-Device-Token": tokenString, // fcmTokenStore,
+            "X-BoardActive-Device-Token": tokenString!, // fcmTokenStore,
             "X-BoardActive-Device-OS": "ios",
             "X-BoardActive-Device-OS-Version": "\(systemVersion)",
             "X-BoardActive-Is-Test-App": "1",

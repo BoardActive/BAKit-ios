@@ -53,7 +53,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         
-        BoardActive.client.handleNotification(application, userInfo)
+//        BoardActive.client.handleNotification(application, userInfo)
         
         UserDefaults.standard.set(userInfo, forKey: "userInfo")
         
