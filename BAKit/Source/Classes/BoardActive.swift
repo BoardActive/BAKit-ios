@@ -190,17 +190,16 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
         let gcmMessageIDKey = "gcm.message_id"
 
         let userInfo = response.notification.request.content.userInfo
-        // Print message ID.
+
         if let messageID = userInfo[gcmMessageIDKey] {
             print("Message ID: \(messageID)")
+            UserDefaults.standard.setValue(messageID, forKey: "kMESSAGEID")
+            UserDefaults.standard.synchronize()
         }
 
         // Print full message.
         print(userInfo)
-
-        UserDefaults.standard.setValue(messageID, forKey: "kMESSAGEID")
-        UserDefaults.standard.synchronize()
-
+        
         completionHandler()
     }
 
