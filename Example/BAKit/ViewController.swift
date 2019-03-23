@@ -8,24 +8,25 @@
 //
 
 import UIKit
-import BAKit
 
 class ViewController: UIViewController {
-  @IBOutlet weak var openBoardActiveButton: UIButton!
-    @IBOutlet weak var infoLabel: UILabel!
-    
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    // Do any additional setup after loading the view, typically from a nib.
-  }
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
-  }
-  
-    
-    @IBAction func showHomeController(_ sender: Any) {
-        BoardActive.client.show()
+    @IBOutlet var openBoardActiveButton: UIButton!
+    @IBOutlet var infoLabel: UILabel!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateInfoLabel(object:)), name: NSNotification.Name(.InfoUpdateNotification), object: nil)
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+
+    @objc func updateInfoLabel(object: Any?) {
+        DispatchQueue.main.async(execute: { () -> Void in
+            let str: String = "\(String(describing: object))"
+            self.infoLabel.text = str
+        })
     }
 }
-

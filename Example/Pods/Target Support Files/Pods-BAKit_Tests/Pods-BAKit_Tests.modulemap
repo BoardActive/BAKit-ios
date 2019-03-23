@@ -1,0 +1,6 @@
+framework module Pods_BAKit_Tests {
+  umbrella header "Pods-BAKit_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}

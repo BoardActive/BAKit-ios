@@ -1,0 +1,44 @@
+{
+  "name": "BAKit",
+  "version": "0.1.0",
+  "summary": "Location-based notifications for personalized user engagement and retention campaigns",
+  "description": "Board Active iOS SDK, for integrating BoardActive into your iOS application. The SDK supports iOS 10+",
+  "homepage": "https://github.com/boardactive/BAKit-ios",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Hunter Brennick": "hunter@boardactive.com"
+  },
+  "source": {
+    "git": "https://github.com/boardactive/BAKit-ios.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "10.0"
+  },
+  "swift_version": "4.0",
+  "source_files": "BAKit/Source/**/*.{swift}",
+  "resource_bundles": {
+    "BAKit": [
+      "BAKit/**/*.xcassets"
+    ]
+  },
+  "resources": "BAKit/**/*.{png,json}",
+  "dependencies": {
+    "Alamofire": [
+      "~> 4.7"
+    ],
+    "PromiseKit/Alamofire": [
+      "~> 6.0"
+    ],
+    "Firebase/Core": [
+      "~> 5.0"
+    ],
+    "Firebase/Messaging": [
+
+    ]
+  },
+  "static_framework": true
+}

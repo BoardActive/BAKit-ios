@@ -7,13 +7,12 @@
 //
 
 import Alamofire
-import Alamofire_SwiftyJSON
 import CoreLocation
 import FirebaseCore
 import FirebaseMessaging
 import Foundation
 import PromiseKit
-import SwiftyJSON
+import UIKit
 import UserNotifications
 
 public enum EndPoints: String {
@@ -24,33 +23,24 @@ public enum EndPoints: String {
 }
 
 public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
-    public static let client = BoardActive()
-
-    let systemVersion = UIDevice.current.systemVersion
-
+    public static let client = BoardActive() // BA singleton
+    
     let appDelegate = UIApplication.shared.delegate
     var locationManager: CLLocationManager = CLLocationManager()
-    let clientViewController: UIViewController = UINavigationController(rootViewController: HomeController(collectionViewLayout: UICollectionViewFlowLayout()))
-    var openingViewController: UIViewController? // used to return to previous view controller after hide() is called
-    var coveringWindow: UIWindow = UIWindow(frame: (UIApplication.shared.keyWindow?.screen.bounds)!)
 
-    private init() {
+    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nil, bundle: nil)
-        setupEnvironment()
     }
 
-    private func setupEnvironment() {
-        FirebaseApp.configure() 
-        retrieveMe()
-        requestLocations()        
-    }
-    
     public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
+    // [END Init]
+
     public func requestLocations() {
         locationManager.delegate = self
+        locationManager.allowsBackgroundLocationUpdates = true
 
         switch CLLocationManager.authorizationStatus() {
         case .authorizedAlways:
@@ -70,53 +60,39 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
             break
         }
 
-        locationManager.requestAlwaysAuthorization()
+        locationManager.requestAlwaysAuthorization() // asks for location permissions when app in foreground
         locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         locationManager.activityType = .fitness
+        locationManager.pausesLocationUpdatesAutomatically = true
+        locationManager.startUpdatingLocation()
+    }
 
-        DispatchQueue.main.async {
-            BoardActive.client.locationManager.startUpdatingLocation()
-        }
+    public func locationManagerDidPauseLocationUpdates(_ manager: CLLocationManager) {
+        print("\nLOCATION MANAGER PAUSE\n")
     }
 
     public func requestNotifications(_ application: UIApplication) {
+        // [START set_messaging_delegate]
         Messaging.messaging().delegate = self
+        // [END set_messaging_delegate]
 
         // Register for remote notifications. This shows a permission dialog on first run, to
         // show the dialog at a more appropriate time move this registration accordingly.
         // [START register_for_notifications]
+
         // For iOS 10 display notification (sent via APNS)
         UNUserNotificationCenter.current().delegate = self
 
         let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
 
-        UNUserNotificationCenter.current().requestAuthorization(options: authOptions, completionHandler: { _, _ in })
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: authOptions,
+            completionHandler: { _, _ in })
+
         application.registerForRemoteNotifications()
-    }
+        // [END register_for_notifications]
 
-    func coverEverything() {
-        coveringWindow.windowLevel = UIWindow.Level.alert + 1
-        coveringWindow.isHidden = false
-        let clientViewController: UIViewController = UINavigationController(rootViewController: HomeController(collectionViewLayout: UICollectionViewFlowLayout()))
-        coveringWindow.rootViewController = clientViewController
-        coveringWindow.makeKeyAndVisible()
-    }
-
-    public func show() {
-        coverEverything()
-    }
-
-    public func hide() {
-        print("HIDE")
-        hideEverything()
-    }
-
-    public func hideEverything() {
-        coveringWindow.windowLevel = UIWindow.Level.alert - 1
-        coveringWindow.isHidden = true
-        appDelegate?.window??.windowLevel = UIWindow.Level.alert + 1
-
-        appDelegate?.window??.makeKeyAndVisible()
+        FirebaseApp.configure()
     }
 
     public func onNotificationReceived(callback: ([String: Any]) -> Void) {
@@ -127,53 +103,36 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
         callback(["opened": ["world": "test"]])
     }
 
+    public func stopUpdatingLocation() {
+        locationManager.stopUpdatingLocation()
+    }
+
     public func handleNotification(_ application: UIApplication, _ userInfo: [AnyHashable: Any]) {
         // TODO: check if 3rd party notifications execute this callback
-        let a = Message(userInfo as! [String: Any])
+        let m = Message(userInfo as! [String: Any])
 
-        if a.isValidNotification() {
+        if m.isValidNotification() {
             if application.applicationState == UIApplication.State.active {
                 // in FG and receive notification
                 print("RECEIVED FOREGROUND")
-                createEvent(name: "received", notificationId: a.notificationId ?? "", messageId: a.messageId, promotionId: a.id)
+                createEvent(name: "received", notificationId: m.notificationId ?? "", messageId: m.messageId, promotionId: m.id)
             } else if application.applicationState == UIApplication.State.background {
                 // in BG and receive notification
                 print("RECEIVED BACKGROUND")
-                createEvent(name: "received", notificationId: a.notificationId ?? "", messageId: a.messageId, promotionId: a.id)
+                createEvent(name: "received", notificationId: m.notificationId ?? "", messageId: m.messageId, promotionId: m.id)
             } else if application.applicationState == UIApplication.State.inactive {
                 // tap notification from notification center
                 print("TAPPED & TRANSITIONING")
-                createEvent(name: "opened", notificationId: a.notificationId ?? "", messageId: a.messageId, promotionId: a.id)
+                createEvent(name: "opened", notificationId: m.notificationId ?? "", messageId: m.messageId, promotionId: m.id)
             }
         }
     }
 
-    public func createEvent(name: String, notificationId: String, messageId: String, promotionId: String) {
-        let path = getPath() + EndPoints.events.rawValue
-        let headers = getHeaders()
-        let body: [String: Any] = [
-            "name": name,
-            "params": [
-                "firebaseNotificationId": notificationId,
-                "advertisement_id": messageId,
-                "promotion_id": promotionId,
-            ],
-        ]
+    // [END Public API]
 
-        Alamofire.request(path, method: .post, parameters: body, encoding: JSONEncoding.default, headers: headers)
-            .validate()
-            .responseJSON { response in
-                switch response.result {
-                case let .success(json):
-                    print("[BA:client:createEvent] OK : ", json)
-                case let .failure(error):
-                    print("[BA:client:createEvent] ERR : ", error)
-                }
-            }
-    }
-
+    // [START Overrides]
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        updateLocation(locations.first!)
+        updateLocation(locations.first!) // only take first
     }
 
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -182,36 +141,44 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
 
     public func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
         print("Firebase registration token: \(fcmToken)")
-        UserDefaults.standard.setValue(fcmToken, forKey: "deviceToken")
+
+        let dataDict: [String: String] = ["token": fcmToken]
+        NotificationCenter.default.post(name: Notification.Name(.FCMToken), object: nil, userInfo: dataDict)
+
+        UserDefaults.standard.setValue(fcmToken, forKey: .DeviceToken)
         UserDefaults.standard.synchronize()
-        //        let dataDict: [String: String] = ["token": fcmToken]
-        //        NotificationCenter.default.post(name: Notification.Name("FCMToken"), object: nil, userInfo: dataDict)
         // TODO: If necessary send token to application server.
         // Note: This callback is fired at each app startup and whenever a new token is generated.
-    }
 
-    public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        let gcmMessageIDKey = "gcm.message_id"
+        DispatchQueue.global(qos: .userInitiated).async {
+            let initialNetworkCallsGroup = DispatchGroup()
+            
+            initialNetworkCallsGroup.enter()
+            self.retrieveMe()
+            initialNetworkCallsGroup.leave()
 
-        let userInfo = response.notification.request.content.userInfo
-
-        if let messageID = userInfo[gcmMessageIDKey] {
-            print("Message ID: \(messageID)")
-            UserDefaults.standard.setValue(messageID, forKey: "kMESSAGEID")
-            UserDefaults.standard.synchronize()
+            initialNetworkCallsGroup.enter()
+            self.requestLocations()
+            initialNetworkCallsGroup.leave()
+            initialNetworkCallsGroup.resume()
         }
-
-        // Print full message.
-        print(userInfo)
-
-        completionHandler()
     }
 
+    public func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
+        print("Your FCM registration token: ", fcmToken)
+        UserDefaults.standard.setValue(fcmToken, forKey: .DeviceToken)
+        UserDefaults.standard.synchronize()
+    }
+
+    // [END Overrides]
+
+    // [START Class Functions]
     private func getPath() -> String {
         return EndPoints.prod.rawValue
     }
 
-    private func castAdDropJsonNumbersToStrings(json: [String: Any]) -> [String: Any] {
+    // Handles casting raw json from Number to String before AdDrop initialization
+    private func castMessageJsonNumbersToStrings(json: [String: Any]) -> [String: Any] {
         var mutatedJson = json
         if let promotionIdNumber = json["promotion_id"] as? NSNumber {
             mutatedJson["promotion_id"] = "\(promotionIdNumber)"
@@ -224,112 +191,135 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
     }
 
     private func getHeaders() -> HTTPHeaders {
-        var tokenString: String?
-        if (UserDefaults.standard.object(forKey: "deviceToken") as? String) == nil {
-            tokenString = "e9t-X4atGnY:APA91bFv7X65OcEgSlgxVUhFQhM6Skrk4mS1j4-5q9wy3Di1YZJSL9bWvFymYLncYPYp0X-V7mG8aOvas6A_Jv4AVFeUHbRrrcxjGPtPI39WmlS1gyX_3csbLwiNZJnQtODYNAH1qFw0"
-        } else {
-            tokenString = UserDefaults.standard.object(forKey: "deviceToken") as? String
-        }
-//        if tokenString !tokenString != nil else {
-//            tokenString = "e9t-X4atGnY:APA91bFv7X65OcEgSlgxVUhFQhM6Skrk4mS1j4-5q9wy3Di1YZJSL9bWvFymYLncYPYp0X-V7mG8aOvas6A_Jv4AVFeUHbRrrcxjGPtPI39WmlS1gyX_3csbLwiNZJnQtODYNAH1qFw0"
-//            
-//        }
+        var tokenString: String
         
+        if (UserDefaults.standard.object(forKey: .DeviceToken) as? String) != nil {
+            tokenString = (UserDefaults.standard.object(forKey: .DeviceToken) as? String)!
+        } else if (UserDefaults.standard.object(forKey: .PreviousDeviceToken) as? String) != nil {
+            tokenString = (UserDefaults.standard.object(forKey: .PreviousDeviceToken) as? String)!
+        } else {
+            tokenString = ""
+        }
+
         let headers: HTTPHeaders = [
-            "Content-Type": "application/json",
-            "Accept": "application/json",
+            "Access-Control-Allow-Origin": "*",
             "X-BoardActive-App-Key": "1",
-            "X-BoardActive-App-Id": "1", // needs to be passed in
+            "X-BoardActive-App-Id": "123", // needs to be passed in
             "X-BoardActive-App-Version": "4.7.3",
-            "X-BoardActive-Device-Token": tokenString!, // fcmTokenStore,
-            "X-BoardActive-Device-OS": "ios",
-            "X-BoardActive-Device-OS-Version": "\(systemVersion)",
+            "X-BoardActive-Device-Token": tokenString, // fcmTokenStore,
+            "X-BoardActive-Device-OS": .iOS, // its a cocoa pod...
+            "X-BoardActive-Device-OS-Version": .SystemVersion,
             "X-BoardActive-Is-Test-App": "1",
         ]
+
         return headers
     }
 
-    func fetchAdDropById(_ id: String) -> Promise<Message> {
-        let path = getPath() + "/promotions/" + id
-        let headers = getHeaders()
+    public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        let gcmMessageIDKey = "gcm.message_id"
 
-        return Promise { seal in
-            Alamofire.request(path, headers: headers).responseJSON { response in
+        let userInfo = response.notification.request.content.userInfo
+
+        if let messageID = userInfo[gcmMessageIDKey] {
+            UserDefaults.standard.setValue(messageID, forKey: .MessageId)
+            UserDefaults.standard.synchronize()
+        }
+
+        // Print full message.
+        print(userInfo)
+
+        completionHandler()
+    }
+    
+    public func createEvent(name: String, notificationId: String, messageId: String, promotionId: String) {
+        let path = getPath() + EndPoints.events.rawValue
+        let headers = getHeaders()
+        let body: [String: Any] = [
+            "name": name,
+            "params": [
+                "firebaseNotificationId": notificationId,
+                "advertisement_id": messageId,
+                "promotion_id": promotionId,
+            ],
+            ]
+        
+        Alamofire.request(path, method: .post, parameters: body, encoding: JSONEncoding.default, headers: headers)
+            .validate()
+            .responseJSON { response in
                 switch response.result {
                 case let .success(json):
-                    guard let json = json as? [String: Any] else {
-                        print("[BA:client:fetchAdDrop] ERR : no json")
-                        return seal.reject(AFError.responseValidationFailed(reason: .dataFileNil))
-                    }
-                    var mutatedJson = json
-                    mutatedJson = self.castAdDropJsonNumbersToStrings(json: mutatedJson)
-                    let adDrop = Message(mutatedJson)
-                    print("[BA:client:fetchAdDrop] OK : ", adDrop)
-                    seal.fulfill(adDrop)
+                    print("[BA:client:createEvent] OK : ", json)
                 case let .failure(error):
-                    print("[BA:client:fetchAdDrop] ERR : ", error)
-                    seal.reject(error)
+                    print("[BA:client:createEvent] ERR : ", error)
                 }
-            }
+                NotificationCenter.default.post(name: NSNotification.Name(.InfoUpdateNotification), object: response.result.description)
         }
     }
-
+    
     func updateLocation(_ location: CLLocation) {
+        let latitudeString = "\(location.coordinate.latitude)"
+        let longitudeString = "\(location.coordinate.longitude)"
+
         let path = getPath() + EndPoints.locations.rawValue
         let headers = getHeaders()
         let body: [String: Any] = [
-            "latitude": "\(location.coordinate.latitude)",
-            "longitude": "\(location.coordinate.longitude)",
-            "deviceTime": "\(Date())",
+            "latitude": latitudeString,
+            "longitude": longitudeString,
+            "deviceTime": Date().iso8601,
         ]
 
         Alamofire.request(path, method: .post, parameters: body, headers: headers).responseJSON { response in
             switch response.result {
             case let .success(json):
                 print("[BA:client:updateLocation] OK : ", json)
+                NotificationCenter.default.post(name: NSNotification.Name(.InfoUpdateNotification), object: json)
             case let .failure(error):
                 print("[BA:client:updateLocation] ERR : ", error)
+                print(response.error!)
             }
-            print((response.value as AnyObject).debugDescription!)
+            NotificationCenter.default.post(name: NSNotification.Name(.InfoUpdateNotification), object: response.result.description)
         }
     }
 
-    public func retrieveMe() {
+    func retrieveMe() {
         let path = getPath() + EndPoints.me.rawValue
         let headers = getHeaders()
-        Alamofire.request(path, method: .get, parameters: nil, headers: headers).responseSwiftyJSON(completionHandler: { response in
+        
+        Alamofire.request(path, method: .get, parameters: nil, headers: headers).responseJSON(completionHandler: { response in
             switch response.result {
             case let .success(json):
                 print("[BA:client:me] OK : ", json)
+                guard let meJSON = response.result.value as? [String: Any], let deviceToken = meJSON["deviceToken"] as? String, !deviceToken.isEmpty else {
+                    return
+                }
+                UserDefaults.standard.set(deviceToken, forKey: .PreviousDeviceToken)
+                UserDefaults.standard.synchronize()
             case let .failure(error):
-                print("[BA:client:me] OK : ", error)
+                print("[BA:client:me] ERR : ", error)
                 return
             }
-
-            let parsedJSON = MePayload(fromJson: response.result.value)
-            UserDefaults.standard.setValue(parsedJSON.deviceToken, forKey: "deviceToken")
-            UserDefaults.standard.setValue(parsedJSON.toDictionary(), forKey: "MePayload")
-            UserDefaults.standard.synchronize()
+            NotificationCenter.default.post(name: NSNotification.Name(.InfoUpdateNotification), object: response.result.description)
         })
     }
 
-    func updateUserInfo(email: String) {
+    func updateMe(email: String) {
         let path = getPath() + EndPoints.me.rawValue
         let headers = getHeaders()
         let body: [String: Any] = [
             "email": email,
-            "deviceOS": "ios",
-            "deviceOSVersion": "12.1.4",
+            "deviceOS": String.iOS,
+            "deviceOSVersion": String.SystemVersion,
         ]
 
-        Alamofire.request(path, method: .post, parameters: body, headers: headers).responseSwiftyJSON(completionHandler: { response in
+        Alamofire.request(path, method: .put, parameters: body, headers: headers).responseJSON(completionHandler: { response in
             switch response.result {
             case let .success(json):
-                print("[BA:client:updateUserInfo] OK : ", json)
+                print("[BA:client:updateMe] OK : ", json)
             case let .failure(error):
-                print("[BA:client:updateUserInfo] ERR : ", error)
+                print("[BA:client:updateMe] ERR : ", error)
                 return
             }
+            NotificationCenter.default.post(name: NSNotification.Name(.InfoUpdateNotification), object: response.result.description)
         })
     }
 
@@ -350,131 +340,25 @@ public class BoardActive: UIViewController, CLLocationManagerDelegate, UNUserNot
     }
 }
 
-//  func toggleAdDropBookmark(_ adDrop: Message) -> Promise<AdDrop> {
-//    return adDrop.isBookmarked
-//      ? createAdDropBookmark(adDrop)
-//      : deleteAdDropBookmark(adDrop)
-//  }
+extension Formatter {
+    static let iso8601: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.calendar = Calendar(identifier: .iso8601)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
+        return formatter
+    }()
+}
 
-//  func createAdDropBookmark(_ adDrop: AdDrop) -> Promise<AdDrop> {
-//    let path = getPath() + "/promotions/" + String(adDrop.id) + "/bookmarks"
-//    let headers = getHeaders()
-//    let body: [String: Any] = [:]
-//
-//    // TODO do we even need body?
-//    return Promise { seal in
-//      Alamofire.request(path, method: .post, parameters: body, headers: headers)
-//        .responseJSON { response in
-//          switch response.result {
-//          case .success(let json):
-//            print("[BA:client:createAdDropBookmark] OK : ", json)
-//            seal.fulfill(adDrop)
-//          case .failure(let error):
-//            print("[BA:client:createAdDropBookmark] ERR : ", error)
-//            seal.reject(error)
-//          }
-//      }
-//    }
-//  }
+extension Date {
+    var iso8601: String {
+        return Formatter.iso8601.string(from: self)
+    }
+}
 
-//  func deleteAdDropBookmark(_ adDrop: Message) -> Promise<AdDrop> {
-//    let path = getPath() + "/promotions/" + String(adDrop.id) + "/bookmarks"
-//    let headers = getHeaders()
-//    let body: [String: Any] = [:]
-//
-//    return Promise { seal in
-//      Alamofire.request(path, method: .delete, parameters: body, headers: headers)
-//        .responseJSON { response in
-//          switch response.result {
-//          case .success(let json):
-//            print("[BA:client:deleteAdDropBookmark] OK : ", json)
-//            seal.fulfill(adDrop)
-//          case .failure(let error):
-//            print("[BA:client:deleteAdDropBookmark] ERR : ", error)
-//            seal.reject(error)
-//          }
-//      }
-//    }
-//  }
-
-//    func fetchAdDrops() -> Promise<[Message]> {
-//        let path = getPath() + "/promotions"
-//        let headers = getHeaders()
-//        var adDrops = [Message]()
-//
-//        print("[BA:client:fetchAdDrops] fetching...")
-//
-//        return Promise { seal in
-//
-//            Alamofire.request(path, headers: headers)
-//                .responseJSON { response in
-//                    switch response.result {
-//                    case let .success(json):
-//
-//                        guard let json = json as? NSArray else {
-//                            print("[BA:client:fetchAdDrops] SUCCESS ERR : no json")
-//                            return seal.reject(AFError.responseValidationFailed(reason: .dataFileNil))
-//                        }
-//
-//                        for adDrop in json {
-//                            var adDropJson = adDrop as! [String: Any]
-//                            adDropJson = self.castAdDropJsonNumbersToStrings(json: adDropJson)
-//                            let drop = Message(adDropJson)
-//                            if drop.isValidModel() {
-//                                adDrops.append(drop)
-//                            } else {
-//                                print("[BA:client:fetchAdDrops] INVALID : ", drop)
-//                            }
-//                        }
-//
-//                        print("[BA:client:fetchAdDrops] OK : ", adDrops)
-//                        seal.fulfill(adDrops)
-//                    case let .failure(error):
-//                        print("[BA:client:fetchAdDrops] ERR : ", error)
-//                        seal.reject(error)
-//                    }
-//                }
-//        }
-//    }
-
-//    Nothing works unless the PUT call to ME has gone through
-//    deviceToken = fcm
-
-//  func fetchBookmarkedAdDrops() -> Promise<[AdDrop]>{
-//    let path = getPath() + "/promotions/bookmarks"
-//    let headers = getHeaders()
-//    var adDrops = [AdDrop]()
-//
-//    return Promise { seal in
-//      Alamofire.request(path, headers: headers)
-//        .responseJSON { response in
-//          switch response.result {
-//          case .success(let json):
-//
-//            guard let json = json as? NSArray else {
-//              print("[BA:client:fetchAdDrops] ERR : no json")
-//              return seal.reject(AFError.responseValidationFailed(reason: .dataFileNil))
-//            }
-//
-//            for adDrop in json {
-//              var adDropJson = adDrop as! [String: Any]
-//              adDropJson = self.castAdDropJsonNumbersToStrings(json: adDropJson)
-//              let adDrop = AdDrop(adDropJson)
-//              if (adDrop.isValidModel()) {
-//                adDrop.isBookmarked = true  // TODO should be set by backend
-//                adDrops.append(adDrop)
-//              } else {
-//                print("[BA:client:fetchAdDrops] INVALID : ", adDrop)
-//              }
-//            }
-//
-//            print("[BA:client:fetchAdDrops] OK : ", adDrops)
-//            seal.fulfill(adDrops)
-//          case .failure(let error):
-//            print("[BA:client:fetchAdDrops] ERR : ", error)
-//            seal.reject(error)
-//          }
-//      }
-//    }
-//  }
-//
+extension String {
+    var iso8601: Date? {
+        return Formatter.iso8601.date(from: self)
+    }
+}

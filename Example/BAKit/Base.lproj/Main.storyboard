@@ -37,29 +37,21 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="j7r-Mr-9tB">
-                                <rect key="frame" x="116" y="164" width="143" height="403"/>
-                                <state key="normal" title="Button"/>
-                                <connections>
-                                    <action selector="showHomeController:" destination="kSb-Kg-7MJ" eventType="touchUpInside" id="oIe-Ep-pWb"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QB2-aZ-nnw">
-                                <rect key="frame" x="166.5" y="323.5" width="42" height="20.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QB2-aZ-nnw">
+                                <rect key="frame" x="16" y="64" width="343" height="603"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="6Hd-51-0tt" firstAttribute="top" secondItem="j7r-Mr-9tB" secondAttribute="bottom" constant="100" id="51y-Xx-ZZh"/>
-                            <constraint firstItem="QB2-aZ-nnw" firstAttribute="centerX" secondItem="OSi-b7-ulP" secondAttribute="centerX" id="Gpp-Jt-f9k"/>
-                            <constraint firstItem="j7r-Mr-9tB" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="OSi-b7-ulP" secondAttribute="leadingMargin" id="PV3-LU-B3g"/>
-                            <constraint firstItem="QB2-aZ-nnw" firstAttribute="centerY" secondItem="OSi-b7-ulP" secondAttribute="centerY" id="W00-st-XE1"/>
-                            <constraint firstItem="j7r-Mr-9tB" firstAttribute="top" secondItem="LwF-fI-Amo" secondAttribute="bottom" constant="100" id="gkY-4b-lYK"/>
-                            <constraint firstItem="j7r-Mr-9tB" firstAttribute="centerX" secondItem="OSi-b7-ulP" secondAttribute="centerX" id="wCQ-1K-nTa"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="j7r-Mr-9tB" secondAttribute="trailing" constant="100" id="y4E-Kn-WKJ"/>
+                            <constraint firstItem="QB2-aZ-nnw" firstAttribute="leading" secondItem="OSi-b7-ulP" secondAttribute="leadingMargin" id="2QL-ys-jA0"/>
+                            <constraint firstItem="QB2-aZ-nnw" firstAttribute="top" secondItem="LwF-fI-Amo" secondAttribute="bottom" id="B9L-8e-lj3"/>
+                            <constraint firstItem="6Hd-51-0tt" firstAttribute="top" secondItem="QB2-aZ-nnw" secondAttribute="bottom" id="KVn-bE-tfF"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="QB2-aZ-nnw" secondAttribute="trailing" id="ZWR-o7-FHf"/>
+                            <constraint firstItem="QB2-aZ-nnw" firstAttribute="leading" secondItem="OSi-b7-ulP" secondAttribute="leadingMargin" id="gud-MB-w5K"/>
+                            <constraint firstItem="QB2-aZ-nnw" firstAttribute="trailing" secondItem="OSi-b7-ulP" secondAttribute="trailingMargin" id="iwD-iR-QQx"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="unu-wr-kS3"/>
@@ -69,7 +61,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Jm-Yj-6P0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="785" y="177"/>
+            <point key="canvasLocation" x="784.79999999999995" y="176.76161919040482"/>
         </scene>
     </scenes>
 </document>
