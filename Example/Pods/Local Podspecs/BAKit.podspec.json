@@ -12,7 +12,7 @@
     "Hunter Brennick": "hunter@boardactive.com"
   },
   "source": {
-    "git": "https://github.com/boardactive/BAKit-ios.git",
+    "git": "https://github.com/BoardActive/BAKit-ios.git",
     "tag": "0.1.0"
   },
   "platforms": {

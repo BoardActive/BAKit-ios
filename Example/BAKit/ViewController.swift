@@ -24,9 +24,7 @@ class ViewController: UIViewController {
     }
 
     @objc func updateInfoLabel(object: Any?) {
-        DispatchQueue.main.async(execute: { () -> Void in
-            let str: String = "\(String(describing: object))"
-            self.infoLabel.text = str
-        })
+            let notification = object.unsafelyUnwrapped as! NSNotification
+            self.infoLabel.text = notification.object.debugDescription
     }
 }

@@ -23,9 +23,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Because we're using it.</string>
+	<string>Allow location monitoring for full functionality.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Because we're using it.</string>
+	<string>Allow location monitoring for full functionality.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
