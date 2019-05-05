@@ -1,0 +1,89 @@
+//
+//  NotificationService.swift
+//  Payload Modification
+//
+//  Created by Ed Salter on 4/30/19.
+//  Copyright © 2019 BoardActive. All rights reserved.
+//
+
+import UserNotifications
+import UIKit
+import Foundation
+
+class NotificationService: UNNotificationServiceExtension {
+
+    var contentHandler: ((UNNotificationContent) -> Void)?
+    var bestAttemptContent: UNMutableNotificationContent?
+
+    override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
+        self.contentHandler = contentHandler
+        bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
+        
+        if let incr = bestAttemptContent!.badge as? Int {
+            switch incr {
+            case 0:
+                UserDefaults.extensions.badge = 0
+                bestAttemptContent!.badge = 0
+            default:
+                let current = UserDefaults.extensions.badge
+                let new = current + incr
+                
+                UserDefaults.extensions.badge = new
+                bestAttemptContent!.badge = NSNumber(value: new)
+            }
+        }
+        
+        if let bestAttemptContent = bestAttemptContent {            
+            var urlString:String? = nil
+            if let urlImageString = request.content.userInfo["imageUrl"] as? String {
+                urlString = urlImageString
+            }
+            
+            if urlString != nil, let fileUrl = URL(string: urlString!) {
+                guard let imageData = NSData(contentsOf: fileUrl) else {
+                    contentHandler(bestAttemptContent)
+                    return
+                }
+                guard let attachment = UNNotificationAttachment.saveImageToDisk(fileIdentifier: "image.jpg", data: imageData, options: nil) else {
+                    contentHandler(bestAttemptContent)
+                    return
+                }
+                
+                bestAttemptContent.attachments = [ attachment ]
+            }
+            
+            contentHandler(bestAttemptContent)
+        }
+    }
+    
+    override func serviceExtensionTimeWillExpire() {
+        // Called just before the extension will be terminated by the system.
+        // Use this as an opportunity to deliver your "best attempt" at modified content, otherwise the original push payload will be used.
+        if let contentHandler = contentHandler, let bestAttemptContent =  bestAttemptContent {
+            contentHandler(bestAttemptContent)
+        }
+    }
+    
+}
+
+@available(iOSApplicationExtension 10.0, *)
+extension UNNotificationAttachment {
+    
+    static func saveImageToDisk(fileIdentifier: String, data: NSData, options: [NSObject : AnyObject]?) -> UNNotificationAttachment? {
+        let fileManager = FileManager.default
+        let folderName = ProcessInfo.processInfo.globallyUniqueString
+        let folderURL = NSURL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(folderName, isDirectory: true)
+        
+        do {
+            try fileManager.createDirectory(at: folderURL!, withIntermediateDirectories: true, attributes: nil)
+            let fileURL = folderURL?.appendingPathComponent(fileIdentifier)
+            try data.write(to: fileURL!, options: [])
+            let attachment = try UNNotificationAttachment(identifier: fileIdentifier, url: fileURL!, options: options)
+            return attachment
+        } catch let error {
+            print("error \(error)")
+        }
+        
+        return nil
+    }
+}

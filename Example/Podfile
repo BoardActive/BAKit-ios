@@ -1,11 +1,28 @@
 platform :ios, '10.0'
 use_frameworks!
 
+# Prevents 
+
+install! 'cocoapods', :disable_input_output_paths => true
+
 target 'BAKit_Example' do
   pod 'BAKit', :path => '../'
-
+#  pod 'BAKit'
+  use_frameworks!
+  pod 'SwiftyJSON'
   target 'BAKit_Tests' do
     inherit! :search_paths
-    
+    pod 'Quick'
+    pod 'Nimble'
+  end
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      cflags = config.build_settings['OTHER_CFLAGS'] || ['$(inherited)']
+      cflags << '-fembed-bitcode'
+      config.build_settings['OTHER_CFLAGS'] = cflags
+    end
   end
 end

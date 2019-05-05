@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="g4B-d3-IFN">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Notification View Controller-->
+        <scene sceneID="kX1-MG-Jd6">
+            <objects>
+                <viewController storyboardIdentifier="NotificationViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="g4B-d3-IFN" customClass="NotificationViewController" customModule="BAKit" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="r8Q-8z-gj6">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tRN-is-DqG">
+                                <rect key="frame" x="135" y="764" width="144" height="44"/>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="2j2-Wm-pLB"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                <state key="normal" title="Dismiss">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="dismissNotificationController:" destination="g4B-d3-IFN" eventType="touchUpInside" id="gaI-8r-YDf"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zkt-kr-SSw">
+                                <rect key="frame" x="170.5" y="79" width="73" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="SDe-nr-nzV"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Notification Body" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="0eT-iv-1BE">
+                                <rect key="frame" x="87" y="591" width="240" height="146"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="iUn-n9-ydd">
+                                <rect key="frame" x="87" y="328" width="240" height="240"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="QeR-yo-uTf"/>
+                                    <constraint firstAttribute="width" constant="240" id="mkQ-jQ-FLR"/>
+                                    <constraint firstAttribute="height" constant="240" id="wyq-jh-kcL"/>
+                                </constraints>
+                            </imageView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Pef-kq-dT2">
+                                <rect key="frame" x="56" y="147" width="302" height="136"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="iUn-n9-ydd" firstAttribute="centerY" secondItem="r8Q-8z-gj6" secondAttribute="centerY" id="1Io-vT-i36"/>
+                            <constraint firstItem="zkt-kr-SSw" firstAttribute="top" secondItem="r8Q-8z-gj6" secondAttribute="top" constant="79" id="5Rd-95-94l"/>
+                            <constraint firstItem="y9g-nG-p6T" firstAttribute="trailing" secondItem="tRN-is-DqG" secondAttribute="trailing" constant="135" id="77e-Xv-BLT"/>
+                            <constraint firstItem="iUn-n9-ydd" firstAttribute="top" secondItem="Pef-kq-dT2" secondAttribute="bottom" constant="45" id="HDS-PX-teC"/>
+                            <constraint firstItem="iUn-n9-ydd" firstAttribute="centerX" secondItem="r8Q-8z-gj6" secondAttribute="centerX" id="IfT-bc-Hku"/>
+                            <constraint firstItem="y9g-nG-p6T" firstAttribute="trailing" secondItem="Pef-kq-dT2" secondAttribute="trailing" constant="56" id="J93-bH-lmj"/>
+                            <constraint firstItem="Pef-kq-dT2" firstAttribute="leading" secondItem="y9g-nG-p6T" secondAttribute="leading" constant="56" id="XwH-de-yGA"/>
+                            <constraint firstItem="zkt-kr-SSw" firstAttribute="centerX" secondItem="r8Q-8z-gj6" secondAttribute="centerX" id="YPH-WP-fBN"/>
+                            <constraint firstItem="0eT-iv-1BE" firstAttribute="centerX" secondItem="r8Q-8z-gj6" secondAttribute="centerX" id="ZKy-SH-sF5"/>
+                            <constraint firstItem="0eT-iv-1BE" firstAttribute="centerX" secondItem="r8Q-8z-gj6" secondAttribute="centerX" id="akb-fJ-pJB"/>
+                            <constraint firstItem="0eT-iv-1BE" firstAttribute="top" secondItem="iUn-n9-ydd" secondAttribute="bottom" constant="23" id="cxQ-hw-kAX"/>
+                            <constraint firstItem="0eT-iv-1BE" firstAttribute="width" secondItem="iUn-n9-ydd" secondAttribute="width" id="r0B-ef-kM1"/>
+                            <constraint firstAttribute="bottom" secondItem="tRN-is-DqG" secondAttribute="bottom" constant="88" id="rZz-7Z-V2A"/>
+                            <constraint firstItem="tRN-is-DqG" firstAttribute="leading" secondItem="y9g-nG-p6T" secondAttribute="leading" constant="135" id="tS0-Ta-VmX"/>
+                            <constraint firstItem="Pef-kq-dT2" firstAttribute="top" secondItem="zkt-kr-SSw" secondAttribute="bottom" constant="8" id="te7-xt-MKC"/>
+                            <constraint firstItem="tRN-is-DqG" firstAttribute="top" secondItem="0eT-iv-1BE" secondAttribute="bottom" constant="27" id="yyj-ru-ScV"/>
+                            <constraint firstItem="tRN-is-DqG" firstAttribute="centerX" secondItem="r8Q-8z-gj6" secondAttribute="centerX" id="zSS-i3-H3E"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="y9g-nG-p6T"/>
+                    </view>
+                    <connections>
+                        <outlet property="bodyTextView" destination="0eT-iv-1BE" id="frH-Oc-pWP"/>
+                        <outlet property="dismissButton" destination="tRN-is-DqG" id="DjA-yF-4R8"/>
+                        <outlet property="messageDataImageView" destination="iUn-n9-ydd" id="u0H-fj-Jrp"/>
+                        <outlet property="notificationImageView" destination="Pef-kq-dT2" id="Pf9-5z-S9B"/>
+                        <outlet property="titleLabel" destination="zkt-kr-SSw" id="liH-HT-GQ0"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Tln-yv-pQG" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-171.01449275362319" y="47.544642857142854"/>
+        </scene>
+    </scenes>
+</document>
