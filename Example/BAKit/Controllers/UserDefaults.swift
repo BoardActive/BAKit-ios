@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 extension UserDefaults {
-    static let suiteName = "group.BAKit"
+    static let suiteName = "group.DLP7NL6GNK.BAKit"
     static let extensions = UserDefaults(suiteName: suiteName)!
     static var imageCache = NSCache<NSString, AnyObject>()
     

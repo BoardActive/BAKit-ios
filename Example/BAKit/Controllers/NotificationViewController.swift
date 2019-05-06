@@ -37,19 +37,14 @@ class NotificationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let group = DispatchGroup()
-        group.enter()
         
+        group.enter()
         DispatchQueue.main.async {
             self.populateModels(notificationModel: self.notificationModel)
             group.leave()
         }
-        
-        // does not wait. But the code in notify() gets run
-        // after enter() and leave() calls are balanced
         group.wait()
-//        group.notify(queue: .main) {
-//            print(self.notificationModel.dictionaryRepresentation())
-//        }
+
         let imageURLString = self.notificationModel.dictionaryRepresentation()["imageUrl"] as! String
         self.notificationImageView!.loadImageUsingCache(withUrl: imageURLString)
         let qrCodeURLString = self.notificationModel.dictionaryRepresentation()["urlQRCode"] as! String
@@ -167,26 +162,5 @@ class NotificationViewController: UIViewController {
         }
         
         UIApplication.shared.windows.first!.makeKeyAndVisible()
-
-//
-//        for window in UIApplication.shared.windows {
-//            if window === displayWindow {
-//                self.dismiss(animated: true, completion: nil)
-//                window.isHidden = true
-//                window.removeFromSuperview()
-//            }
-////            else if window.windowLevel == UIWindowLevelNormal {
-////                window.makeKeyAndVisible()
-////            }
-//        }
-//
-
-      
-//                UIApplication.shared.keyWindow!.isHidden = true
-//            UIApplication.shared.windows.first!.makeKeyAndVisible()
-//            UIApplication.shared.keyWindow!.isHidden = true
-//            UIApplication.shared.windows.last?.removeFromSuperview()
-        
-        }
-//    }
+    }
 }

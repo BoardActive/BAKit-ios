@@ -198,7 +198,7 @@ extension UIApplication {
 }
 
 extension UserDefaults {
-    static let extensions = UserDefaults(suiteName: "group.BAKit")
+    static let extensions = UserDefaults(suiteName: "group.DLP7NL6GNK.ATD")
     
     private enum Keys {
         static let badge = "badge"

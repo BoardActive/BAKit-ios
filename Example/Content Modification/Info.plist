@@ -27,11 +27,11 @@
 			<key>UNNotificationExtensionCategory</key>
 			<string>NEWS_CATEGORY</string>
 			<key>UNNotificationExtensionDefaultContentHidden</key>
-			<string>true</string>
+			<true/>
 			<key>UNNotificationExtensionInitialContentSizeRatio</key>
 			<integer>2</integer>
 			<key>UNNotificationExtensionOverridesDefaultTitle</key>
-			<string>false</string>
+			<false/>
 		</dict>
 		<key>NSExtensionMainStoryboard</key>
 		<string>MainInterface</string>

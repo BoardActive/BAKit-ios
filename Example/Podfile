@@ -1,15 +1,17 @@
 platform :ios, '10.0'
-use_frameworks!
 
-# Prevents 
+keep_source_code_for_prebuilt_frameworks!
+use_frameworks!
 
 install! 'cocoapods', :disable_input_output_paths => true
 
+plugin 'cocoapods-binary'
+
 target 'BAKit_Example' do
   pod 'BAKit', :path => '../'
-#  pod 'BAKit'
-  use_frameworks!
+
   pod 'SwiftyJSON'
+
   target 'BAKit_Tests' do
     inherit! :search_paths
     pod 'Quick'
