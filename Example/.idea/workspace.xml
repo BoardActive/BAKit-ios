@@ -40,207 +40,42 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5b1bd78d-07d9-4575-9c78-c354fb7ebb5a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../BAKit/Source/Controllers/AlertController.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../BAKit/Source/Controllers/BoardActive.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../BAKit/Source/Models/BoardActiveCredentials.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../BAKit/Source/Models/NotificationModel.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../BAKit/Source/Models/User.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BAKit/Assets.xcassets/Contents.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BAKit/Assets.xcassets/step-1.imageset/Contents.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BAKit/Assets.xcassets/step-1.imageset/step-1.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BAKit/Assets.xcassets/step-2.imageset/Contents.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BAKit/Assets.xcassets/step-2.imageset/step-2.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BAKit/Assets.xcassets/step-3.imageset/Contents.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BAKit/Assets.xcassets/step-3.imageset/step-3.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BAKit/Assets.xcassets/step-4.imageset/Contents.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BAKit/Assets.xcassets/step-4.imageset/step-4.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BAKit/Assets.xcassets/step-5.imageset/Contents.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BAKit/Assets.xcassets/step-5.imageset/step-5.pdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BAKit/Storyboards/Onboarding.storyboard" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Payload Modification/Info.plist" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Payload Modification/NotificationService.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tests/AlertControllerTests.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Tests/NotificationModelSpec.swift" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../GoogleService-Info.plist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BAKit/Source/Models/Alert.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BAKit/Source/Models/Aps.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BAKit/Source/Models/Inbox.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../BAKit/Source/Models/MessageData.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BAKit/UserInfo.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Gemfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Gemfile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../BAKit.podspec" beforeDir="false" afterPath="$PROJECT_DIR$/../BAKit.podspec" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/Assets.xcassets/Contents.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/Assets.xcassets/icons-back-filled-48.imageset/Contents.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/Assets.xcassets/icons-back-filled-48.imageset/icons-back-filled-48.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/Assets.xcassets/icons-close-24.imageset/Contents.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/Assets.xcassets/icons-close-24.imageset/icons8-delete-24.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/Assets.xcassets/icons-delete-24.imageset/Contents.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/Assets.xcassets/icons-delete-24.imageset/icons-delete-24.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/Assets.xcassets/icons-delete-48.imageset/Contents.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/Assets.xcassets/icons-delete-48.imageset/icons-delete-48.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/Assets.xcassets/icons-external-link-48.imageset/Contents.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/Assets.xcassets/icons-external-link-48.imageset/icons-external-link-48.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/Assets.xcassets/icons-heart-48.imageset/Contents.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/Assets.xcassets/icons-heart-48.imageset/icons-heart-48.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/Assets.xcassets/icons-heart-filled-48.imageset/Contents.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/Assets.xcassets/icons-heart-filled-48.imageset/icons-heart-filled-48.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/Assets.xcassets/icons-home-48.imageset/Contents.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/Assets.xcassets/icons-home-48.imageset/icons-home-48.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/GoogleService-Info.plist" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/Source/Classes/BoardActive.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/Source/Helpers/AlertController.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BAKit/Source/Controllers/BoardActive.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../BAKit/Source/Controllers/BoardActive.swift" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../BAKit/Source/Helpers/Extensions.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../BAKit/Source/Helpers/Extensions.swift" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../BAKit/Source/Helpers/StringConstants.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../BAKit/Source/Helpers/StringConstants.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/Source/Models/Inbox.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/Source/Models/MePayload.swift" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../BAKit/Source/Models/Message.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BAKit/Source/Models/BoardActiveCredentials.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../BAKit/Source/Models/BoardActiveCredentials.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BAKit/Source/Models/Location.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../BAKit/Source/Models/Location.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BAKit/Source/Models/NotificationModel.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../BAKit/Source/Models/NotificationModel.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../BAKit/Source/Models/UserInfo.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../BAKit/Source/Models/UserInfo.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/BAKit.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BAKit.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/BAKit.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BAKit.xcodeproj/xcshareddata/xcschemes/BAKit-Example.xcscheme" beforeDir="false" afterPath="$PROJECT_DIR$/BAKit.xcodeproj/xcshareddata/xcschemes/BAKit-Example.xcscheme" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BAKit/AppDelegate.swift" beforeDir="false" afterPath="$PROJECT_DIR$/BAKit/AppDelegate.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BAKit/Base.lproj/LaunchScreen.xib" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/BAKit/Base.lproj/Main.storyboard" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/BAKit/GoogleService-Info.plist" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/BAKit/Info.plist" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/BAKit/ViewController.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BAKit/Controllers/NotificationViewController.swift" beforeDir="false" afterPath="$PROJECT_DIR$/BAKit/Controllers/NotificationViewController.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BAKit/Controllers/UserDefaults.swift" beforeDir="false" afterPath="$PROJECT_DIR$/BAKit/Controllers/UserDefaults.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BAKit/Controllers/ViewController.swift" beforeDir="false" afterPath="$PROJECT_DIR$/BAKit/Controllers/ViewController.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BAKit/Models/Alert.swift" beforeDir="false" afterPath="$PROJECT_DIR$/BAKit/Inbox.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BAKit/Models/Aps.swift" beforeDir="false" afterPath="$PROJECT_DIR$/BAKit/Models/Aps.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BAKit/Models/MessageData.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/BAKit/Models/NotificationModel.swift" beforeDir="false" afterPath="$PROJECT_DIR$/BAKit/Models/NotificationModel.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BAKit/Resources/BoardActive-Credentials.plist" beforeDir="false" afterPath="$PROJECT_DIR$/BAKit/Resources/BoardActive-Credentials.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BAKit/Resources/GoogleService-Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/BAKit/Resources/GoogleService-Info.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BAKit_Example.entitlements" beforeDir="false" afterPath="$PROJECT_DIR$/BAKit_Example.entitlements" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content Modification/Content Modification.entitlements" beforeDir="false" afterPath="$PROJECT_DIR$/Content Modification/Content Modification.entitlements" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Payload Modification/NotificationService.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Payload Modification/NotificationService.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Payload Modification/Payload Modification.entitlements" beforeDir="false" afterPath="$PROJECT_DIR$/Payload Modification/Payload Modification.entitlements" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Podfile" beforeDir="false" afterPath="$PROJECT_DIR$/Podfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Podfile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Alamofire/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Alamofire/LICENSE" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Alamofire/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Alamofire/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Alamofire/Source/AFError.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Alamofire/Source/AFError.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Alamofire/Source/Alamofire.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Alamofire/Source/Alamofire.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Alamofire/Source/DispatchQueue+Alamofire.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Alamofire/Source/DispatchQueue+Alamofire.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Alamofire/Source/MultipartFormData.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Alamofire/Source/MultipartFormData.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Alamofire/Source/NetworkReachabilityManager.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Alamofire/Source/NetworkReachabilityManager.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Alamofire/Source/Notifications.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Alamofire/Source/Notifications.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Alamofire/Source/ParameterEncoding.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Alamofire/Source/ParameterEncoding.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Alamofire/Source/Request.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Alamofire/Source/Request.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Alamofire/Source/Response.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Alamofire/Source/Response.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Alamofire/Source/ResponseSerialization.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Alamofire/Source/ResponseSerialization.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Alamofire/Source/Result.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Alamofire/Source/Result.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Alamofire/Source/ServerTrustPolicy.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Alamofire/Source/ServerTrustPolicy.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Alamofire/Source/SessionDelegate.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Alamofire/Source/SessionDelegate.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Alamofire/Source/SessionManager.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Alamofire/Source/SessionManager.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Alamofire/Source/TaskDelegate.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Alamofire/Source/TaskDelegate.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Alamofire/Source/Timeline.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Alamofire/Source/Timeline.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Alamofire/Source/Validation.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Alamofire/Source/Validation.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Firebase/CoreOnly/Sources/Firebase.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Firebase/CoreOnly/Sources/Firebase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Firebase/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Firebase/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.framework/FirebaseAnalytics" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.framework/FirebaseAnalytics" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.framework/Headers/FIRAnalytics.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.framework/Headers/FIRAnalytics.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.framework/Headers/FIRParameterNames.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.framework/Headers/FIRParameterNames.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.framework/Modules/module.modulemap" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.framework/Modules/module.modulemap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseAnalytics/Frameworks/FirebaseCoreDiagnostics.framework/FirebaseCoreDiagnostics" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseAnalytics/Frameworks/FirebaseCoreDiagnostics.framework/FirebaseCoreDiagnostics" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseAnalytics/Frameworks/FirebaseCoreDiagnostics.framework/Modules/module.modulemap" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseAnalytics/Frameworks/FirebaseCoreDiagnostics.framework/Modules/module.modulemap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/FIRAnalyticsConfiguration.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/FIRAnalyticsConfiguration.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/FIRApp.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/FIRApp.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/FIRBundleUtil.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/FIRBundleUtil.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/FIRComponentContainer.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/FIRComponentContainer.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/FIRConfiguration.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/FIRConfiguration.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/FIROptions.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/FIROptions.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/Private/FIRAppInternal.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/Private/FIRAppInternal.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/Private/FIRBundleUtil.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/Private/FIRBundleUtil.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/Private/FIRComponentContainer.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/Private/FIRComponentContainer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/Private/FIRComponentContainerInternal.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/Private/FIRComponentContainerInternal.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/Private/FIRComponentRegistrant.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/Private/FIRCoreConfigurable.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/Public/FIRAnalyticsConfiguration.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/Public/FIRAnalyticsConfiguration.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/Public/FIRConfiguration.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseCore/Firebase/Core/Public/FIRConfiguration.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseCore/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseCore/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseInstanceID/CHANGELOG.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseInstanceID/Frameworks/FirebaseInstanceID.framework/FirebaseInstanceID" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseInstanceID/Frameworks/FirebaseInstanceID.framework/Headers/FIRInstanceID.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseInstanceID/Frameworks/FirebaseInstanceID.framework/Headers/FirebaseInstanceID.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseInstanceID/Frameworks/FirebaseInstanceID.framework/Modules/module.modulemap" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseInstanceID/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseInstanceID/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMMessageCode.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMMessageCode.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessaging.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessaging.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingCheckinService.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingCheckinService.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingConstants.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingConstants.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingConstants.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingConstants.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingContextManagerService.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingContextManagerService.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingDataMessageManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingDataMessageManager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingDataMessageManager.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingDataMessageManager.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingDefines.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingDefines.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingPubSub.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingPubSub.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingPubSub.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingPubSub.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingReceiver.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingReceiver.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingReceiver.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingReceiver.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingRmq2PersistentStore.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingRmq2PersistentStore.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingSecureSocket.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingSecureSocket.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingUtilities.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingUtilities.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingUtilities.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessagingUtilities.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessaging_Private.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/FIRMessaging_Private.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/Public/FIRMessaging.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/Public/FIRMessaging.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/Public/FirebaseMessaging.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseMessaging/Firebase/Messaging/Public/FirebaseMessaging.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/FirebaseMessaging/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/FirebaseMessaging/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/GoogleAppMeasurement/Frameworks/GoogleAppMeasurement.framework/GoogleAppMeasurement" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/GoogleAppMeasurement/Frameworks/GoogleAppMeasurement.framework/GoogleAppMeasurement" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/GoogleAppMeasurement/Frameworks/GoogleAppMeasurement.framework/Modules/module.modulemap" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/GoogleAppMeasurement/Frameworks/GoogleAppMeasurement.framework/Modules/module.modulemap" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/GoogleAppMeasurement/Frameworks/MeasurementNanoPB.framework/MeasurementNanoPB" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/GoogleUtilities/GoogleUtilities/AppDelegateSwizzler/GULAppDelegateSwizzler.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/GoogleUtilities/GoogleUtilities/AppDelegateSwizzler/GULAppDelegateSwizzler.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/GoogleUtilities/GoogleUtilities/Environment/third_party/GULAppEnvironmentUtil.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/GoogleUtilities/GoogleUtilities/Environment/third_party/GULAppEnvironmentUtil.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/GoogleUtilities/GoogleUtilities/Logger/GULLogger.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/GoogleUtilities/GoogleUtilities/Logger/GULLogger.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/GoogleUtilities/GoogleUtilities/MethodSwizzler/GULSwizzler.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/GoogleUtilities/GoogleUtilities/MethodSwizzler/GULSwizzler.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/GoogleUtilities/GoogleUtilities/Network/GULNetwork.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/GoogleUtilities/GoogleUtilities/Network/GULNetwork.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/GoogleUtilities/GoogleUtilities/Network/GULNetworkURLSession.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/GoogleUtilities/GoogleUtilities/Network/GULNetworkURLSession.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/GoogleUtilities/GoogleUtilities/Network/Private/GULNetworkMessageCode.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/GoogleUtilities/GoogleUtilities/Network/Private/GULNetworkMessageCode.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/GoogleUtilities/GoogleUtilities/Network/Private/GULNetworkURLSession.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/GoogleUtilities/GoogleUtilities/Network/Private/GULNetworkURLSession.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/GoogleUtilities/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/GoogleUtilities/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Local Podspecs/BAKit.podspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Local Podspecs/BAKit.podspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Manifest.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Manifest.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Pods.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Pods.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/PromiseKit/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/PromiseKit/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/PromiseKit/Sources/AnyPromise.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/PromiseKit/Sources/AnyPromise.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/PromiseKit/Sources/Box.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/PromiseKit/Sources/Box.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/PromiseKit/Sources/Catchable.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/PromiseKit/Sources/Catchable.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/PromiseKit/Sources/Configuration.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/PromiseKit/Sources/Configuration.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/PromiseKit/Sources/Deprecations.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/PromiseKit/Sources/Deprecations.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/PromiseKit/Sources/Error.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/PromiseKit/Sources/Error.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/PromiseKit/Sources/Guarantee.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/PromiseKit/Sources/Guarantee.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/PromiseKit/Sources/Promise.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/PromiseKit/Sources/Promise.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/PromiseKit/Sources/Resolver.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/PromiseKit/Sources/Resolver.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/PromiseKit/Sources/after.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/PromiseKit/Sources/after.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/PromiseKit/Sources/hang.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/PromiseKit/Sources/hang.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/PromiseKit/Sources/when.swift" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/PromiseKit/Sources/when.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/GPBArray.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/GPBArray.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/GPBArray.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/GPBArray.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/GPBBootstrap.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/GPBBootstrap.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/GPBCodedInputStream.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/GPBCodedInputStream.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/GPBDescriptor.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/GPBDescriptor.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/GPBDescriptor.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/GPBDescriptor.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/GPBDictionary.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/GPBDictionary.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/GPBDictionary.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/GPBDictionary.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/GPBMessage.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/GPBMessage.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/GPBUnknownField.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/GPBUnknownField.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/GPBUtilities.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/GPBUtilities.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/Any.pbobjc.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/Any.pbobjc.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/Any.pbobjc.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/Any.pbobjc.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/Api.pbobjc.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/Api.pbobjc.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/Duration.pbobjc.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/Duration.pbobjc.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/Empty.pbobjc.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/Empty.pbobjc.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/FieldMask.pbobjc.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/FieldMask.pbobjc.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/FieldMask.pbobjc.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/FieldMask.pbobjc.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/SourceContext.pbobjc.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/SourceContext.pbobjc.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/Struct.pbobjc.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/Struct.pbobjc.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/Timestamp.pbobjc.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/Timestamp.pbobjc.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/Timestamp.pbobjc.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/Timestamp.pbobjc.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/Type.pbobjc.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/Type.pbobjc.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/Wrappers.pbobjc.m" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Protobuf/objectivec/google/protobuf/Wrappers.pbobjc.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Target Support Files/BAKit/BAKit.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Target Support Files/BAKit/BAKit.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Target Support Files/FirebaseCore/FirebaseCore.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Target Support Files/FirebaseCore/FirebaseCore.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Target Support Files/FirebaseMessaging/FirebaseMessaging-umbrella.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Target Support Files/FirebaseMessaging/FirebaseMessaging-umbrella.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Target Support Files/FirebaseMessaging/FirebaseMessaging.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Target Support Files/FirebaseMessaging/FirebaseMessaging.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Target Support Files/Pods-BAKit_Example/Pods-BAKit_Example-acknowledgements.markdown" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Target Support Files/Pods-BAKit_Example/Pods-BAKit_Example-acknowledgements.markdown" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Target Support Files/Pods-BAKit_Example/Pods-BAKit_Example-acknowledgements.plist" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Target Support Files/Pods-BAKit_Example/Pods-BAKit_Example-acknowledgements.plist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Target Support Files/Pods-BAKit_Example/Pods-BAKit_Example-frameworks.sh" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Target Support Files/Pods-BAKit_Example/Pods-BAKit_Example-frameworks.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Target Support Files/Pods-BAKit_Example/Pods-BAKit_Example-resources.sh" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Target Support Files/Pods-BAKit_Example/Pods-BAKit_Example-resources.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Target Support Files/Pods-BAKit_Example/Pods-BAKit_Example.debug.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Target Support Files/Pods-BAKit_Example/Pods-BAKit_Example.debug.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Target Support Files/Pods-BAKit_Example/Pods-BAKit_Example.release.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Target Support Files/Pods-BAKit_Example/Pods-BAKit_Example.release.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Target Support Files/Pods-BAKit_Tests/Pods-BAKit_Tests-acknowledgements.markdown" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Target Support Files/Pods-BAKit_Tests/Pods-BAKit_Tests-acknowledgements.markdown" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Target Support Files/Pods-BAKit_Tests/Pods-BAKit_Tests-acknowledgements.plist" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Target Support Files/Pods-BAKit_Tests/Pods-BAKit_Tests-acknowledgements.plist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Target Support Files/Pods-BAKit_Tests/Pods-BAKit_Tests.debug.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Target Support Files/Pods-BAKit_Tests/Pods-BAKit_Tests.debug.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Target Support Files/Pods-BAKit_Tests/Pods-BAKit_Tests.release.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Target Support Files/Pods-BAKit_Tests/Pods-BAKit_Tests.release.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/Target Support Files/nanopb/nanopb.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/Target Support Files/nanopb/nanopb.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/nanopb/pb.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/nanopb/pb.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/nanopb/pb_decode.c" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/nanopb/pb_decode.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/nanopb/pb_decode.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/nanopb/pb_decode.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/nanopb/pb_encode.c" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/nanopb/pb_encode.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Pods/nanopb/pb_encode.h" beforeDir="false" afterPath="$PROJECT_DIR$/Pods/nanopb/pb_encode.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Gemfile" beforeDir="false" afterPath="$PROJECT_DIR$/../Gemfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Gemfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../Gemfile.lock" afterDir="false" />
     </list>
     <ignored path="$USER_HOME$/Library/Caches/AppCode2019.1/DerivedData/BAKit-ewgnklbqmibfmkfhenfhktmdxhpf/Build/Intermediates.noindex/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -269,17 +104,35 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../BAKit/Source/Controllers/AlertController.swift">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-7">
-              <caret line="4" column="36" selection-start-line="4" selection-start-column="36" selection-end-line="4" selection-end-column="36" />
+            <state relative-caret-position="527">
+              <caret line="31" column="71" selection-start-line="31" selection-start-column="71" selection-end-line="31" selection-end-column="71" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../BAKit/Source/Controllers/BoardActive.swift">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="205">
+              <caret line="308" column="37" selection-start-line="308" selection-start-column="37" selection-end-line="308" selection-end-column="37" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/../BAKit/Source/Controllers/BoardActive.swift">
+        <entry file="file://$PROJECT_DIR$/../BAKit/Source/Helpers/StringConstants.swift">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="177">
-              <caret line="266" column="58" selection-start-line="266" selection-start-column="58" selection-end-line="266" selection-end-column="58" />
+            <state relative-caret-position="485">
+              <caret line="83" column="5" selection-start-line="83" selection-start-column="5" selection-end-line="83" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../BAKit/Source/Models/Location.swift">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="16" selection-start-line="16" selection-end-line="16" />
             </state>
           </provider>
         </entry>
@@ -295,6 +148,7 @@
       <find>didreceiveremote</find>
       <find>didfail</find>
       <find>fail</find>
+      <find>iso</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -308,6 +162,7 @@
         <option value="$PROJECT_DIR$/../BAKit/Source/Controllers/AlertController.swift" />
         <option value="$PROJECT_DIR$/Tests/ExtensionsTests.swift" />
         <option value="$PROJECT_DIR$/Tests/AlertControllerTests.swift" />
+        <option value="$PROJECT_DIR$/../BAKit/Source/Models/Location.swift" />
         <option value="$PROJECT_DIR$/../BAKit/Source/Controllers/BoardActive.swift" />
       </list>
     </option>
@@ -357,19 +212,6 @@
               <item name="Pods" type="1d218c8b:XcodeProjectNode" />
               <item name="Development Pods" type="fcab9f18:XcodeViewNode" />
             </path>
-            <path>
-              <item name="" type="efc3779f:XcodeRootNode" />
-              <item name="Pods" type="1d218c8b:XcodeProjectNode" />
-              <item name="Development Pods" type="fcab9f18:XcodeViewNode" />
-              <item name="BAKit" type="fcab9f18:XcodeViewNode" />
-            </path>
-            <path>
-              <item name="" type="efc3779f:XcodeRootNode" />
-              <item name="Pods" type="1d218c8b:XcodeProjectNode" />
-              <item name="Development Pods" type="fcab9f18:XcodeViewNode" />
-              <item name="BAKit" type="fcab9f18:XcodeViewNode" />
-              <item name="Controllers" type="fcab9f18:XcodeViewNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -379,9 +221,10 @@
   <component name="PropertiesComponent">
     <property name="DatabaseDriversLRU" value="postgresql" />
     <property name="OBJC.PRESERVED_TARGET_SELECTION" value="BAKit_Tests" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.jetbrains.cidr.execution.build.XcodeMessageFilterConfiguration.WARNING" value="false" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -408,7 +251,6 @@
     </configuration>
     <list>
       <item itemvalue="Application.BAKit-Example" />
-      <item itemvalue="Application.BAKit" />
       <item itemvalue="XCTest.BAKit_Tests" />
       <item itemvalue="XCTest.AlertControllerTests" />
       <item itemvalue="XCTest.AlertControllerSpec" />
@@ -443,6 +285,9 @@
       <workItem from="1556898041807" duration="255000" />
       <workItem from="1556899708103" duration="5984000" />
       <workItem from="1556916397497" duration="763000" />
+      <workItem from="1557828355995" duration="2861000" />
+      <workItem from="1557854188711" duration="172000" />
+      <workItem from="1557854386600" duration="1175000" />
     </task>
     <servers />
   </component>
@@ -479,12 +324,13 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="23719000" />
+    <option name="totallyTimeSpent" value="27927000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="831" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49385476" visible="true" weight="0.18005739" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49385476" visible="true" weight="0.17934003" />
       <window_info id="Structure" order="1" sideWeight="0.50614524" side_tool="true" weight="0.18036287" />
       <window_info id="Designer" order="2" />
       <window_info id="Favorites" order="3" side_tool="true" />
@@ -502,12 +348,15 @@
       <window_info anchor="bottom" id="Tail" order="11" />
       <window_info active="true" anchor="bottom" id="Messages" order="12" sideWeight="0.49928263" visible="true" weight="0.43881857" />
       <window_info anchor="bottom" id="TeamCity" order="13" weight="0.2419128" />
+      <window_info anchor="bottom" id="SonarLint" order="14" />
+      <window_info anchor="right" id="Jenkins" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Learn" order="3" weight="0.33428982" />
       <window_info anchor="right" id="Database" order="4" weight="0.32855093" />
       <window_info anchor="right" id="Palette&#9;" order="5" />
+      <window_info anchor="right" id="PlantUML" order="6" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -523,13 +372,7 @@
     <entry file="file://$PROJECT_DIR$/BAKit/Assets.xcassets/LaunchImage.launchimage/Default-Landscape-736h@3x.png">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/Debug.xcconfig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="14" selection-start-line="14" selection-end-line="14" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/Debug.xcconfig" />
     <entry file="file://$PROJECT_DIR$/Podfile">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -544,16 +387,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/BAKit/Aps.swift">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="31" selection-start-line="13" selection-end-line="14" />
-          <folding>
-            <element signature="e#111#128#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/BAKit/Aps.swift" />
     <entry file="file://$PROJECT_DIR$/BAKit/AppDelegate.swift">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
@@ -582,17 +416,32 @@
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/../BAKit/Source/Models/Message.swift" />
+    <entry file="file://$PROJECT_DIR$/../BAKit/Source/Bindable.swift" />
     <entry file="file://$PROJECT_DIR$/../BAKit/Source/Controllers/AlertController.swift">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-7">
-          <caret line="4" column="36" selection-start-line="4" selection-start-column="36" selection-end-line="4" selection-end-column="36" />
+        <state relative-caret-position="527">
+          <caret line="31" column="71" selection-start-line="31" selection-start-column="71" selection-end-line="31" selection-end-column="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../BAKit/Source/Models/Location.swift">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="16" selection-start-line="16" selection-end-line="16" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../BAKit/Source/Controllers/BoardActive.swift">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="177">
-          <caret line="266" column="58" selection-start-line="266" selection-start-column="58" selection-end-line="266" selection-end-column="58" />
+        <state relative-caret-position="205">
+          <caret line="308" column="37" selection-start-line="308" selection-start-column="37" selection-end-line="308" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../BAKit/Source/Helpers/StringConstants.swift">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="485">
+          <caret line="83" column="5" selection-start-line="83" selection-start-column="5" selection-end-line="83" selection-end-column="5" />
         </state>
       </provider>
     </entry>

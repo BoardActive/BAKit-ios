@@ -19,17 +19,14 @@ class NotificationService: UNNotificationServiceExtension {
         self.contentHandler = contentHandler
         bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
         
-        if let incr = bestAttemptContent!.badge as? Int {
-            switch incr {
+        if var badgeNumber = bestAttemptContent!.badge as? Int {
+            switch badgeNumber {
             case 0:
-                UserDefaults.extensions.badge = 0
-                bestAttemptContent!.badge = 0
+                UserDefaults.extensions.badge = badgeNumber
+                bestAttemptContent!.badge = badgeNumber as NSNumber
             default:
-                let current = UserDefaults.extensions.badge
-                let new = current + incr
-                
-                UserDefaults.extensions.badge = new
-                bestAttemptContent!.badge = NSNumber(value: new)
+                badgeNumber += UserDefaults.extensions.badge
+                bestAttemptContent!.badge = NSNumber(value: badgeNumber)
             }
         }
         

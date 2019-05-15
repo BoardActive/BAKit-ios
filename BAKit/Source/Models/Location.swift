@@ -7,25 +7,29 @@
 //
 
 import Foundation
+import CoreLocation
 
-class Location {
+struct Location {
     // Meta members
-    var id: Int
-    var dateCreated: String? // TODO: should be String?
-    var dateUpdated: String? // "
+//    let id: Dynamic<Int> = Dynamic(0)
+//    let dateCreated:Dynamic<String> = Dynamic("")
+//    let dateUpdated:Dynamic<String> = Dynamic("")
+//
+//    let date = Date().iso8601
+//    let newLocation: CLLocationCoordinate2D!
+//
 
-    var latitude: String // TODO: should be float?
-    var longitude: String // "
-
-    init(_ json: [String: Any]) {
-        // Meta members
-        id = json["id"] as! Int
-
-        dateCreated = json["created_at"] as? String
-        dateUpdated = json["updated_at"] as? String
-
-        // Coordinates of address
-        latitude = json["latitude"] as! String
-        longitude = json["longitude"] as! String
-    }
+//    init(_ json: [String: Any]) {
+//        // Meta members
+//        id = json["id"] as!
+//
+//        dateCreated = json["created_at"] as? String
+//        dateUpdated = json["updated_at"] as? String
+//
+//        // Coordinates of address
+//        latitude = json["latitude"] as! String
+//        longitude = json["longitude"] as! String
+//    }
 }
+
+// var textChanged :(String) -> () = { _ in }

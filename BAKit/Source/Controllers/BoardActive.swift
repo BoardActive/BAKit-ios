@@ -6,13 +6,10 @@
 //  Copyright © 2018 BoardActive. All rights reserved.
 //
 
-import Alamofire
-import Alamofire_SwiftyJSON
 import CoreLocation
 import FirebaseCore
 import FirebaseMessaging
 import Foundation
-import PromiseKit
 import UIKit
 import UserNotifications
 
@@ -21,7 +18,7 @@ import os.log
 public protocol BoardActiveDelegate: AnyObject {
     /**
      The means by which BoardActive passes it's received notification to the conforming object.
-     
+
      - Parameter notification: `UNNotification` The received push notification that has been tapped or otherwise selected by the user for display.
      */
     func appReceivedRemoteNotification(notification: UNNotification)
@@ -36,10 +33,8 @@ public enum ActionIdentifier: String {
  Dev and prod base urls plus their associated endpoints.
  */
 public enum EndPoints: String {
-    case dev       = "https://springer-api.boardactive.com/mobile/v1"
-    case prod      = "https://api.boardactive.com/mobile/v1"
-    case events    = "/events"
-    case me        = "/me"
+    case events = "/events"
+    case me = "/me"
     case locations = "/locations"
 }
 
@@ -51,13 +46,12 @@ public enum AuthorizationMode: String {
     case whenInUse
 }
 
-
 public class BoardActive: NSObject, UNUserNotificationCenterDelegate, MessagingDelegate, CLLocationManagerDelegate {
     /**
      A property returning the BoardActive singleton.
      */
     public static let client = BoardActive()
-    
+
     /**
      The class that conforms to the BoardActiveDelegate protocol, receiving `UNNotifications` immediately following user interaction with said notifications.
      */
@@ -67,81 +61,94 @@ public class BoardActive: NSObject, UNUserNotificationCenterDelegate, MessagingD
      The app's badge number.
      */
     public var badgeNumber = UIApplication.shared.applicationIconBadgeNumber
-    
-    private var locationManager = CLLocationManager()
-    private let authOptions = UNAuthorizationOptions.init(arrayLiteral: [.alert, .badge, .sound])
-    private let notificationOptions = UNNotificationPresentationOptions(arrayLiteral: [.alert, .badge, .sound])
-    private lazy var configValues: Dictionary<String, String>? = {
-        return populateConfigDictionary()
-    }()
-    private var initialLocation :CLLocation?
-    private var updatedUserLocation :CLLocation?
-    private var distanceBetweenLocations: CLLocationDistance?
 
+    private var appKey = ""
+    private var appId = ""
+
+    private var locationManager = CLLocationManager()
+    private let authOptions = UNAuthorizationOptions(arrayLiteral: [.alert, .badge, .sound])
+    private let notificationOptions = UNNotificationPresentationOptions(arrayLiteral: [.alert, .badge, .sound])
+    private var initialLocation: CLLocation?
+    private var updatedUserLocation: CLLocation?
+    private var distanceBetweenLocations: CLLocationDistance?
 
     /**
      Utilizes the a property list to instantiate `FirebaseOptions` before calling `FirebaseApp.configure(options:)` on those options.
-     
+
      - parameter resource: The `String` name of a property list in the main bundle containing the data necessary to configure a `FirebaseApp`.
      */
-    public func setupEnvironment(resource: String) {
-        let path = Bundle.main.path(forResource: resource, ofType: "plist")
-        let options = FirebaseOptions(contentsOfFile: path!)!
-
-        FirebaseApp.configure(options: options)
+    public func setupEnvironment(appID: String, appKey: String) {
+        appId = appID
+        self.appKey = appKey
+        FirebaseApp.configure()
     }
-    // [END Init]
 
     /**
      Sets the BoardActive `CLLocationManager`'s delegate property to BoardActive.client. Configures BoardActive's `CLLocationManager` to allow background location updates, _not_ pause location updates automatically, sets `desiredAccuracy` to `kCLLocationAccuracyBest`, requests always authorization, and starts updating locations.
      */
-    public func requestLocations(authorizationMode:AuthorizationMode) {
+    public func requestLocations() {
         locationManager.delegate = self
-        locationManager.activityType = .other
+        locationManager.allowsBackgroundLocationUpdates = true
+
+        switch CLLocationManager.authorizationStatus() {
+        case .authorizedAlways:
+            break
+        case .authorizedWhenInUse:
+            break
+        case .denied:
+            locationManager.requestAlwaysAuthorization()
+            break
+        case .notDetermined:
+            locationManager.requestAlwaysAuthorization()
+            break
+        case .restricted:
+            locationManager.requestAlwaysAuthorization()
+            break
+        default:
+            break
+        }
+
+//        locationManager.requestAlwaysAuthorization() // asks for location permissions when app in foreground
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.activityType = .other
+        locationManager.delegate = self
         locationManager.allowsBackgroundLocationUpdates = true
         locationManager.pausesLocationUpdatesAutomatically = false
-        if authorizationMode == AuthorizationMode.always {
-            locationManager.requestAlwaysAuthorization()
-        } else {
-            locationManager.requestWhenInUseAuthorization()
-        }
-        
         locationManager.startUpdatingLocation()
     }
-    
+
     /**
      Functions as an as needed means of procuring the user's current location. If regular locations updates provide a better solution, call `requestLocations(authorizationMode:AuthorizationMode)`.
      - Returns: `CLLocation?` An optional `CLLocation` obtained by `CLLocationManager's` `requestLocation()` function.
      */
     public func getCurrentLocations() -> CLLocation? {
-        self.locationManager.requestLocation()
+        locationManager.requestLocation()
         guard let location = self.locationManager.location else {
             return nil
         }
         return location
     }
-    
+
     /**
      Calls `stopUpdatingLocation` on BoardActive's private CLLocationManager property.
      */
     public func stopUpdatingLocation() {
-        self.locationManager.stopUpdatingLocation()
+        locationManager.stopUpdatingLocation()
     }
 
     /**
      Sets `UNUserNotificationCenterDelegate` and `MessagingDelegate` to self. Requests user push notification authorization via the `UNUserNotificationCenter` and registers for remote notifications.
      */
     public func requestNotifications() {
-        // [START set_userNotification_delegate]
         UNUserNotificationCenter.current().delegate = self
-        // [END set_userNotification_delegate]
 
-        // [START set_messaging_delegate]
         Messaging.messaging().delegate = self
-        // [END set_messaging_delegate]
 
-        // [START register_for_notifications]
+        // Allows Firebase to target only those devices subscribed to the included topic
+//        Messaging.messaging().subscribe(toTopic: "topic") { _ in
+//            print("description")
+//        }
+
         UNUserNotificationCenter.current().requestAuthorization(options: authOptions) { granted, error in
             guard error == nil, granted else {
                 return
@@ -151,12 +158,11 @@ public class BoardActive: NSObject, UNUserNotificationCenterDelegate, MessagingD
         DispatchQueue.main.async {
             UIApplication.shared.registerForRemoteNotifications()
         }
-        // [END register_for_notifications]
     }
 
     /**
      Registers your app’s notification types and the custom actions that they support.
-    
+
      - Parameter categories: An array of `UNNotificationCategory`.
      */
     public func register(categories: [UNNotificationCategory]) {
@@ -165,79 +171,76 @@ public class BoardActive: NSObject, UNUserNotificationCenterDelegate, MessagingD
 
     /**
      Creates an instance of `NotificationModel` from `userInfo`, validates said instance, and calls `createEvent`, capturing the current application state.
-     
+
      - Parameter userInfo: A dictionary that contains information related to the remote notification, potentially including a badge number for the app icon, an alert sound, an alert message to display to the user, a notification identifier, and custom data. The provider originates it as a JSON-defined dictionary that iOS converts to an `NSDictionary` object; the dictionary may contain only property-list objects plus `NSNull`. For more information about the contents of the remote notification dictionary, see Generating a Remote Notification.
      */
     public func handleNotification(application: UIApplication, userInfo: [AnyHashable: Any]) {
         let tempUserInfo = userInfo as! [String: Any]
-        let notificationModel = NotificationModel(object: tempUserInfo)
-    
+        let notificationModel = NotificationModel(fromDictionary: tempUserInfo)
+
         badgeNumber += 1
         application.applicationIconBadgeNumber = badgeNumber
-        
-        os_log("Notification Model :: %s", notificationModel.dictionaryRepresentation().debugDescription)
 
-        if notificationModel.isValidNotification() {
+        os_log("Notification Model :: %s", notificationModel.toDictionary().debugDescription)
+
+        if let _ = notificationModel.aps, let gcmmessageId = notificationModel.gcmmessageId, let firebaseNotificationId = notificationModel.notificationId {
             switch application.applicationState {
             case .active:
                 os_log("%s", String.ReceivedBackground)
-                createEvent(name: String.Received, googleMessageId: notificationModel.gcmMessageId!, messageId: notificationModel.messageId!)
+                createEvent(name: String.Received, googleMessageId: gcmmessageId, messageId: firebaseNotificationId)
             case .background:
                 os_log("%s", String.ReceivedBackground)
-                createEvent(name: String.Received, googleMessageId: notificationModel.gcmMessageId!, messageId: notificationModel.messageId!)
+                createEvent(name: String.Received, googleMessageId: gcmmessageId, messageId: firebaseNotificationId)
             case .inactive:
                 os_log("%s", String.TappedAndTransitioning)
-                createEvent(name: String.Opened, googleMessageId: notificationModel.gcmMessageId!, messageId: notificationModel.messageId!)
+                createEvent(name: String.Opened, googleMessageId: gcmmessageId, messageId: firebaseNotificationId)
             default:
                 break
             }
         }
     }
-    
+
     /**
      This method will be called once a token is available, or has been refreshed. Typically it will be called once per app start, but may be called more often, if token is invalidated or updated. In this method, you should perform operations such as:
-     
+
      * Uploading the FCM token to your application server, so targeted notifications can be sent.
      * Subscribing to any topics.
      */
     public func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
         os_log("BoardActive :: Firebase token: %s", fcmToken)
-        
+
         let dataDict: [String: String] = [String.Token: fcmToken]
         NotificationCenter.default.post(name: Notification.Name(.FCMToken), object: nil, userInfo: dataDict)
-        
+
         UserDefaults.standard.setValue(fcmToken, forKey: .DeviceToken)
         UserDefaults.standard.synchronize()
-        
+
         let operationQueue = OperationQueue()
-        
+
         let retrieveMeOp = BlockOperation {
-            self.updateMe(email: nil)
+            self.updateUser(attributes: ["": ""])
         }
-        
+
         let requestLocationsOp = BlockOperation {
-            self.requestLocations(authorizationMode: AuthorizationMode.always)
+            self.requestLocations()
         }
         requestLocationsOp.addDependency(retrieveMeOp)
-        
+
         operationQueue.addOperations([retrieveMeOp, requestLocationsOp], waitUntilFinished: true)
     }
-    // [END Public API]
-    
-    // [START Overrides]
+
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if initialLocation == nil {
-            initialLocation = locations.last!
+            initialLocation = locations.last
         }
         updatedUserLocation = locations.last!
-        distanceBetweenLocations =  updatedUserLocation!.distance(from: initialLocation!)
-        
-        os_log("DISTANCE TRAVELED :: %s", distanceBetweenLocations!.debugDescription)
+        distanceBetweenLocations = updatedUserLocation!.distance(from: initialLocation!)
+
         if distanceBetweenLocations! >= 5.0 {
-            updateLocation(location: locations.last!)
+            BoardActive.client.updateLocation(location: updatedUserLocation!)
+            distanceBetweenLocations = 0
         }
-        
-        initialLocation = locations.last!
+        initialLocation = updatedUserLocation
     }
 
     public func locationManager(_: CLLocationManager, didFailWithError error: Error) {
@@ -246,7 +249,6 @@ public class BoardActive: NSObject, UNUserNotificationCenterDelegate, MessagingD
 
     public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         os_log("CLAuthorizationStatus :: %d", status.rawValue)
-//        var locationAuthorizationStatus = status
     }
 
     /**
@@ -254,7 +256,6 @@ public class BoardActive: NSObject, UNUserNotificationCenterDelegate, MessagingD
      */
     public func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
         os_log("MESSAGING %s", messaging.fcmToken!.debugDescription)
-        
     }
 
     public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
@@ -263,216 +264,159 @@ public class BoardActive: NSObject, UNUserNotificationCenterDelegate, MessagingD
     }
 
     public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-                
-        UIApplication.shared.applicationIconBadgeNumber = UserDefaults.extensions!.badge
-//        switch response.actionIdentifier {
-//        case accept:
-//            let cancelAction = UNNotificationAction(identifier: cancel, title: "Cancel")
-//            let currentActions = extensionContext?.notificationActions ?? []
-//            extensionContext?.notificationActions = currentActions.map {
-//                $0.identifier == accept ? cancelAction : $0
-//            }
-//        case cancel:
-//            let acceptAction = UNNotificationAction(identifier: accept,
-//                                                    title: "Accept")
-//            let currentActions = extensionContext?.notificationActions ?? []
-//            extensionContext?.notificationActions = currentActions.map {
-//                $0.identifier == cancel ? acceptAction : $0
-//            }
-//        default:
-//            break
-//        }
-        
-//        completion(.doNotDismiss)
-        
+        UIApplication.shared.applicationIconBadgeNumber = response.notification.request.content.badge as! Int
+
         guard response.actionIdentifier != UNNotificationDefaultActionIdentifier || response.actionIdentifier !=
             "VIEW_IDENTIFIER" else {
             return
         }
-
-        
-        
         BoardActive.client.delegate?.appReceivedRemoteNotification(notification: response.notification)
         completionHandler()
     }
-//    }
 
     // MARK: Class Functions
 
-    fileprivate func getPath() -> String? {
-        return EndPoints.dev.rawValue
-    }
-
-    fileprivate func getHeaders() -> HTTPHeaders {
+    fileprivate func getHeaders() -> [String: String]? {
         guard let tokenString = UserDefaults.standard.object(forKey: .DeviceToken) as? String else {
-            return HTTPHeaders.init()
+            return nil
         }
-
-        if configValues?[String.ConfigKeys.UUID.rawValue] == nil {
-            configValues?[String.ConfigKeys.UUID.rawValue] = UIDevice.current.identifierForVendor?.uuidString
-        }
-
-        let headers: HTTPHeaders = [
-            String.HeaderKeys.AccessControl.rawValue: String.AllowOrigin,
-            String.HeaderKeys.AppId.rawValue: configValues?[String.ConfigKeys.AppId.rawValue] ?? "", // needs to be passed in
-            String.HeaderKeys.AppKey.rawValue: configValues?[String.ConfigKeys.AppKey.rawValue] ?? "",
-            String.HeaderKeys.AppVersion.rawValue: String.AppVersion,
-            String.HeaderKeys.DeviceOS.rawValue: String.iOS, // its a cocoa pod...
-            String.HeaderKeys.DeviceOSVersion.rawValue: String.SystemVersion,
-            String.HeaderKeys.DeviceToken.rawValue: tokenString, // fcmTokenStore,
-            String.HeaderKeys.DeviceType.rawValue: String.DeviceType,
-            String.HeaderKeys.UUID.rawValue: configValues?[String.ConfigKeys.UUID.rawValue] ?? ""
+        let uuidString = UIDevice.current.identifierForVendor!.uuidString
+        let headers: [String: String] = [
+            "X-BoardActive-App-Key": self.appKey,
+            "X-BoardActive-App-Id": self.appId,
+            "X-BoardActive-Device-Token": tokenString,
+            "X-BoardActive-App-Version": Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String,
+            "X-BoardActive-Device-OS": "ios",
+            "Content-Type": "application/json",
+            "X-BoardActive-Device-OS-Version": UIDevice.current.systemVersion,
+            "X-BoardActive-Device-Type": String.DeviceType,
+            "X-BoardActive-Device-UUID": uuidString,
+            "Accept": "*/*",
+            "Cache-Control": "no-cache",
+            "Host": "springer-api.boardactive.com",
+            "accept-encoding": "gzip, deflate",
+            "Connection": "keep-alive",
         ]
-
         return headers
     }
 
     /**
      Creates an Event using the information provided and then logs said Event to the BoardActive server.
-     
+
      - Parameter name: `String`
      - Parameter googleMessageId: `String` The value associated with key "gcm.message_id" in notifications.
      - Parameter messageId: `String` The value associated with the key "messageId" in notifications.
      */
     public func createEvent(name: String, googleMessageId: String, messageId: String) {
-        guard let pathString = getPath() else {
-            os_log("[BA:client:createEvent] Path string nil")
-            return
-        }
+//            os_log("[BA:client:createEvent] Path string nil")
+//            return
+//        }
 
-        let path = pathString + EndPoints.events.rawValue
-        let headers = getHeaders()
+//        let path = EndPoints.events.rawValue
+//        let headers = getHeaders()
         let body: [String: Any] = [
-            "name": name,
-            "messageId": messageId,
-            "inbox": Dictionary<String, String>(),
-            "firebaseNotificationId": googleMessageId
+            String.EventKeys.name.rawValue: name,
+            String.EventKeys.messageId.rawValue: messageId,
+            String.EventKeys.inbox.rawValue: Dictionary<String, String>(),
+            String.EventKeys.firebaseNotificationId.rawValue: googleMessageId,
         ]
-
-        Alamofire.request(path, method: .post, parameters: body, encoding: JSONEncoding.default, headers: headers)
-            .validate()
-            .responseSwiftyJSON { response in
-                switch response.result {
-                case let .success(json):
-                    do {
-                        let jsonResponse = try JSONSerialization.jsonObject(with:
-                                response.data!, options: [])
-                        guard let jsonArray = jsonResponse as? [[String: Any]] else {
-                            return
-                        }
-//                        print(jsonArray)
-//                        print("JSON Array :: \(jsonArray.debugDescription)")
-                        //Response result
-                    } catch let parsingError {
-                        os_log("[BA:client:createEvent] Parsing Error :: %s", parsingError.localizedDescription)
-                    }
-                    os_log("[BA:client:createEvent] OK : %s", json.debugDescription)
-                case let .failure(error):
-                    os_log("[BA:client:createEvent] ERR : %s", error.localizedDescription)
-                }
+        callServer(path: "\(EndPoints.events.rawValue)", httpMethod: "POST", body: body) { _, err in
+            guard err == nil else {
+                return
+            }
         }
     }
 
     /**
      Derives a latitude and longitude from the location parameter, couples the coordinate with an iso8601 formatted date, and then updates the server and database with user's timestamped location.
-     
+
      - Parameter location: `CLLocation` The user's current location.
      */
     public func updateLocation(location: CLLocation) {
-        let latitudeString = "\(location.coordinate.latitude)"
-        let longitudeString = "\(location.coordinate.longitude)"
-
-        guard let pathString = getPath() else {
-            os_log("[BA:client:updateLocation] Path string nil")
-            return
-        }
-
-        let path = pathString + EndPoints.locations.rawValue
-        let headers = getHeaders()
+        let path = "\(EndPoints.locations.rawValue)"
         let body: [String: Any] = [
-            String.Latitude: latitudeString,
-            String.Longitude: longitudeString,
-            String.DeviceTime: Date().iso8601
-        ]
-
-        Alamofire.request(path, method: .post, parameters: body, headers: headers)
-            .validate()
-            .responseSwiftyJSON { response in
-                switch response.result {
-                case let .success(json):
-                    do {
-                        let jsonResponse = try JSONSerialization.jsonObject(with:
-                                response.data!, options: [])
-                        guard let jsonArray = jsonResponse as? [String:Any] else {
-                            return
-                        }
-                        os_log("[BA:client:updateLocation] :: jsonArray :: %s", jsonArray.debugDescription)
-                    } catch let parsingError {
-                        print("[BA:client:updateLocation] Parsing Error", parsingError)
-                    }
-                    os_log("[BA:client:updateLocation] OK : %s", json.debugDescription)
-                case let .failure(error):
-                    os_log("[BA:client:updateLocation] ERR : %s", error.localizedDescription)
-                }
-                NotificationCenter.default.post(name: NSNotification.Name(.InfoUpdateNotification), object: [latitudeString, longitudeString])
+            "latitude": "\(location.coordinate.latitude)",
+            "longitude": "\(location.coordinate.longitude)",
+            "deviceTime": Date().iso8601,
+        ] as [String: Any]
+        callServer(path: path, httpMethod: "POST", body: body) { parsedJSON, err in
+            guard err == nil else {
+                return
+            }
+            os_log("[BA:client:updateLocation] :: jsonArray :: %s", parsedJSON.debugDescription)
         }
     }
 
     /**
      A means of updating the user's associated data.
-     
+
      - Parameter email: `String` An email that will be associated with the user on the server then saved to the database.
      */
-    public func updateMe(email: String? = nil) {
-        guard let pathString = getPath() else {
-            os_log("[BA:client:updateMe] Path string nil")
-            return
-        }
-
-        let path = pathString + EndPoints.me.rawValue
-        let headers = getHeaders()
-        let body: [String: Any] = [
-            String.StockAttributes.email.rawValue: email ?? "",
+    public func updateUser(attributes: [String: Any]) {
+        let path = "\(EndPoints.me.rawValue)"
+        var body: [String: Any] = [
             String.StockAttributes.deviceOS.rawValue: String.iOS,
-            String.StockAttributes.deviceOSVersion.rawValue: String.SystemVersion
+            String.StockAttributes.deviceOSVersion.rawValue: String.SystemVersion,
         ]
-        
-        configValues![String.StockAttributes.email.rawValue] = email
 
-        Alamofire.request(path, method: .put, parameters: body, headers: headers)
-            .validate()
-            .responseSwiftyJSON(completionHandler: { response in
-                switch response.result {
-                case let .success(json):
-                    do {
-                        let jsonResponse = try JSONSerialization.jsonObject(with:
-                                response.data!, options: [])
-                        guard let jsonArray = jsonResponse as? [[String: Any]] else {
-                            return
-                        }
-                    } catch let parsingError {
-//                        print("[BA:client:updateMe] Parsing Error", parsingError)
-                    }
-                    os_log("[BA:client:updateMe] OK : %s", json.debugDescription)
-                case let .failure(error):
-                    os_log("[BA:client:updateMe] ERR : %s", error.localizedDescription)
-                }
-            })
+        body = body.merging(attributes) { current, _ in current }
+
+        callServer(path: path, httpMethod: "PUT", body: body) { userInfoJSON, err in
+            guard err == nil else {
+                return
+            }
+            os_log("[BA:client:updateMe] OK : %s", (userInfoJSON.debugDescription))
+        }
     }
 
-    fileprivate func populateConfigDictionary() -> Dictionary<String, String>? {
-        var configs: Dictionary<String, String>?
+    enum BackendError: Error {
+        case urlError(reason: String)
+        case objectSerialization(reason: String)
+    }
 
-        guard let path = Bundle.main.path(forResource: "BoardActive-Credentials", ofType: "plist") else {
-            return nil
-        }
+    /**
+     Creates a `URLSession` given the parameters provided and returns a completion handler containing either a `Dictionary` of the parsed, returned JSON, or an error.
+     
+     - Parameter path:  String The path the `URLSession` calls.
+     - Parameter httpMethod: String Corresponding `HTTPMethod`
+     - Parameter body: [String:Any] Dictionary of what will become the `URLRequest`'s body.
+     - Parameter completionHandler: [String: Any]?
+    */
+    typealias callback = ([String:Any]?, (Error?) -> Void)
+    public func callServer(path: String, httpMethod: String, body: [String: Any], completionHandler:
+        @escaping ([String: Any]?, Error?) -> Void) {
+        #if DEBUG
+            let endpoint = "https://springer-api.boardactive.com/mobile/v1"
+        #else
+            let endpoint = "https://api.boardactive.com/mobile/v1"
+        #endif
 
-        if let xml = FileManager.default.contents(atPath: path),
-            let preferences = try? PropertyListDecoder().decode(BoardActiveCredentials.self, from: xml) {
-            configs = preferences.dictionaryRepresentation() as? Dictionary<String, String>
+        let destination = endpoint + path
+        let parameters = body as [String: Any]
+        let postData = try! JSONSerialization.data(withJSONObject: parameters, options: [])
+
+        let request = NSMutableURLRequest(url: NSURL(string: destination)! as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 100.0)
+        guard let headers = getHeaders() else {
+            return
         }
-        
-        os_log("[BA:client:populateConfigDictionary] Config Values: %s", [String.ConfigKeys.AppId.rawValue: configs?[String.ConfigKeys.AppId.rawValue], String.ConfigKeys.AppKey.rawValue: configs?[String.ConfigKeys.AppKey.rawValue], EndPoints.dev: configs?[EndPoints.dev.rawValue]].debugDescription)
-        return configs
+        request.allHTTPHeaderFields = headers
+        request.httpMethod = httpMethod
+        request.httpBody = postData as Data
+        let session = URLSession.shared
+        let dataTask = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
+            if error != nil {
+                print(error?.localizedDescription)
+            } else {
+                let httpResponse = response as? HTTPURLResponse
+                print(httpResponse.debugDescription)
+                if let json = try? JSONSerialization.jsonObject(with: data!, options: []) {
+                    if let data = data, let dataString = String(data: data, encoding: .utf8) {
+                        print(dataString)
+                    }
+                }
+            }
+        })
+
+        dataTask.resume()
     }
 }

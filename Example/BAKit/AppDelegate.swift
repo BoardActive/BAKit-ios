@@ -17,11 +17,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
-        BoardActive.client.setupEnvironment(resource: "GoogleService-Info")
-        BoardActive.client.requestNotifications()
+        BoardActive.client.setupEnvironment(appID: "127", appKey: "209d9729-0887-466b-a061-b2a42bd4626a")
         
         application.applicationIconBadgeNumber = 0
         
+        BoardActive.client.requestNotifications()
+
         return true
     }
     
@@ -35,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
-// [START receive_message]
+
 extension AppDelegate {
     enum Identifiers: String {
         case viewAction = "VIEW_IDENTIFIER"
@@ -66,8 +67,6 @@ extension AppDelegate {
         
         let newsCategory = UNNotificationCategory(identifier: Identifiers.newsCategory.rawValue, actions: [viewAction], intentIdentifiers: [])
         UNUserNotificationCenter.current().setNotificationCategories([newsCategory])
-
-//        BoardActive.client.register(categories: [newsCategory])
     }
 }
-// [END receive_message]
+

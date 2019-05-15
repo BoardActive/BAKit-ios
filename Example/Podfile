@@ -1,6 +1,6 @@
 platform :ios, '10.0'
 
-keep_source_code_for_prebuilt_frameworks!
+#keep_source_code_for_prebuilt_frameworks!
 use_frameworks!
 
 install! 'cocoapods', :disable_input_output_paths => true

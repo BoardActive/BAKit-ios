@@ -40,15 +40,15 @@ class ViewController: UIViewController, MKMapViewDelegate, BoardActiveDelegate {
     
     func appReceivedRemoteNotification(notification: UNNotification) {
         let tempUserInfo = notification.request.content.userInfo as! [String:Any]
-        let notificationModel = NotificationModel(object: tempUserInfo)
+        let notificationModel = NotificationModel(fromDictionary: tempUserInfo)
         
         let storyboard = UIStoryboard(name: "NotificationBoard", bundle: Bundle.main)
         guard let viewController = storyboard.instantiateViewController(withIdentifier: "NotificationViewController") as? NotificationViewController else {
             return
         }
         
-        viewController.notificationModel = notificationModel
-        viewController.loadViewIfNeeded()
-        viewController.showNotification(animated: true, completion: nil)
+//        viewController.notificationModel = notificationModel
+//        viewController.loadViewIfNeeded()
+//        viewController.showNotification(animated: true, completion: nil)
     }
 }

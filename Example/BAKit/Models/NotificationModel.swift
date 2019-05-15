@@ -1,128 +1,95 @@
 //
-//  NotificationModel.swift
-//
-//  Created by Ed Salter on 4/3/19
-//  Copyright (c) BoardActive. All rights reserved.
-//
+//    RootClass.swift
+//    Model file generated using JSONExport: https://github.com/Ahmed-Ali/JSONExport
 
 import Foundation
-import SwiftyJSON
 
-//Codable
-public struct NotificationModel  {
+public struct NotificationModel {
     
-    // MARK: Declaration for string constants to be used to decode and also serialize.
-    enum CodingKeys: String {
-        case messageId = "messageId"
-        case body = "body"
-        case messageData = "messageData"
-        case notificationId = "notificationId"
-        case aps = "aps"
-        case isTestMessage = "isTestMessage"
-        case dateLastUpdated = "dateLastUpdated"
-        case tap = "tap"
-        case googlecae = "google.c.a.e"
-        case dateCreated = "dateCreated"
-        case title = "title"
-        case imageUrl = "imageUrl"
-        case gcmMessageId = "gcm.message_id"
-    }
+    var aps : Aps!
+    var body : String!
+    var dateCreated : String!
+    var dateLastUpdated : String!
+    var gcmmessageId : String!
+    var googlecae : String!
+    var imageUrl : String!
+    var isTestMessage : String!
+    var messageData : MessageData!
+    var messageId : String!
+    var notificationId : String!
+    var tap : Bool!
+    var title : String!
     
-    struct SerializationKeys {
-        static let messageData = "messageData"
-        static let aps = "aps"
-    }
     
-    // MARK: Properties
-    public var messageId: String?
-    public var body: String?
-    public var messageData: MessageData? // DO NOT DRILL DOWN
-    public var notificationId: String?
-    public var aps: Aps? // DO NOT DRILL DOWN
-    public var isTestMessage: String?
-    public var dateLastUpdated: String?
-    public var tap: Bool? = false
-    public var googlecae: String?
-    public var dateCreated: String?
-    public var title: String?
-    public var imageUrl: String?
-    public var gcmMessageId: String?
-    
-    // MARK: SwiftyJSON Initializers
-    /// Initiates the instance based on the object.
-    ///
-    /// - parameter object: The object of either Dictionary or Array kind that was passed.
-    /// - returns: An initialized instance of the class.
-    public init(object: Any) {
-        self.init(json: JSON(object))
-    }
-    
-    /// Initiates the instance based on the JSON that was passed.
-    ///
-    /// - parameter json: JSON object from SwiftyJSON.
-    public init(json: JSON) {
-        messageId = json[CodingKeys.messageId.rawValue].string
-        body = json[CodingKeys.body.rawValue].string
-        body = body?.replacingOccurrences(of: "\\", with: "")
-        if !json[SerializationKeys.messageData].isEmpty{
-            messageData = MessageData(object: json[SerializationKeys.messageData])
+    /**
+     * Instantiate the instance using the passed dictionary values to set the properties values
+     */
+    public init(fromDictionary dictionary: [String:Any]){
+        if let apsData = dictionary["aps"] as? [String:Any]{
+            aps = Aps(fromDictionary: apsData)
         }
-//        messageData = MessageData(json:json[SerializationKeys.messageData])
-        notificationId = json[CodingKeys.notificationId.rawValue].string
-        if !json[SerializationKeys.aps].isEmpty{
-            aps = Aps(object:json[SerializationKeys.aps])
+        body = dictionary["body"] as? String
+        dateCreated = dictionary["dateCreated"] as? String
+        dateLastUpdated = dictionary["dateLastUpdated"] as? String
+        gcmmessageId = dictionary["gcm.message_id"] as? String
+        googlecae = dictionary["google.c.a.e"] as? String
+        imageUrl = dictionary["imageUrl"] as? String
+        isTestMessage = dictionary["isTestMessage"] as? String
+        if let messageDataData = dictionary["messageData"] as? [String:Any]{
+            messageData = MessageData(fromDictionary: messageDataData)
         }
-        isTestMessage = json[CodingKeys.isTestMessage.rawValue].string
-        dateLastUpdated = json[CodingKeys.dateLastUpdated.rawValue].string
-        tap = json[CodingKeys.tap.rawValue].boolValue
-        googlecae = json[CodingKeys.googlecae.rawValue].string
-        dateCreated = json[CodingKeys.dateCreated.rawValue].string
-        title = json[CodingKeys.title.rawValue].string
-        title = title?.replacingOccurrences(of: "\\", with: "")
-        imageUrl = json[CodingKeys.imageUrl.rawValue].string
-        imageUrl = imageUrl?.replacingOccurrences(of: "\\", with: "")
-        gcmMessageId = json[CodingKeys.gcmMessageId.rawValue].string
+        messageId = dictionary["messageId"] as? String
+        notificationId = dictionary["notificationId"] as? String
+        tap = dictionary["tap"] as? Bool
+        title = dictionary["title"] as? String
     }
     
-    /// Generates description of the object in the form of a NSDictionary.
-    ///
-    /// - returns: A Key value pair containing all valid values in the object.
-    public func dictionaryRepresentation() -> [String: Any] {
-        var dictionary: [String: Any] = [:]
-        if let value = messageId { dictionary[CodingKeys.messageId.rawValue] = value }
-        if let value = body { dictionary[CodingKeys.body.rawValue] = value }
-        if let value = messageData { dictionary[CodingKeys.messageData.rawValue] = value }
-        if let value = notificationId { dictionary[CodingKeys.notificationId.rawValue] = value }
-        if let value = aps { dictionary[CodingKeys.aps.rawValue] = value }
-        if let value = isTestMessage { dictionary[CodingKeys.isTestMessage.rawValue] = value }
-        if let value = dateLastUpdated { dictionary[CodingKeys.dateLastUpdated.rawValue] = value }
-        dictionary[CodingKeys.tap.rawValue] = tap
-        if let value = googlecae { dictionary[CodingKeys.googlecae.rawValue] = value }
-        if let value = dateCreated { dictionary[CodingKeys.dateCreated.rawValue] = value }
-        if let value = title { dictionary[CodingKeys.title.rawValue] = value }
-        if let value = imageUrl { dictionary[CodingKeys.imageUrl.rawValue] = value }
-        if let value = gcmMessageId { dictionary[CodingKeys.gcmMessageId.rawValue] = value }
+    /**
+     * Returns all the available property values in the form of [String:Any] object where the key is the approperiate json key and the value is the value of the corresponding property
+     */
+    public func toDictionary() -> [String:Any]
+    {
+        var dictionary = [String:Any]()
+        if aps != nil{
+            dictionary["aps"] = aps.toDictionary()
+        }
+        if body != nil{
+            dictionary["body"] = body
+        }
+        if dateCreated != nil{
+            dictionary["dateCreated"] = dateCreated
+        }
+        if dateLastUpdated != nil{
+            dictionary["dateLastUpdated"] = dateLastUpdated
+        }
+        if gcmmessageId != nil{
+            dictionary["gcm.message_id"] = gcmmessageId
+        }
+        if googlecae != nil{
+            dictionary["google.c.a.e"] = googlecae
+        }
+        if imageUrl != nil{
+            dictionary["imageUrl"] = imageUrl
+        }
+        if isTestMessage != nil{
+            dictionary["isTestMessage"] = isTestMessage
+        }
+        if messageData != nil{
+            dictionary["messageData"] = messageData.toDictionary()
+        }
+        if messageId != nil{
+            dictionary["messageId"] = messageId
+        }
+        if notificationId != nil{
+            dictionary["notificationId"] = notificationId
+        }
+        if tap != nil{
+            dictionary["tap"] = tap
+        }
+        if title != nil{
+            dictionary["title"] = title
+        }
         return dictionary
     }
     
-    public func isValidNotification() -> Bool {
-        return (gcmMessageId != nil && !gcmMessageId!.isEmpty && notificationId != nil && !notificationId!.isEmpty && notificationId != nil && !notificationId!.isEmpty)
-    }
-    
-//    public init(from decoder: Decoder) throws {
-//        let values = try decoder.container(keyedBy: CodingKeys.self)
-//        messageId = try values.decodeIfPresent(String.self, forKey: .messageId)
-//        body = try values.decodeIfPresent(String.self, forKey: .body)
-//        messageData = try values.decodeIfPresent(Any.self, forKey: .messageData)
-//        notificationId = try values.decodeIfPresent(String.self, forKey: .notificationId)
-//        aps = try values.decodeIfPresent(AnyClass.self, forKey: .aps)
-//        isTestMessage = try values.decodeIfPresent(String.self, forKey: .isTestMessage)
-//        dateLastUpdated = try values.decodeIfPresent(String.self, forKey: .dateLastUpdated)
-//        dateCreated = try values.decodeIfPresent(String.self, forKey: .dateCreated)
-//        googlecae = try values.decodeIfPresent(String.self, forKey: .googlecae)
-//        title = try values.decodeIfPresent(String.self, forKey: .title)
-//        imageUrl = try values.decodeIfPresent(String.self, forKey: .imageUrl)
-//        gcmMessageId = try values.decodeIfPresent(String.self, forKey: .gcmMessageId)
-//    }
 }
-

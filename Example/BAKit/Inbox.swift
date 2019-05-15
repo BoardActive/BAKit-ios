@@ -1,24 +1,22 @@
 //
-//  Alert.swift
+//  Inbox.swift
 //
-//  Created by Ed Salter on 4/3/19
-//  Copyright (c) BoardActive. All rights reserved.
+//  Created by Ed Salter on 5/14/19
+//  Copyright (c) . All rights reserved.
 //
 
 import Foundation
 import SwiftyJSON
 
-public struct Alert {
+public struct Inbox {
 
   // MARK: Declaration for string constants to be used to decode and also serialize.
   private struct SerializationKeys {
-    static let body = "body"
-    static let title = "title"
+
   }
 
   // MARK: Properties
-  public var body: String?
-  public var title: String?
+
 
   // MARK: SwiftyJSON Initializers
   /// Initiates the instance based on the object.
@@ -33,11 +31,7 @@ public struct Alert {
   ///
   /// - parameter json: JSON object from SwiftyJSON.
   public init(json: JSON) {
-    body = json[SerializationKeys.body].string
-    body = body?.replacingOccurrences(of: "\\", with: "")
-    
-    title = json[SerializationKeys.title].string
-    title = title?.replacingOccurrences(of: "\\", with: "")
+
   }
 
   /// Generates description of the object in the form of a NSDictionary.
@@ -45,8 +39,7 @@ public struct Alert {
   /// - returns: A Key value pair containing all valid values in the object.
   public func dictionaryRepresentation() -> [String: Any] {
     var dictionary: [String: Any] = [:]
-    if let value = body { dictionary[SerializationKeys.body] = value }
-    if let value = title { dictionary[SerializationKeys.title] = value }
+
     return dictionary
   }
 

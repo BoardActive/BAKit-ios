@@ -1,15 +1,7 @@
 PODS:
-  - Alamofire (4.8.2)
-  - Alamofire-SwiftyJSON (3.0.0):
-    - Alamofire (~> 4.5)
-    - SwiftyJSON (~> 4.0.0)
   - BAKit (0.1.0):
-    - Alamofire (~> 4.7)
-    - Alamofire-SwiftyJSON
     - Firebase/Core (~> 5.0)
     - Firebase/Messaging
-    - PromiseKit/Alamofire (~> 6.0)
-    - SwiftyJSON (~> 4.0)
   - Firebase/Core (5.20.2):
     - Firebase/CoreOnly
     - FirebaseAnalytics (= 5.8.1)
@@ -73,10 +65,6 @@ PODS:
   - nanopb/decode (0.3.901)
   - nanopb/encode (0.3.901)
   - Nimble (8.0.1)
-  - PromiseKit/Alamofire (6.8.4):
-    - Alamofire (~> 4.0)
-    - PromiseKit/CorePromise
-  - PromiseKit/CorePromise (6.8.4)
   - Protobuf (3.7.0)
   - Quick (2.1.0)
   - SwiftyJSON (4.0.0)
@@ -89,8 +77,6 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
-    - Alamofire
-    - Alamofire-SwiftyJSON
     - Firebase
     - FirebaseAnalytics
     - FirebaseAnalyticsInterop
@@ -101,7 +87,6 @@ SPEC REPOS:
     - GoogleUtilities
     - nanopb
     - Nimble
-    - PromiseKit
     - Protobuf
     - Quick
     - SwiftyJSON
@@ -111,9 +96,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
-  Alamofire-SwiftyJSON: 2b3649d57dc7bb2880fb8b86f8bb969397666916
-  BAKit: d516b3fedac153a63a1e1f1b9f3ce788151d43fe
+  BAKit: e74eb6c3a6f68a53386fd90e1deda0b3e203576c
   Firebase: 0c8cf33f266410c61ab3e2265cfa412200351d9c
   FirebaseAnalytics: ece1aa57a4f43c64d53a648b5a5e05151aae947b
   FirebaseAnalyticsInterop: efbe45c8385ec626e29f9525e5ebd38520dfb6c1
@@ -124,11 +107,10 @@ SPEC CHECKSUMS:
   GoogleUtilities: 273e67030e0de313e7304f6dcfa96fc5214f6c23
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Nimble: 45f786ae66faa9a709624227fae502db55a8bdd0
-  PromiseKit: 51794a832647e7b819336dc2279039ce9f1cc49b
   Protobuf: 7a877b7f3e5964e3fce995e2eb323dbc6831bb5a
   Quick: 4be43f6634acfa727dd106bdf3929ce125ffa79d
   SwiftyJSON: 070dabdcb1beb81b247c65ffa3a79dbbfb3b48aa
 
-PODFILE CHECKSUM: 4e16fa965a7fbd4a45f6936cb3f5dcc0b39e4558
+PODFILE CHECKSUM: 38044cb410d99ca675380ff9765eab5f1577a7c1
 
 COCOAPODS: 1.6.1
