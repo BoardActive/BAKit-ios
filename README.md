@@ -1,15 +1,21 @@
 <img src="https://avatars0.githubusercontent.com/u/38864287?s=200&v=4" width="96" height="96"/>
 
 ### Retain and engage mobile users
+
 Connect with customers using BoardActive's proprietary location-based marketing technology.
 
 ## Installation
 
-BoardActive for iOS supports iOS 10 and iOS 11. 
+BoardActive for iOS supports iOS 10+. 
 
 Building with Xcode 9 is required, which adds support for iPhone X and iOS 11.
 
+## SDK
+
+Currently, the SDK is available via CocoaPods or via downloading the repository and manual linking.
+
 ### CocoaPods
+
 Add the BoardActive pod into your Podfile and run `pod install`.
 ```ruby
     target :YourTargetName do
@@ -19,20 +25,19 @@ Add the BoardActive pod into your Podfile and run `pod install`.
 
 ## Update Info.plist
 
-When installing BoardActive, you'll need to make sure that you have the following entries in your `Info.plist`: `Privacy - Location Always and When In Use Usage Description`, `Privacy - Location Always Usage Description`, and `Privacy - Location When In Use Usage Description`. Additionally, you'll have to add three items to `Required background modes`: `App downloads content in response to push notifications`, `App downloads content from the network`, and `App registers for location updates`.
-
-This is required by Apple for all apps that send notifications and track location in the background. It is necessary when installing BoardActive due to the location-based notification functionality. Users will be prompted for location permissions ONLY when BoardActive's `boot` function is executed.
-
+When installing BoardActive, you'll need to make sure that you have the following entries in your `Info.plist`: `Privacy - Location Always and When In Use Usage Description`, `Privacy - Location Always Usage Description`, and `Privacy - Location When In Use Usage Description`. Additionally, you'll have to add three items to `Required background modes`: `App downloads content in response to push notifications`, `App downloads content from the network`, and `App registers for location updates`. The same can be accomplished by selecting the project's primary target, selecting the `Capabilities` settings, and, under `Background Modes`, ensuring `Location updates`, `Background fetch`, and `Remote notifications` are all checked.
 
 ## Example app
+
 There is an example app provided [here](https://github.com/BoardActive/BAKit-ios/tree/master/Example) for Swift.
 
 ## Setup and Configuration
 
+
 * [TODO] Our [installation guide](https://developers.boardactive.com) contains full setup and initialisation instructions.
 * [TODO] Read ["Configuring BoardActive for iOS"](https://developers.boardactive.com).
 * [TODO] Read our guide on [Push Notifications](https://developers.boardactive.com).
-* Please contact us on [BoardActive](https://boardactive.com) with any questions you may have, we're only a click away!
+* Please contact us at [BoardActive](https://boardactive.com) with any questions you may have, we're only a click away!
 
 ## Customer Support
 
