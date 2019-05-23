@@ -12,27 +12,62 @@ Building with Xcode 9 is required, which adds support for iPhone X and iOS 11.
 
 ## SDK
 
-Currently, the SDK is available via CocoaPods or via downloading the repository and manual linking.
+Currently, the SDK is available via CocoaPods or via downloading the repository and manually linking the SDK's source code to your project.
 
 ### CocoaPods
 
 Add the BoardActive pod into your Podfile and run `pod install`.
 ```ruby
+    platform :ios, '10.0'
+
     target :YourTargetName do
       pod 'BoardActive'
     end
 ```
 
-## Update Info.plist
+### Update Info.plist
 
-When installing BoardActive, you'll need to make sure that you have the following entries in your `Info.plist`: `Privacy - Location Always and When In Use Usage Description`, `Privacy - Location Always Usage Description`, and `Privacy - Location When In Use Usage Description`. Additionally, you'll have to add three items to `Required background modes`: `App downloads content in response to push notifications`, `App downloads content from the network`, and `App registers for location updates`. The same can be accomplished by selecting the project's primary target, selecting the `Capabilities` settings, and, under `Background Modes`, ensuring `Location updates`, `Background fetch`, and `Remote notifications` are all checked.
+When installing BoardActive, you'll need to make sure that you have the following entries in your `Info.plist`: `Privacy - Location Always and When In Use Usage Description`, `Privacy - Location Always Usage Description`, and `Privacy - Location When In Use Usage Description`. 
+
+Additionally, you'll have to add three items to `Required background modes`: `App downloads content in response to push notifications`, `App downloads content from the network`, and `App registers for location updates`. The same can be accomplished by selecting the project's primary target, selecting the `Capabilities` settings, and, under `Background Modes`, ensuring `Location updates`, `Background fetch`, and `Remote notifications` are all checked. 
+
+## How to use this SDK
+
+### Permissions
+
+`CoreLocation` and `UserNotifications` permissions need be requested before the hosting app's `AppDelegate`'s `application(_:willFinishLaunchingWithOptions:)`.
+
+### Instantiate BAKit
+
+```swift
+    // 1
+    import BAKit
+
+    @UIApplicationMain 
+    class AppDelegate: UIResponder, UIApplicationDelegate {
+        var window: UIWindow?
+    
+        func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+        
+            // 2
+            BoardActive.client.setupEnvironment(appID: "", appKey: "")
+        
+            // 3
+            BoardActive.client.requestNotifications()
+
+            return true
+        }
+    }
+```
+1) Import the SDK.
+2) Set SDK's `appID` and `appKey` and configure the associated Firebase project.
+3) Declare `BoardActive` as the `UNUserNotificationCenterDelegate` and `MessagingDelegate`. Requests user push notification authorization via the `UNUserNotificationCenter` and registers for remote notifications. Additionally, trigger the calling of `BoardActive.client.requestLocations()` thereby requesting appropriate `CoreLocation` permissions and starting location updates.
 
 ## Example app
 
 There is an example app provided [here](https://github.com/BoardActive/BAKit-ios/tree/master/Example) for Swift.
 
 ## Setup and Configuration
-
 
 * [TODO] Our [installation guide](https://developers.boardactive.com) contains full setup and initialisation instructions.
 * [TODO] Read ["Configuring BoardActive for iOS"](https://developers.boardactive.com).
