@@ -1,13 +1,13 @@
 # BAKit-iOS
 
-<img src="https://avatars0.githubusercontent.com/u/38864287?s=200&v=4" width="96" height="96" align="left"/>
+<img src="https://avatars0.githubusercontent.com/u/38864287?s=200&v=4" width="96" height="96"/>
 
-___
+
 
 ### Location-Based Engagement
-#####Enhance your app. Empower your marketing.
+##### Enhance your app. Empower your marketing.
 
-#####It's not about Advertising... It's about *"PERSONALIZING"*
+##### It's not about Advertising... It's about *"PERSONALIZING"*
 
 BoardActive's platform connects brands to consumers using location-based engagement. Our international patent-pending Visualmatic™ software is a powerful marketing tool allowing brands to set up a virtual perimeter around any location, measure foot-traffic, and engage users with personalized messages when they enter geolocations… AND effectively attribute campaign efficiency by seeing where users go after the impression! 
 
