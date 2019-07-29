@@ -18,8 +18,8 @@ Example/Documentation
 #           - AS PER https://guides.cocoapods.org/using/using-cocoapods.html NEVER IGNORE THE LOCK FILE
 
 **/Pods/**
-Pods/
-Example/Pods/**
+**/Pods/ 
+**/Example/Pods/**
 
 ### fastlane ###
 # fastlane - A streamlined workflow tool for Cocoa deployment
@@ -143,6 +143,7 @@ iOSInjectionProject/
 **/.idea/**/contentModel.xml
 
 # Sensitive or high-churn files
+**/.idea/
 **/.idea/**/dataSources/
 **/.idea/**/dataSources.ids
 **/.idea/**/dataSources.local.xml

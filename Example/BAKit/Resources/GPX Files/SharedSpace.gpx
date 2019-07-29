@@ -246,4 +246,7 @@
   <wpt lat="33.8924148" lon="-84.4744432">
     <name>WP078</name>
   </wpt>
+  <wpt lat="33.892956" lon="-84.474648">
+      <name>WP079</name>
+  </wpt>
 </gpx>

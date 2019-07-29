@@ -1,45 +1,5 @@
 import UIKit
 
-extension UIView {
-    struct Constants {
-        static let ExternalBorderName = "externalBorder"
-    }
-    
-    func addExternalBorder(borderWidth: CGFloat = 2.0, borderColor: UIColor = .white, cornerRadius: CGFloat = 8) {
-        let externalBorder = CALayer()
-        externalBorder.frame = CGRect(x: -borderWidth, y: -borderWidth, width: frame.size.width + 2 * borderWidth, height: frame.size.height + 2 * borderWidth)
-        externalBorder.borderColor = borderColor.cgColor
-        externalBorder.borderWidth = borderWidth
-        externalBorder.cornerRadius = cornerRadius
-        externalBorder.name = Constants.ExternalBorderName
-        
-        layer.insertSublayer(externalBorder, at: 0)
-        layer.masksToBounds = false
-    }
-    
-    func removeExternalBorders() {
-        layer.sublayers?.filter { $0.name == Constants.ExternalBorderName }.forEach {
-            $0.removeFromSuperlayer()
-        }
-    }
-    
-    func removeExternalBorder(externalBorder: CALayer) {
-        guard externalBorder.name == Constants.ExternalBorderName else { return }
-        externalBorder.removeFromSuperlayer()
-    }
-    
-    public func addConstraintsWithFormat(format: String, views: UIView...) {
-        var viewsDictionary = [String: UIView]()
-        for (index, view) in views.enumerated() {
-            let key = "v\(index)"
-            view.translatesAutoresizingMaskIntoConstraints = false
-            viewsDictionary[key] = view
-        }
-        
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: format, options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: viewsDictionary))
-    }
-}
-
 public let imageCache = NSCache<NSString, AnyObject>()
 
 public extension UIImageView {
@@ -67,30 +27,6 @@ public extension UIImageView {
             }
             
         }).resume()
-    }
-}
-
-
-extension UINavigationController {
-    open override var shouldAutorotate: Bool {
-        if let visibleVC = visibleViewController {
-            return visibleVC.shouldAutorotate
-        }
-        return super.shouldAutorotate
-    }
-    
-    open override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        if let visibleVC = visibleViewController {
-            return visibleVC.preferredInterfaceOrientationForPresentation
-        }
-        return super.preferredInterfaceOrientationForPresentation
-    }
-    
-    open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        if let visibleVC = visibleViewController {
-            return visibleVC.supportedInterfaceOrientations
-        }
-        return super.supportedInterfaceOrientations
     }
 }
 

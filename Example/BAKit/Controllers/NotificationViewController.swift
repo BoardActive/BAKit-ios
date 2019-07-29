@@ -7,12 +7,12 @@
 //
 import UIKit
 import os.log
-import BAKit
+
 //
 class NotificationViewController: UIViewController {
-//    @IBOutlet weak var titleLabel: UILabel!
-//    @IBOutlet weak var notificationImageView: UIImageView!
-//    @IBOutlet weak var bodyTextView: UITextView!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var notificationImageView: UIImageView!
+    @IBOutlet weak var bodyTextView: UITextView!
 //    @IBOutlet weak var dismissButton: UIButton!
 //    @IBOutlet weak var messageDataImageView: UIImageView!
 //    
@@ -20,41 +20,41 @@ class NotificationViewController: UIViewController {
 //    public var messageData: MessageData!
 //    public var apsModel: Aps!
 //    
-//    public var notificationModel: NotificationModel!
-//        
-//    private lazy var displayWindow: UIWindow = {
-//        let secondWindow = UIWindow(frame: UIScreen.main.bounds)
-//        secondWindow.backgroundColor = UIColor.clear
-//        secondWindow.windowLevel = UIWindowLevelAlert
-//        
-//        let rootViewController = UIViewController()
-//        rootViewController.view.backgroundColor = UIColor.clear
-//        secondWindow.rootViewController = rootViewController
-//        
-//        return secondWindow
-//    }()
-//    
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        let group = DispatchGroup()
-//        
-//        group.enter()
-//        DispatchQueue.main.async {
-//            self.populateModels(notificationModel: self.notificationModel)
-//            group.leave()
-//        }
-//        group.wait()
+    public var notificationModel: NotificationModel!
 //
-////        let imageURLString = self.notificationModel.dictionaryRepresentation()["imageUrl"] as! String
-////        self.notificationImageView!.loadImageUsingCache(withUrl: imageURLString)
-////        let qrCodeURLString = self.notificationModel.dictionaryRepresentation()["urlQRCode"] as! String
-////        self.messageDataImageView!.loadImageUsingCache(withUrl: qrCodeURLString)
-//        
-//        self.titleLabel.text = String(alertModel.title!)
-//        
-//        self.bodyTextView.text = alertModel.body!
-////        self.populateBody(model: self.notificationModel)
-//    }
+    private lazy var displayWindow: UIWindow = {
+        let secondWindow = UIWindow(frame: UIScreen.main.bounds)
+        secondWindow.backgroundColor = UIColor.clear
+        secondWindow.windowLevel = UIWindowLevelAlert
+        
+        let rootViewController = UIViewController()
+        rootViewController.view.backgroundColor = UIColor.clear
+        secondWindow.rootViewController = rootViewController
+        
+        return secondWindow
+    }()
+//
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let group = DispatchGroup()
+        
+        group.enter()
+        DispatchQueue.main.async {
+            self.populateModels(notificationModel: self.notificationModel)
+            group.leave()
+        }
+        group.wait()
+
+//        let imageURLString = self.notificationModel.dictionaryRepresentation()["imageUrl"] as! String
+//        self.notificationImageView!.loadImageUsingCache(withUrl: imageURLString)
+//        let qrCodeURLString = self.notificationModel.dictionaryRepresentation()["urlQRCode"] as! String
+//        self.messageDataImageView!.loadImageUsingCache(withUrl: qrCodeURLString)
+        
+        self.titleLabel.text = String(alertModel.title!)
+        
+        self.bodyTextView.text = alertModel.body!
+//        self.populateBody(model: self.notificationModel)
+    }
 //
 //    public func populateModels(notificationModel: NotificationModel) {
 //        if notificationModel.isValidNotification() {

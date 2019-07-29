@@ -1,17 +1,19 @@
+
 platform :ios, '10.0'
 
-#keep_source_code_for_prebuilt_frameworks!
+plugin 'cocoapods-binary'
 use_frameworks!
+enable_bitcode_for_prebuilt_frameworks!
 
+# https://www.ralfebert.de/ios/blog/cocoapods-clean-input-output-files/
 install! 'cocoapods', :disable_input_output_paths => true
 
-plugin 'cocoapods-binary'
 
 target 'BAKit_Example' do
-  pod 'BAKit', :path => '../'
-
-  pod 'SwiftyJSON'
-
+  pod 'BAKit', :path => '../', :binary => false
+  pod 'Firebase/Core', '~> 5.0', :binary => true
+  pod 'Firebase/Messaging', :binary => true
+  
   target 'BAKit_Tests' do
     inherit! :search_paths
     pod 'Quick'

@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "filename" : "LinkedIn~universal@1x.png",
+      "scale" : "1x",
+      "idiom" : "universal"
+    },
+    {
+      "scale" : "2x",
+      "idiom" : "universal",
+      "filename" : "LinkedIn~universal@2x.png"
+    },
+    {
+      "filename" : "LinkedIn~universal@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
