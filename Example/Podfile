@@ -3,16 +3,11 @@ platform :ios, '10.0'
 
 plugin 'cocoapods-binary'
 use_frameworks!
-enable_bitcode_for_prebuilt_frameworks!
-
-# https://www.ralfebert.de/ios/blog/cocoapods-clean-input-output-files/
-install! 'cocoapods', :disable_input_output_paths => true
-
 
 target 'BAKit_Example' do
-  pod 'BAKit', :path => '../', :binary => false
-  pod 'Firebase/Core', '~> 5.0', :binary => true
-  pod 'Firebase/Messaging', :binary => true
+  pod 'BAKit', :path => '../'
+  pod 'Firebase/Core', '~> 5.0'
+  pod 'Firebase/Messaging'
   
   target 'BAKit_Tests' do
     inherit! :search_paths

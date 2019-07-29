@@ -213,3 +213,139 @@ extension NSDictionary {
     }
 }
 
+extension UIButton {
+    @IBInspectable
+    var cornerRadius: CGFloat {
+        get {
+            return layer.cornerRadius
+        }
+        set {
+            layer.cornerRadius = newValue
+        }
+    }
+}
+
+@IBDesignable
+class DesignableButton: UIButton {
+}
+
+extension UITextField {
+    
+    public typealias TextFieldConfig = (UITextField) -> Swift.Void
+    
+    public func config(textField configurate: TextFieldConfig?) {
+        configurate?(self)
+    }
+    
+    func left(image: UIImage?, color: UIColor = .black) {
+        if let image = image {
+            leftViewMode = UITextFieldViewMode.always
+            let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+            imageView.contentMode = .scaleAspectFit
+            imageView.image = image
+            imageView.image = imageView.image?.withRenderingMode(.alwaysTemplate)
+            imageView.tintColor = color
+            leftView = imageView
+        } else {
+            leftViewMode = UITextFieldViewMode.never
+            leftView = nil
+        }
+    }
+    
+    func right(image: UIImage?, color: UIColor = .black) {
+        if let image = image {
+            rightViewMode = UITextFieldViewMode.always
+            let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 20, height: 20))
+            imageView.contentMode = .scaleAspectFit
+            imageView.image = image
+            imageView.image = imageView.image?.withRenderingMode(.alwaysTemplate)
+            imageView.tintColor = color
+            rightView = imageView
+        } else {
+            rightViewMode = UITextFieldViewMode.never
+            rightView = nil
+        }
+    }
+}
+
+// MARK: - Methods
+
+public extension UITextField {
+    
+    /// Set placeholder text color.
+    ///
+    /// - Parameter color: placeholder text color.
+    public func setPlaceHolderTextColor(_ color: UIColor) {
+        self.attributedPlaceholder = NSAttributedString(string:self.placeholder != nil ? self.placeholder! : "", attributes:[NSAttributedStringKey.foregroundColor: color])
+    }
+    
+    /// Set placeholder text and its color
+    func placeholder(text value: String, color: UIColor = .red) {
+        self.attributedPlaceholder = NSAttributedString(string: value, attributes: [ NSAttributedStringKey.foregroundColor : color])
+    }
+}
+
+public extension UIColor {
+    
+    convenience init(hex: Int, alpha: CGFloat) {
+        let r = CGFloat((hex & 0xFF0000) >> 16)/255
+        let g = CGFloat((hex & 0xFF00) >> 8)/255
+        let b = CGFloat(hex & 0xFF)/255
+        self.init(red: r, green: g, blue: b, alpha: alpha)
+    }
+    
+    convenience init(hex: Int) {
+        self.init(hex: hex, alpha: 1.0)
+    }
+    
+    /**
+     Creates an UIColor from HEX String in "#363636" format
+     
+     - parameter hexString: HEX String in "#363636" format
+     - returns: UIColor from HexString
+     */
+    convenience init(hexString: String) {
+        
+        let hexString: String       = (hexString as NSString).trimmingCharacters(in: .whitespacesAndNewlines)
+        let scanner                 = Scanner(string: hexString as String)
+        
+        if hexString.hasPrefix("#") {
+            scanner.scanLocation = 1
+        }
+        var color: UInt32 = 0
+        scanner.scanHexInt32(&color)
+        
+        let mask = 0x000000FF
+        let r = Int(color >> 16) & mask
+        let g = Int(color >> 8) & mask
+        let b = Int(color) & mask
+        
+        let red   = CGFloat(r) / 255.0
+        let green = CGFloat(g) / 255.0
+        let blue  = CGFloat(b) / 255.0
+        self.init(red:red, green:green, blue:blue, alpha:1)
+    }
+    
+    /// Create UIColor from RGB values with optional transparency.
+    ///
+    /// - Parameters:
+    ///   - red: red component.
+    ///   - green: green component.
+    ///   - blue: blue component.
+    ///   - transparency: optional transparency value (default is 1)
+    public convenience init(red: Int, green: Int, blue: Int, transparency: CGFloat = 1) {
+        assert(red >= 0 && red <= 255, "Invalid red component")
+        assert(green >= 0 && green <= 255, "Invalid green component")
+        assert(blue >= 0 && blue <= 255, "Invalid blue component")
+        var trans: CGFloat {
+            if transparency > 1 {
+                return 1
+            } else if transparency < 0 {
+                return 0
+            } else {
+                return transparency
+            }
+        }
+        self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: trans)
+    }
+}

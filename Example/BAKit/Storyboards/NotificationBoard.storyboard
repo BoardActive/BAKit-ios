@@ -104,6 +104,7 @@
                                             <constraint firstAttribute="width" constant="44" id="X6O-wi-Ubf"/>
                                             <constraint firstAttribute="height" constant="44" id="agT-gY-zR8"/>
                                         </constraints>
+                                        <color key="tintColor" red="0.0" green="0.56862745100000001" blue="0.88235294119999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <state key="normal" backgroundImage="LinkedIn"/>
                                         <connections>
                                             <action selector="openLinkedIn:" destination="g4B-d3-IFN" eventType="touchUpInside" id="1Lu-eM-TBV"/>
@@ -115,6 +116,7 @@
                                             <constraint firstAttribute="width" constant="44" id="3VS-Fj-hwn"/>
                                             <constraint firstAttribute="height" constant="44" id="9Gq-CB-olU"/>
                                         </constraints>
+                                        <color key="tintColor" red="0.0" green="0.56862745100000001" blue="0.88235294119999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <state key="normal" backgroundImage="Twitter"/>
                                         <connections>
                                             <action selector="openTwitter:" destination="g4B-d3-IFN" eventType="touchUpInside" id="nJb-Bi-VK1"/>
@@ -153,6 +155,7 @@
                                             <constraint firstAttribute="width" constant="44" id="CDX-RL-EWN"/>
                                             <constraint firstAttribute="height" constant="44" id="nLz-NW-fhY"/>
                                         </constraints>
+                                        <color key="tintColor" red="0.0" green="0.56862745100000001" blue="0.88235294119999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <state key="normal" backgroundImage="Directions"/>
                                         <connections>
                                             <action selector="getDirections:" destination="g4B-d3-IFN" eventType="touchUpInside" id="dgV-uH-Awv"/>
@@ -190,10 +193,10 @@
                             <constraint firstItem="zkt-kr-SSw" firstAttribute="width" secondItem="Pef-kq-dT2" secondAttribute="width" id="2X0-pf-S0s"/>
                             <constraint firstItem="zkt-kr-SSw" firstAttribute="top" secondItem="Pef-kq-dT2" secondAttribute="bottom" constant="6" id="2gf-Kz-A1K"/>
                             <constraint firstItem="Lac-7Y-tCl" firstAttribute="centerX" secondItem="r8Q-8z-gj6" secondAttribute="centerX" id="3wx-Aw-vpA"/>
-                            <constraint firstItem="tRN-is-DqG" firstAttribute="top" secondItem="iUn-n9-ydd" secondAttribute="bottom" constant="38" id="46X-mn-Pfd"/>
                             <constraint firstItem="y9g-nG-p6T" firstAttribute="trailing" secondItem="tRN-is-DqG" secondAttribute="trailing" constant="135" id="77e-Xv-BLT"/>
                             <constraint firstItem="EFu-QJ-cTM" firstAttribute="centerY" secondItem="NfC-Zg-BE7" secondAttribute="centerY" id="8cR-EB-HXJ"/>
                             <constraint firstItem="4A3-2j-CAb" firstAttribute="top" secondItem="tzE-V7-1Ht" secondAttribute="bottom" constant="40" id="Cvu-7z-s40"/>
+                            <constraint firstItem="tRN-is-DqG" firstAttribute="top" secondItem="iUn-n9-ydd" secondAttribute="bottom" constant="38" id="D0J-3H-Z7s"/>
                             <constraint firstItem="tzE-V7-1Ht" firstAttribute="leading" secondItem="zkt-kr-SSw" secondAttribute="leading" id="ED4-4T-jFj"/>
                             <constraint firstItem="cL4-xx-nZd" firstAttribute="leading" secondItem="4A3-2j-CAb" secondAttribute="trailing" constant="8" id="Eja-i0-14U"/>
                             <constraint firstItem="UD2-th-7BL" firstAttribute="top" secondItem="Lac-7Y-tCl" secondAttribute="bottom" constant="30" id="FJA-Qy-PT9"/>

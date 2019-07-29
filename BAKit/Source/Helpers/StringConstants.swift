@@ -9,13 +9,13 @@ import Foundation
 
 public extension String {
     enum ConfigKeys {
-        static let AppId       = "AppId"
-        static let AppKey      = "AppKey"
-        static let UUID        = "UUID"
-        static let Email       = "email"
-        static let Password    = "password"
-        static let ID          = "id"
-        static let DeviceToken = "deviceToken"
+        public static let AppId       = "AppId"
+        public static let AppKey      = "AppKey"
+        public static let UUID        = "UUID"
+        public static let Email       = "email"
+        public static let Password    = "password"
+        public static let ID          = "id"
+        public static let DeviceToken = "deviceToken"
     }
     
     enum HeaderKeys {
@@ -128,7 +128,7 @@ public extension String {
         static let DeviceOSVersion                     = "deviceOSVersion"
         static let DeviceType                          = "deviceType"
         static let DeviceToken                         = String.ConfigKeys.DeviceToken
-        static let DateLocationPermissionRequested     = "dateLocationPermissionRequested"
+        public static let DateLocationPermissionRequested     = "dateLocationPermissionRequested"
         static let DateNotificationPermissionRequested = "dateNotificationPermissionRequested"
         static let LocationPermission                  = "locationPermission"
         static let NotificationPermission              = "notificationPermission"

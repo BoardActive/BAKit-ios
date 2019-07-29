@@ -41,6 +41,8 @@
 	<string>Allow location monitoring for full functionality.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Allow location monitoring for full functionality.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Allow location monitoring for full functionality.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

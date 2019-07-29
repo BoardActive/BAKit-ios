@@ -22,17 +22,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
     private let authOptions = UNAuthorizationOptions(arrayLiteral: [.alert, .badge, .sound])
 
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+        
         FirebaseApp.configure()
-        
-        BoardActive.client.setupEnvironment(appID: "127", appKey: "209d9729-0887-466b-a061-b2a42bd4626a")
-        if (!BoardActive.client.userDefaults!.bool(forKey:.DeviceRegistered)) {
-            showLogin()
-        } else {
-            self.requestNotifications()
-        }
-        
         Messaging.messaging().delegate = self
 
+        BoardActive.client.setupEnvironment(appID: "127", appKey: "209d9729-0887-466b-a061-b2a42bd4626a")
+        BoardActive.client.isDevEnv = true
+        
         application.applicationIconBadgeNumber = 0
         
         return true
@@ -46,51 +42,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
     func applicationDidBecomeActive(_ application: UIApplication) {
         os_log("App Became Active Again")
     }
-    
-    func showLogin() {
-        let alertController = LoginAlertController(title: "Log in", message: "Please enter your credentials", preferredStyle: .alert)
-        
-        alertController.configure()
-    }
-    
-    public func setupSDK() {
-        let operationQueue = OperationQueue()
-        let registerDeviceOperation = BlockOperation {
-            BoardActive.client.registerDevice()
-        }
-        
-        let requestNotificationsOperation = BlockOperation {
-            self.requestNotifications()
-        }
-        
-        let monitorLocationOperation = BlockOperation {
-            BoardActive.client.monitorLocation()
-        }
-        
-        requestNotificationsOperation.addDependency(registerDeviceOperation)
-        monitorLocationOperation.addDependency(requestNotificationsOperation)
-        
-        OperationQueue.main.addOperation(monitorLocationOperation)
-    }
 }
 
 
 extension AppDelegate {
-    enum Identifiers: String {
-        case viewAction = "VIEW_IDENTIFIER"
-        case newsCategory = "NEWS_CATEGORY"
-    }
-    
-   
-    
-    func registerCustomActions() {
-        let viewAction = UNNotificationAction(identifier: Identifiers.viewAction.rawValue, title: "View", options: [.foreground])
+    func setupSDK() {
+//        let operationQueue = OperationQueue()
+//        let registerDeviceOperation = BlockOperation {
+            BoardActive.client.registerDevice()
+//        }
         
-        let newsCategory = UNNotificationCategory(identifier: Identifiers.newsCategory.rawValue, actions: [viewAction], intentIdentifiers: [])
-        UNUserNotificationCenter.current().setNotificationCategories([newsCategory])
+//        let requestNotificationsOperation = BlockOperation {
+            self.requestNotifications()
+//        }
+        
+//        let monitorLocationOperation = BlockOperation {
+            BoardActive.client.monitorLocation()
+//        }
+        
+//        requestNotificationsOperation.addDependency(registerDeviceOperation)
+//        monitorLocationOperation.addDependency(requestNotificationsOperation)
+        
+//        OperationQueue.main.addOperation(monitorLocationOperation)
     }
-    
-    
     /**
      Creates an instance of `NotificationModel` from `userInfo`, validates said instance, and calls `createEvent`, capturing the current application state.
      
@@ -116,32 +90,10 @@ extension AppDelegate {
             case .inactive:
                 os_log("%s", String.TappedAndTransitioning)
                 BoardActive.client.postEvent(name: String.Opened, googleMessageId: gcmmessageId, messageId: firebaseNotificationId)
-                BoardActive.client.delegate?.appReceivedRemoteNotification(notification: userInfo)
             default:
                 break
             }
         }
-    }
-    
-    
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        UIApplication.shared.applicationIconBadgeNumber = response.notification.request.content.badge as! Int
-        
-        guard response.actionIdentifier == UNNotificationDefaultActionIdentifier else {
-                return
-        }
-        
-        let userInfo = response.notification.request.content.userInfo as! [String: Any]
-        let notificationModel = NotificationModel.init(fromDictionary: userInfo)
-        // Print message ID.
-        if let messageID = userInfo["gcmMessageIDKey"] {
-            print("Message ID: \(messageID)")
-        }
-        
-        // Print full message.
-        print(userInfo)
-        
-        completionHandler()
     }
 }
 
@@ -160,25 +112,6 @@ extension AppDelegate: MessagingDelegate {
         let dataDict:[String: String] = ["token": fcmToken]
         NotificationCenter.default.post(name: Notification.Name("FCMToken Registration"), object: nil, userInfo: dataDict)
     }
-    
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        let userInfo = notification.request.content.userInfo
-        
-        // With swizzling disabled you must let Messaging know about the message, for Analytics
-        // Messaging.messaging().appDidReceiveMessage(userInfo)
-        
-        // Print message ID.
-        if let messageID = userInfo["gcmMessageIDKey"] {
-            print("Message ID: \(messageID)")
-        }
-        
-        // Print full message.
-        print(userInfo)
-        
-        // Change this to your preferred presentation option
-        completionHandler([])
-    }
-
 }
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
@@ -192,13 +125,28 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        registerCustomActions()
         let deviceTokenString = deviceToken.reduce("", { $0 + String(format: "%02X", $1) })
         os_log("APNs TOKEN :: %s", deviceTokenString)
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         os_log("Reason for failing remote notifications: %s", error.localizedDescription)
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        guard response.actionIdentifier == UNNotificationDefaultActionIdentifier else {
+            return
+        }
+        
+        UIApplication.shared.applicationIconBadgeNumber = response.notification.request.content.badge as! Int
+        
+        let userInfo = response.notification.request.content.userInfo as! [String: Any]
+        
+        BoardActive.client.delegate?.appReceivedRemoteNotification(notification: userInfo)
+        
+        print(userInfo)
+        
+        completionHandler()
     }
     
     public func requestNotifications() {
@@ -219,4 +167,5 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             UIApplication.shared.registerForRemoteNotifications()
         }
     }
+
 }

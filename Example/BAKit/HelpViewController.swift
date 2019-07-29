@@ -7,13 +7,43 @@
 //
 
 import UIKit
+import BAKit
 
 class HelpViewController: UIViewController {
 
+    @IBOutlet weak var signOutButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    @IBAction func signOutAction(_ sender: Any) {
+        let queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 1
 
-        // Do any additional setup after loading the view.
+        queue.addOperation {
+            self.tabBarController?.selectedIndex = 0
+        }
+        
+        queue.addOperation {
+            BoardActive.client.signOut()
+        }
+        
+        
+//        let switchIndexOperation = BlockOperation {
+//            self.tabBarController?.selectedIndex = 0
+//        }
+//        
+//        let signOutOperation = BlockOperation {
+//            BoardActive.client.signOut()
+//        }
+//        
+//        signOutOperation.addDependency(switchIndexOperation)
+//        
+//        queue.addOperation {
+//            <#code#>
+//        }
+        
     }
     
 

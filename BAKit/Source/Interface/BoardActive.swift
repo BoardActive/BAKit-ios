@@ -55,7 +55,7 @@ public class BoardActive: NSObject {
     private var currentLocationRequestID: INTULocationRequestID?
     private var currentLocation: CLLocation?
     private var distanceBetweenLocations: CLLocationDistance?
-
+    
     private override init() {}
     /**
      Sets the `appID`, `appKey`, and `fcmToken` in the `UserDefaults` to those of the parameters before calling `FirebaseApp.configure()`.
@@ -196,6 +196,7 @@ public class BoardActive: NSObject {
         
         callServer(path: path, httpMethod: String.HTTPMethod.POST, body: body as Dictionary<String, AnyObject>) { parsedJSON, err in
             guard err == nil else {
+                NotificationCenter.default.post(name: NSNotification.Name("LOGIN ERROR"), object: nil)
                 return
             }
             
@@ -208,11 +209,18 @@ public class BoardActive: NSObject {
 //                self.userDefaults?.set(payload.firstName, forKey: "firstName")
 //                self.userDefaults?.set(payload.googleAvatarUrl, forKey: "googleAvatarUrl")
 //                self.userDefaults?.set(payload.guid, forKey: "guid")
+                self.userDefaults?.set(email, forKey: "email")
+                self.userDefaults?.set(password, forKey: "password")
+                self.userDefaults?.set(self.isDevEnv, forKey: "isDevEnv")
+                self.userDefaults?.synchronize()
+
                 self.userDefaults?.set(payload.id, forKey: String.ConfigKeys.ID)
 //                self.userDefaults?.set(payload.lastName, forKey: "lastName")
                 self.userDefaults?.set(true, forKey: .LoggedIn)
                 self.userDefaults?.synchronize()
+                
                 print(payload)
+                NotificationCenter.default.post(name: NSNotification.Name("LOGIN"), object: nil)
             }
             os_log("[BoardActive] :: postLogin: %s", parsedJSON.debugDescription)
         }
@@ -376,5 +384,19 @@ public class BoardActive: NSObject {
         }
         return nil
     }
-
+    
+    public func signOut() {
+        DispatchQueue.main.async {
+            BoardActive.client.stopUpdatingLocation()
+        }
+        BoardActive.client.userDefaults?.removeObject(forKey: String.ConfigKeys.DeviceToken)
+        BoardActive.client.userDefaults?.removeObject(forKey: String.DeviceRegistered)
+        BoardActive.client.userDefaults?.removeObject(forKey: String.ConfigKeys.Email)
+        BoardActive.client.userDefaults?.removeObject(forKey: String.ConfigKeys.Password)
+        BoardActive.client.userDefaults?.removeObject(forKey: .LoggedIn)
+        BoardActive.client.userDefaults?.synchronize()
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "signout"), object: nil)
+        // How to call to present the login screen from here and how to regenerate the token?
+    }
+    
 }
