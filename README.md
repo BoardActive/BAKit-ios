@@ -116,6 +116,21 @@ Just inside the declaration of the ```AppDelegate``` class, the following variab
     private let notificationCatOptions = UNNotificationCategoryOptions(arrayLiteral: [])
 ```
 
+After declaring your configuring Firebase and declaring ```AppDelegate```'s conformance to Firebase's ```MessagingDelegate```, store your BoardActive AppId and AppKey in ```BoardActive.client.userDefaults``` like so:
+
+```swift
+func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+    FirebaseApp.configure()
+    Messaging.messaging().delegate = self
+        
+    BoardActive.client.userDefaults?.set(<#AppId#>, forKey: "AppId")
+    BoardActive.client.userDefaults?.set(<#AppKey#>, forKey: "AppKey")
+    BoardActive.client.userDefaults?.synchronize()
+    
+    return true
+}
+```
+
 Having followed the Apple's instructions linked to in the **Add Firebase Core and Firebase Messaging to your app** section, please add the following code, ```import BAKit``` and snippets to your ```AppDelegate.swift```:
 
 ```swift
