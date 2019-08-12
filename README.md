@@ -228,7 +228,7 @@ self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
 
 
 ## Download Example App Source Code
-There is an example app provided [here](https://github.com/BoardActive/BAAdDrop-Android) for Android.
+There is an example app attached to CocoaPod.
 
 ## Ask for Help
 
