@@ -156,7 +156,7 @@ extension AppDelegate {
         BoardActive.client.monitorLocation()
     }
     
-        public func requestNotifications() {
+   public func requestNotifications() {
         UNUserNotificationCenter.current().delegate = self
         let notificationCenter = UNUserNotificationCenter.current()
         
