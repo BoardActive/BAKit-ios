@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="BAKit_Tests" type="OCUnitRunConfiguration" factoryName="XCTest/Kiwi" singleton="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="BAKit" TARGET_NAME="BAKit_Tests" CONFIG_NAME="Debug" SCHEME_NAME="BAKit_Tests" IS_LOCATION_SIMULATION_ALLOWED="true" LOCATION_SCENARIO_ID="../BAKit/mapstogpx20190406_015905.gpx" LOCATION_SCENARIO_TYPE="0" APPLICATION_LANGUAGE="IDELaunchSchemeLanguageUseSystemLanguage" APPLICATION_REGION="" TEST_MODE="SUITE_TEST" XCODE_TESTS_HASH_CODE="0">
+    <method v="2">
+      <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+    </method>
+  </configuration>
+</component>
