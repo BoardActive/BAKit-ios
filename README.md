@@ -1,3 +1,6 @@
+## CocoaPods Status Update:
+- August 14th, 10:07: Push for `BAKit 1.0.1' has been pushed
+
 # BAKit-iOS
 
 <img src="https://avatars0.githubusercontent.com/u/38864287?s=200&v=4" width="96" height="96"/>
