@@ -156,6 +156,34 @@ extension AppDelegate {
         BoardActive.client.monitorLocation()
     }
     
+        public func requestNotifications() {
+        UNUserNotificationCenter.current().delegate = self
+        let notificationCenter = UNUserNotificationCenter.current()
+        
+        if #available(iOS 11.0, *) {
+            let previewNotificationCategory = UNNotificationCategory(identifier: categoryIdentifier, actions: [], intentIdentifiers: [], hiddenPreviewsBodyPlaceholder: "", options: [])
+            notificationCenter.setNotificationCategories([previewNotificationCategory])
+        } else {
+            // Fallback on earlier versions
+        }
+        // Register the notification type.
+        
+        UNUserNotificationCenter.current().requestAuthorization(options: authOptions) { granted, error in
+            guard error == nil, granted else {
+                return
+            }
+            
+            if BoardActive.client.userDefaults?.object(forKey: "dateNotificationPermissionRequested") == nil {
+                BoardActive.client.userDefaults?.set(Date().iso8601, forKey: "dateNotificationPermissionRequested")
+                BoardActive.client.userDefaults?.synchronize()
+            }
+        }
+        
+        DispatchQueue.main.async {
+            UIApplication.shared.registerForRemoteNotifications()
+        }
+    }
+    
 /**
      Creates an instance of `NotificationModel` from `userInfo`, validates said instance, and calls `createEvent`, capturing the current application state.
      
@@ -254,5 +282,3 @@ Our team wants to help. Please contact us
 * Call us: [(678) 383-2200](tel:+6494461709)
 * Email Us [support@boardactive.com](mailto:info@boardactive.com)
 * Online Support [Web Site](https://www.boardactive.com/)
-
-
