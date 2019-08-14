@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>908412444735-0l4lj0ksualbgqhlhak9f9r6c6695nsn.apps.googleusercontent.com</string>
+	<string>247328967680-cp4hvnamn1eng91kjatj0jcrfedc2fhu.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.908412444735-0l4lj0ksualbgqhlhak9f9r6c6695nsn</string>
+	<string>com.googleusercontent.apps.247328967680-cp4hvnamn1eng91kjatj0jcrfedc2fhu</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCw-SfR0bVG_r8iX6Wk_ZpPxXF-tBsD7Ug</string>
+	<string>AIzaSyAj3-nVo8t5YP8zNsXHjnbUYPB7FD_wYZg</string>
 	<key>GCM_SENDER_ID</key>
-	<string>908412444735</string>
+	<string>247328967680</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>org.cocoapods.demo.BAKit-Example</string>
+	<string>com.boardactive.addrop</string>
 	<key>PROJECT_ID</key>
-	<string>boardactive-sdk</string>
+	<string>boardactive-addrop</string>
 	<key>STORAGE_BUCKET</key>
-	<string>boardactive-sdk.appspot.com</string>
+	<string>boardactive-addrop.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +29,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:908412444735:ios:f28c027745320816</string>
+	<string>1:247328967680:ios:7582d2671282e70a</string>
 	<key>DATABASE_URL</key>
-	<string>https://boardactive-sdk.firebaseio.com</string>
+	<string>https://boardactive-addrop.firebaseio.com</string>
 </dict>
 </plist>

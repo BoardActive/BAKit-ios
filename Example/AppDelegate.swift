@@ -12,25 +12,30 @@ import UIKit
 import UserNotifications
 import os.log
 import Messages
+import CoreData
+
+protocol NotificationDelegate: NSObject {
+    func appReceivedRemoteNotification(notification: [AnyHashable: Any])
+}
+
+private let categoryIdentifier = "PreviewNotification"
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate  {
     var window: UIWindow?
     
+    public weak var notificationDelegate: NotificationDelegate?
+
     public var badgeNumber = UIApplication.shared.applicationIconBadgeNumber
 
     private let authOptions = UNAuthorizationOptions(arrayLiteral: [.alert, .badge, .sound])
-
+    
+    private let notificationCatOptions = UNNotificationCategoryOptions(arrayLiteral: [])
+    
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
-        
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
-
-        BoardActive.client.setupEnvironment(appID: "127", appKey: "209d9729-0887-466b-a061-b2a42bd4626a")
-        BoardActive.client.isDevEnv = true
-        
-        application.applicationIconBadgeNumber = 0
-        
+      
         return true
     }
     
@@ -42,29 +47,59 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
     func applicationDidBecomeActive(_ application: UIApplication) {
         os_log("App Became Active Again")
     }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        CoreDataStack.sharedInstance.saveContext()
+    }
 }
-
 
 extension AppDelegate {
     func setupSDK() {
-//        let operationQueue = OperationQueue()
-//        let registerDeviceOperation = BlockOperation {
-            BoardActive.client.registerDevice()
-//        }
+        BoardActive.client.registerDevice { (parsedJSON, err) in
+            guard err == nil else {
+                fatalError()
+            }
+            
+            BoardActive.client.userDefaults?.set(true, forKey: String.DeviceRegistered)
+            BoardActive.client.userDefaults?.synchronize()
+            
+            let userInfo = UserInfo.init(fromDictionary: parsedJSON!)
+            StorageObject.container.userInfo = userInfo
+        }
         
-//        let requestNotificationsOperation = BlockOperation {
-            self.requestNotifications()
-//        }
+        self.requestNotifications()
         
-//        let monitorLocationOperation = BlockOperation {
-            BoardActive.client.monitorLocation()
-//        }
-        
-//        requestNotificationsOperation.addDependency(registerDeviceOperation)
-//        monitorLocationOperation.addDependency(requestNotificationsOperation)
-        
-//        OperationQueue.main.addOperation(monitorLocationOperation)
+        BoardActive.client.monitorLocation()
     }
+    
+    public func requestNotifications() {
+        UNUserNotificationCenter.current().delegate = self
+        let notificationCenter = UNUserNotificationCenter.current()
+        
+        if #available(iOS 11.0, *) {
+            let previewNotificationCategory = UNNotificationCategory(identifier: categoryIdentifier, actions: [], intentIdentifiers: [], hiddenPreviewsBodyPlaceholder: "", options: [])
+            notificationCenter.setNotificationCategories([previewNotificationCategory])
+        } else {
+            // Fallback on earlier versions
+        }
+        // Register the notification type.
+        
+        UNUserNotificationCenter.current().requestAuthorization(options: authOptions) { granted, error in
+            guard error == nil, granted else {
+                return
+            }
+            
+            if BoardActive.client.userDefaults?.object(forKey: "dateNotificationPermissionRequested") == nil {
+                BoardActive.client.userDefaults?.set(Date().iso8601, forKey: "dateNotificationPermissionRequested")
+                BoardActive.client.userDefaults?.synchronize()
+            }
+        }
+        
+        DispatchQueue.main.async {
+            UIApplication.shared.registerForRemoteNotifications()
+        }
+    }
+    
     /**
      Creates an instance of `NotificationModel` from `userInfo`, validates said instance, and calls `createEvent`, capturing the current application state.
      
@@ -72,12 +107,25 @@ extension AppDelegate {
      */
     public func handleNotification(application: UIApplication, userInfo: [AnyHashable: Any]) {
         let tempUserInfo = userInfo as! [String: Any]
-        let notificationModel = NotificationModel(fromDictionary: tempUserInfo)
+        var notificationModel: NotificationModel
+        
+        if let _ = tempUserInfo["aps"] {
+            notificationModel = CoreDataStack.sharedInstance.createNotificationModel(fromDictionary: tempUserInfo)
+        } else {
+            let context = CoreDataStack.sharedInstance.persistentContainer.viewContext
+            notificationModel = NSEntityDescription.insertNewObject(forEntityName: "NotificationModel", into: context) as! NotificationModel
+            notificationModel.body = tempUserInfo["body"] as? String
+            notificationModel.messageData = CoreDataStack.sharedInstance.createMessageData(fromDictionary: tempUserInfo)
+        }
+        notificationModel.date = Date()
+        CoreDataStack.sharedInstance.persistentContainer.viewContext.insert(notificationModel)
+        
+        StorageObject.container.notification = notificationModel
         
         badgeNumber += 1
         application.applicationIconBadgeNumber = badgeNumber
         
-        os_log("Notification Model :: %s", notificationModel.toDictionary().debugDescription)
+        os_log("Notification Model :: %s", notificationModel.debugDescription)
         
         if let _ = notificationModel.aps, let gcmmessageId = notificationModel.gcmmessageId, let firebaseNotificationId = notificationModel.notificationId {
             switch application.applicationState {
@@ -108,9 +156,6 @@ extension AppDelegate: MessagingDelegate {
         print("Firebase registration token: \(fcmToken)")
         BoardActive.client.userDefaults?.set(fcmToken, forKey: "deviceToken")
         BoardActive.client.userDefaults?.synchronize()
-        
-        let dataDict:[String: String] = ["token": fcmToken]
-        NotificationCenter.default.post(name: Notification.Name("FCMToken Registration"), object: nil, userInfo: dataDict)
     }
 }
 
@@ -124,13 +169,17 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         completionHandler(UIBackgroundFetchResult.newData)
     }
     
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler(UNNotificationPresentationOptions.init(arrayLiteral: [.badge, .sound, .alert]))
+    }
+    
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let deviceTokenString = deviceToken.reduce("", { $0 + String(format: "%02X", $1) })
         os_log("APNs TOKEN :: %s", deviceTokenString)
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        os_log("Reason for failing remote notifications: %s", error.localizedDescription)
+        os_log("APNs TOKEN FAIL :: %s", error.localizedDescription)
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
@@ -138,34 +187,12 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             return
         }
         
-        UIApplication.shared.applicationIconBadgeNumber = response.notification.request.content.badge as! Int
-        
         let userInfo = response.notification.request.content.userInfo as! [String: Any]
         
-        BoardActive.client.delegate?.appReceivedRemoteNotification(notification: userInfo)
+        self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
         
         print(userInfo)
         
         completionHandler()
     }
-    
-    public func requestNotifications() {
-        UNUserNotificationCenter.current().delegate = self
-        
-        UNUserNotificationCenter.current().requestAuthorization(options: authOptions) { granted, error in
-            guard error == nil, granted else {
-                return
-            }
-            
-            if BoardActive.client.userDefaults?.object(forKey: "dateNotificationPermissionRequested") == nil {
-                BoardActive.client.userDefaults?.set(Date().iso8601, forKey: "dateNotificationPermissionRequested")
-                BoardActive.client.userDefaults?.synchronize()
-            }
-        }
-        
-        DispatchQueue.main.async {
-            UIApplication.shared.registerForRemoteNotifications()
-        }
-    }
-
 }

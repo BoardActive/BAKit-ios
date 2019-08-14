@@ -11,19 +11,53 @@ import UIKit
 import BAKit
 import UserNotifications
 import Firebase
+import MaterialComponents
+import CoreData
 
 class LoginViewController: UIViewController {
+    @IBOutlet weak var devEnvSwitch: UISwitch!
+    @IBOutlet weak var devEnvLabel: UILabel!
+    @IBOutlet weak var emailTextField: MDCTextField!
+    @IBOutlet weak var passwordTextField: MDCTextField!
+    @IBOutlet weak var isolatedView: ShadowView!
+    @IBOutlet weak var imageView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(self, selector: #selector(loginComplete), name: NSNotification.Name("LOGIN"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(showCredentialsErrorAlert), name: NSNotification.Name("LOGIN ERROR"), object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(signOutShowLogin), name: NSNotification.Name("signout"), object: nil)
-        if (BoardActive.client.userDefaults!.bool(forKey:String.DeviceRegistered)) {
-            DispatchQueue.main.async {
-                self.loginComplete()
+        self.navigationController?.view.backgroundColor = UIColor.white
+        self.view.backgroundColor = UIColor.white
+        
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(LoginViewController.dismissKeyboard))
+        self.view.addGestureRecognizer(tap)
+        
+        if BoardActive.client.userDefaults!.bool(forKey: String.DeviceRegistered), let anEmail = BoardActive.client.userDefaults!.string(forKey: String.ConfigKeys.Email), let aPassword = BoardActive.client.userDefaults!.string(forKey: String.ConfigKeys.Password)  {
+            self.emailTextField.text = anEmail
+            self.passwordTextField.text = aPassword
+            if (BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppKey) == String.AppKeys.Dev) {
+                devEnvSwitch.setOn(true, animated: false)
+                BoardActive.client.isDevEnv = true
+            } else {
+                devEnvSwitch.setOn(false, animated: false)
+                BoardActive.client.isDevEnv = false
             }
+            self.signInAction(self)
         }
+            
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+
+//        devEnvSwitch.isHidden = true
+//        devEnvLabel.isHidden = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        emailTextField.text = ""
+        passwordTextField.text = ""
+        
+        self.navigationController!.navigationBar.isHidden = true
     }
     
     override func didReceiveMemoryWarning() {
@@ -31,148 +65,133 @@ class LoginViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    @objc
+    func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0 {
+                self.view.frame.origin.y -= keyboardSize.height
+            }
+        }
+    }
+    
+    @objc
+    func keyboardWillHide(notification: NSNotification) {
+        self.view.frame.origin.y = 0
+    }
+    
+    @objc func dismissKeyboard() {
+        self.view.endEditing(true)
+    }
+    
     @IBAction func signInAction(_ sender: Any) {
-        var email = BoardActive.client.userDefaults?.string(forKey: "email")  ?? ""
-        var password = BoardActive.client.userDefaults?.string(forKey: "password")  ?? ""
-        
-        if (!email.isEmpty && !password.isEmpty) {
-            BoardActive.client.postLogin(email: email, password: password)
+        guard let email = emailTextField.text, let password = passwordTextField.text else {
+            DispatchQueue.main.async {
+                self.showCredentialsErrorAlert(error: "Both fields must contain entries.")
+            }
             return
         }
         
-        let alert = UIAlertController(title: "Login", message: nil, preferredStyle: .alert)
-        let configOne: TextField.Config = { textField in
-            textField.textColor = .black
-            textField.placeholder = "Email"
-            textField.left(image: #imageLiteral(resourceName: "user"), color: .black)
-            textField.leftViewPadding = 16
-            textField.leftTextPadding = 12
-            textField.borderWidth = 1
-            textField.borderColor = UIColor.lightGray.withAlphaComponent(0.5)
-            textField.backgroundColor = nil
-            textField.clearButtonMode = .whileEditing
-            textField.autocapitalizationType = .none
-            textField.keyboardAppearance = .default
-            textField.keyboardType = .default
-            textField.returnKeyType = .continue
-            textField.action { txtEmail in
-                if let inputText = txtEmail.text {
-                    email = inputText
-                    textField.text = txtEmail.text
-                }
-//                textField.addTarget(self, action: #selector(self.textChanged), for: .editingChanged)
+        if (!email.isEmpty && !password.isEmpty) {
+            BoardActive.client.userDefaults?.set(email, forKey: "email")
+            BoardActive.client.userDefaults?.set(password, forKey: "password")
+            
+            if self.devEnvSwitch.isOn {
+                BoardActive.client.userDefaults?.set(true, forKey: "isDevEnv")
+                BoardActive.client.userDefaults?.synchronize()
+            } else {
+                BoardActive.client.userDefaults?.set(false, forKey: "isDevEnv")
             }
-        }
-        
+//            BoardActive.client.userDefaults?.set(, forKey: <#T##String#>)
+//            var json: Dictionary<String,Any> = [:]
+            let operationQueue = OperationQueue()
+            let registerDeviceOperation = BlockOperation {
+                BoardActive.client.postLogin(email: email, password: password) { (parsedJSON, err) in
+                    guard (err == nil) else {
+                        DispatchQueue.main.async {
+                            self.showCredentialsErrorAlert(error: err!.localizedDescription)
+                        }
+                        return
+                    }
+                    
+                    if let parsedJSON = parsedJSON {
+                        let payload: LoginPayload = LoginPayload.init(fromDictionary: parsedJSON)
+                       
+                        if payload.apps.count < 1 {
+                            DispatchQueue.main.async {
+                                self.showCredentialsErrorAlert(error: parsedJSON["message"] as! String)
+                                return
+                            }
+                        } else {
+                            StorageObject.container.payload = payload
+                            StorageObject.container.apps = payload.apps
+                            print("PAYLOAD :: APPS : \(payload.apps.description)")
+                            
+                            OperationQueue.main.addOperation {
+                                let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+                                let appPickingViewController = storyBoard.instantiateViewController(withIdentifier: "AppSelectViewController")
+                                self.navigationController?.pushViewController(appPickingViewController, animated: true)
+                            }
+                        }
+                    }
+                }
+                
+                if BoardActive.client.isDevEnv {
+                    BoardActive.client.userDefaults?.set(String.AppKeys.Dev, forKey: String.ConfigKeys.AppKey)
+                } else {
+                    BoardActive.client.userDefaults?.set(String.AppKeys.Prod, forKey: String.ConfigKeys.AppKey)
+                }
+                
+                BoardActive.client.userDefaults?.synchronize()
+            }
 
-        let configTwo: TextField.Config = { textField in
-            textField.textColor = .black
-            textField.placeholder = "Password"
-            textField.left(image: #imageLiteral(resourceName: "lock"), color: .black)
-            textField.leftViewPadding = 16
-            textField.leftTextPadding = 12
-            textField.borderWidth = 1
-            textField.borderColor = UIColor.lightGray.withAlphaComponent(0.5)
-            textField.backgroundColor = nil
-            textField.clearsOnBeginEditing = true
-            textField.autocapitalizationType = .none
-            textField.keyboardAppearance = .default
-            textField.keyboardType = .default
-            textField.isSecureTextEntry = true
-            textField.returnKeyType = .done
-            textField.action { txtPassword in
-                if let inputText = txtPassword.text {
-                    password = inputText
-                    textField.text = txtPassword.text
-                }
-//                textField.addTarget(self, action: #selector(self.textChanged), for: .editingChanged)
-            }
-        }
-        // vInset - is top and bottom margin of two textFields
-        alert.addTwoTextFields(vInset: 12, textFieldOne: configOne, textFieldTwo: configTwo)
-        alert.addAction(image: nil, title: "Sign In", color: nil, style: .default, isEnabled: true) { (action) in
-            guard !email.isEmpty || !password.isEmpty else {
-                alert.dismiss(animated: false, completion: nil)
-                self.showCredentialsErrorAlert()
-                return
-            }
-                BoardActive.client.postLogin(email: email, password: password)
-                alert.dismiss(animated: true, completion: nil)
-//            } else {
-//                let alert = UIAlertController(style: .alert, title: "Sign In Error", message: "Incorrect email or password.")
-//                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: self.signInAction(_:)))
-//                alert.show()
+//            let transitionBlockOperation = BlockOperation {
+//                DispatchQueue.main.async {
+//                    let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+//                    let appPickingViewController = storyBoard.instantiateViewController(withIdentifier: "AppSelectViewController")
+//                    self.navigationController?.pushViewController(appPickingViewController, animated: true)
+//                }
 //            }
-        }
-//                alert.dismiss(animated: false, completion: {
-//                    }
-//                })
+            
+//            transitionBlockOperation.addDependency(registerDeviceOperation)
+            operationQueue.addOperation(registerDeviceOperation)
+//            operationQueue.addOperation(transitionBlockOperation)
+           
+//            if payload.apps.count == 1 {
+//                let appId = String(payload.apps.first!.id)
+//                BoardActive.client.userDefaults?.set(appId, forKey: String.ConfigKeys.AppId)
+//                BoardActive.client.userDefaults?.synchronize()
+//
+//                let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+//                let homeViewController = storyBoard.instantiateViewController(withIdentifier: "HomeViewController")
+//                self.navigationController?.pushViewController(homeViewController, animated: true)
 //            } else {
-//                print("No Username entered")
-//                print("No password entered")
-//                alert.show()
 //            }
-        
-        
-        let switchControl = UISwitch(frame:CGRect(x: 30, y: 160, width: 0, height: 0));
-        switchControl.addTarget(self, action: #selector(self.switchValueDidChange(sender:)), for: .valueChanged);
-        switchControl.isOn = false
-        
-        if (BoardActive.client.userDefaults?.bool(forKey: "isDevEnv") ?? false) {
-            switchControl.setOn(true, animated: false);
         } else {
-            switchControl.setOn(false, animated: false);
+            DispatchQueue.main.async {
+                self.showCredentialsErrorAlert(error:"Both fields must contain entries.")
+            }
         }
-        
-        let label = UILabel(frame: CGRect(x: 100, y: 165, width: 140, height: 22))
-        label.text = "Development"
-        alert.view.addSubview(label)
-        
-        alert.view.addSubview(switchControl)
-        alert.show(animated: true, vibrate: false, style: .light, completion: nil)
     }
-    //        let alertController = LoginAlertController(title: "Log in", message: "Please enter your credentials", preferredStyle: .alert)
-    
-    //        alertController.configure()
-    //        alertController.showAlert()
 
     @objc
-    func showCredentialsErrorAlert() {
-        let alert = UIAlertController(title: "Login Error", message: "Please verify you credentials and login.", preferredStyle: .alert)
+    func showCredentialsErrorAlert(error: String) {
+        let alert = UIAlertController(title: "Login Error", message: error, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "OK", style: .default) { (action) in
-            self.signInAction(self)
+            self.dismiss(animated: true, completion: nil)
         }
         alert.addAction(okAction)
-        self.show(alert, sender: nil)
+        self.present(alert, animated: true, completion: nil)
     }
     
-    @objc
-    public func switchValueDidChange(sender:UISwitch!){
-        if (sender.isOn) {
+    @IBAction func switchValueDidChange(_ sender: Any) {
+        if ((sender as! UISwitch).isOn) {
             BoardActive.client.isDevEnv = true
         } else {
             BoardActive.client.isDevEnv = false
         }
     }
     
-    @objc
-    func loginComplete() {
-        DispatchQueue.main.async {
-            (UIApplication.shared.delegate as? AppDelegate)?.setupSDK()
-        }
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let homeViewController = storyboard.instantiateViewController(withIdentifier: "HomeViewController")
-        self.definesPresentationContext = true
-        homeViewController.modalPresentationStyle = .overCurrentContext
-        self.present(homeViewController, animated: true, completion: nil)
-    }
-    
-    @IBAction func signOutAction(_ sender: Any) {
-        BoardActive.client.signOut()
-    }
-    
     @objc func textChanged(_ sender: Any) {
-
         let textfield = sender as! UITextField
         var resp : UIResponder! = textfield
         while !(resp is UIAlertController) { resp = resp.next }
@@ -180,14 +199,27 @@ class LoginViewController: UIViewController {
         alert.actions[0].isEnabled = (!(alert.textFields![0].text!.isEmpty) && !(alert.textFields![0].text!.isEmpty))
     }
     
-    @objc func signOutShowLogin() {
-        DispatchQueue.main.async {
-            self.tabBarController?.selectedIndex = 0
+    var count = 0
+    
+    @IBAction func tapHandler(_ sender: Any) {
+        if count <= 6 {
+            count += 1
+        } else {
+            count = 0
+            if (devEnvSwitch.isHidden || devEnvLabel.isHidden) {
+                devEnvSwitch.isHidden = false
+                devEnvLabel.isHidden = false
+            } else {
+                devEnvSwitch.isHidden = true
+                devEnvLabel.isHidden = true
+            }
         }
-        
-        
     }
-
 }
 
-
+extension LoginViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+}

@@ -6,8 +6,14 @@ use_frameworks!
 
 target 'BAKit_Example' do
   pod 'BAKit', :path => '../'
+  
   pod 'Firebase/Core', '~> 5.0'
   pod 'Firebase/Messaging'
+
+  pod 'Fabric', '~> 1.10.2'
+  pod 'Crashlytics', '~> 3.13.4'
+  
+  pod 'MaterialComponents'
   
   target 'BAKit_Tests' do
     inherit! :search_paths

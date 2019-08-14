@@ -8,7 +8,13 @@
 import Foundation
 
 public extension String {
+    enum AppKeys {
+        public static let Prod = "b70095c6-1169-43d6-a5dd-099877b4acb3"
+        public static let Dev  = "d17f0feb-4f96-4c2a-83fd-fd6302ae3a16"
+    }
+    
     enum ConfigKeys {
+        public static let Apps        = "Apps"
         public static let AppId       = "AppId"
         public static let AppKey      = "AppKey"
         public static let UUID        = "UUID"
@@ -27,6 +33,7 @@ public extension String {
         static let DeviceOSVersionHeader = "X-BoardActive-Device-OS-Version"
         static let DeviceTokenHeader     = "X-BoardActive-Device-Token"
         static let DeviceTypeHeader      = "X-BoardActive-Device-Type"
+        static let IsTestApp             = "X-BoardActive-Is-Test-App"
         static let UUIDHeader            = "X-BoardActive-Device-UUID"
         static let ContentTypeHeader     = "Content-Type"
         static let AcceptHeader          = "Accept"
@@ -45,10 +52,10 @@ public extension String {
         static let KeepAlive       = "keep-alive"
         static let DevHostKey      = "springer-api.boardactive.com"
         static let ProdHostKey     = "api.boardactive.com"
-        static let iOS             = "ios"
+        static let iOS             = "iOS"
         static let FCMToken        = String.ConfigKeys.DeviceToken
-        static let AppId           = BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppId) ?? ""
-        static let AppKey          = BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppKey) ?? ""
+        static let AppId           = BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppId)
+        static let AppKey          = BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppKey)
         static let DeviceOSVersion = UIDevice.current.systemVersion
         static let DeviceType      = UIDevice.modelName
         static let UUID            = UIDevice.current.identifierForVendor!.uuidString

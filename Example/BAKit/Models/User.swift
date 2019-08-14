@@ -4,7 +4,7 @@
 
 import Foundation
 
-struct User{
+public struct User{
 
 	var email : String!
 	var firstName : AnyObject!

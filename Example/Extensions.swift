@@ -158,24 +158,6 @@ extension UIApplication {
     }
 }
 
-extension UserDefaults {
-    static let extensions = UserDefaults(suiteName: "group.BAKit")
-    
-    private enum Keys {
-        static let badge = "badge"
-    }
-    
-    var badge: Int {
-        get {
-            return UserDefaults.extensions!.integer(forKey: Keys.badge)
-        }
-        
-        set {
-            UserDefaults.extensions!.set(newValue, forKey: Keys.badge)
-        }
-    }
-}
-
 extension NSMutableAttributedString {
     public func setAsLink(textToFind:String, linkURL:String) -> Bool {
         guard !linkURL.isEmpty else {
@@ -213,17 +195,17 @@ extension NSDictionary {
     }
 }
 
-extension UIButton {
-    @IBInspectable
-    var cornerRadius: CGFloat {
-        get {
-            return layer.cornerRadius
-        }
-        set {
-            layer.cornerRadius = newValue
-        }
-    }
-}
+//extension UIButton {
+//    @IBInspectable
+//    var cornerRadius: CGFloat {
+//        get {
+//            return layer.cornerRadius
+//        }
+//        set {
+//            layer.cornerRadius = newValue
+//        }
+//    }
+//}
 
 @IBDesignable
 class DesignableButton: UIButton {

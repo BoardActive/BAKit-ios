@@ -4,18 +4,18 @@
 
 import Foundation
 
-struct App{
+public struct App{
 
 	var createdBy : CreatedBy!
 	var dateCreated : String!
 	var dateLastUpdated : String!
 	var guid : String!
 	var iconUrl : AnyObject!
-	var id : Int!
+	public var id : Int!
 	var inbox : Inbox!
 	var itunesUrl : AnyObject!
 	var lastUpdatedBy : CreatedBy!
-	var name : String!
+	public var name : String!
 	var playStoreUrl : AnyObject!
 	var users : [User]!
 

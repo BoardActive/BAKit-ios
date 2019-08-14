@@ -12,11 +12,6 @@ import UIKit
 import os.log
 import INTULocationManager
 
-public protocol BoardActiveDelegate: NSObject {
-    func appReceivedRemoteNotification(notification: [AnyHashable: Any])
-}
-
-
 public enum NetworkError: Error {
     case BadJSON
     case NSError
@@ -49,7 +44,6 @@ public class BoardActive: NSObject {
     public static let client = BoardActive()
     public var userDefaults = UserDefaults.init(suiteName: "BAKit")
     public var isDevEnv = false
-    public weak var delegate: BoardActiveDelegate?
     
     private var locationManager = INTULocationManager.sharedInstance()
     private var currentLocationRequestID: INTULocationRequestID?
@@ -144,8 +138,6 @@ public class BoardActive: NSObject {
         revokeLocationSubscription()
     }
     
-    
-    
     // MARK: Class Functions
     
     fileprivate func getHeaders() -> [String: String]? {
@@ -163,8 +155,8 @@ public class BoardActive: NSObject {
         let headers: [String: String] = [
             String.HeaderKeys.AcceptEncodingHeader  : String.HeaderValues.GzipDeflate,
             String.HeaderKeys.AcceptHeader          : String.HeaderValues.WildCards,
-            String.HeaderKeys.AppKeyHeader          : String.HeaderValues.AppKey,
-            String.HeaderKeys.AppIdHeader           : String.HeaderValues.AppId,
+            String.HeaderKeys.AppKeyHeader          : BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppKey) ?? "" ,
+            String.HeaderKeys.AppIdHeader           : BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppId) ?? "",
             String.HeaderKeys.AppVersionHeader      : String.HeaderValues.AppVersion,
             String.HeaderKeys.CacheControlHeader    : String.HeaderValues.NoCache,
             String.HeaderKeys.ConnectionHeader      : String.HeaderValues.KeepAlive,
@@ -174,7 +166,8 @@ public class BoardActive: NSObject {
             String.HeaderKeys.DeviceTokenHeader     : tokenString,
             String.HeaderKeys.DeviceTypeHeader      : String.HeaderValues.DeviceType,
             String.HeaderKeys.HostHeader            : hostKey,
-            String.HeaderKeys.UUIDHeader            : String.HeaderValues.UUID
+            String.HeaderKeys.IsTestApp             : "1",
+            String.HeaderKeys.UUIDHeader            : UIDevice.current.identifierForVendor!.uuidString
         ]
         return headers
     }
@@ -187,46 +180,52 @@ public class BoardActive: NSObject {
         }
     }
     
-    public func postLogin(email: String, password: String) {
+    public func postLogin(email: String, password: String, completionHandler: @escaping ([String:Any]?, Error?) -> Void) {
         let path = "\(EndPoints.Login)"
         let body: [String: Any] = [
             String.ConfigKeys.Email: email,
             String.ConfigKeys.Password: password
         ]
         
+//        var error: Error?
+//        var json: [String:Any]?
+        
         callServer(path: path, httpMethod: String.HTTPMethod.POST, body: body as Dictionary<String, AnyObject>) { parsedJSON, err in
             guard err == nil else {
-                NotificationCenter.default.post(name: NSNotification.Name("LOGIN ERROR"), object: nil)
+//                error = err
+                completionHandler(nil, err)
                 return
             }
             
-            if let parsedJSON = parsedJSON {
-                let payload: LoginPayload = LoginPayload.init(fromDictionary: parsedJSON)
-                
+//            if let parsedJSON = parsedJSON {
 //                self.userDefaults?.set(payload.avatarImageId, forKey: "avatarImageId")
 //                self.userDefaults?.set(payload.avatarUrl, forKey: "avatarUrl")
 //                self.userDefaults?.set(payload.customerId, forKey: "customerId")
 //                self.userDefaults?.set(payload.firstName, forKey: "firstName")
 //                self.userDefaults?.set(payload.googleAvatarUrl, forKey: "googleAvatarUrl")
 //                self.userDefaults?.set(payload.guid, forKey: "guid")
-                self.userDefaults?.set(email, forKey: "email")
-                self.userDefaults?.set(password, forKey: "password")
-                self.userDefaults?.set(self.isDevEnv, forKey: "isDevEnv")
-                self.userDefaults?.synchronize()
-
-                self.userDefaults?.set(payload.id, forKey: String.ConfigKeys.ID)
+//                self.userDefaults?.set(email, forKey: "email")
+//                self.userDefaults?.set(password, forKey: "password")
+//                self.userDefaults?.set(self.isDevEnv, forKey: "isDevEnv")
+//                self.userDefaults?.set(payload.id, forKey: String.ConfigKeys.ID)
+//                self.userDefaults?.set(payload.apps, forKey:String.ConfigKeys.Apps)
+//                self.apps = payload.apps
 //                self.userDefaults?.set(payload.lastName, forKey: "lastName")
-                self.userDefaults?.set(true, forKey: .LoggedIn)
-                self.userDefaults?.synchronize()
-                
-                print(payload)
-                NotificationCenter.default.post(name: NSNotification.Name("LOGIN"), object: nil)
-            }
-            os_log("[BoardActive] :: postLogin: %s", parsedJSON.debugDescription)
+//                self.userDefaults?.set(true, forKey: .LoggedIn)
+//                self.userDefaults?.synchronize()
+//
+//                print(payload)
+                os_log("[BoardActive] :: postLogin: %s", parsedJSON.debugDescription)
+//                json = parsedJSON
+                completionHandler(parsedJSON, nil)
+//                NotificationCenter.default.post(name: NSNotification.Name("LOGIN"), object: nil)
+            return
         }
+        
+//        completionHandler(json, error)
     }
     
-    public func registerDevice() {
+    public func registerDevice(completionHandler: @escaping ([String:Any]?, Error?) -> Void) {
         let path = "\(EndPoints.Me)"
         
         let body: [String: Any] = [
@@ -237,13 +236,16 @@ public class BoardActive: NSObject {
         
         callServer(path: path, httpMethod: String.HTTPMethod.POST, body: body) { parsedJSON, err in
             guard err == nil else {
+                completionHandler(nil, err)
                 return
             }
             
-            if let parsedJSON = parsedJSON {
-                self.userDefaults?.set(true, forKey: .DeviceRegistered)
-                os_log("[BoardActive] :: registerDevice : parsedJSON : %s", parsedJSON.description)
-            }
+//            if let parsedJSON = parsedJSON {
+            self.userDefaults?.set(true, forKey: .DeviceRegistered)
+            completionHandler(parsedJSON, nil)
+            os_log("[BoardActive] :: registerDevice : parsedJSON : %s", parsedJSON!.description)
+            return
+//            }
         }
     }
     
@@ -282,7 +284,7 @@ public class BoardActive: NSObject {
         let body: [String: Any] = [
             String.NetworkCallRelated.Latitude: "\(location.coordinate.latitude)",
             String.NetworkCallRelated.Longitude: "\(location.coordinate.longitude)",
-            String.NetworkCallRelated.DeviceToken: Date().iso8601 as AnyObject
+            String.NetworkCallRelated.DeviceTime: Date().iso8601 as AnyObject
             ]
         print("PATH :: \(path) \n BODY :: \(body)")
         callServer(path: path, httpMethod: String.HTTPMethod.POST, body: body) { parsedJSON, err in
@@ -384,19 +386,4 @@ public class BoardActive: NSObject {
         }
         return nil
     }
-    
-    public func signOut() {
-        DispatchQueue.main.async {
-            BoardActive.client.stopUpdatingLocation()
-        }
-        BoardActive.client.userDefaults?.removeObject(forKey: String.ConfigKeys.DeviceToken)
-        BoardActive.client.userDefaults?.removeObject(forKey: String.DeviceRegistered)
-        BoardActive.client.userDefaults?.removeObject(forKey: String.ConfigKeys.Email)
-        BoardActive.client.userDefaults?.removeObject(forKey: String.ConfigKeys.Password)
-        BoardActive.client.userDefaults?.removeObject(forKey: .LoggedIn)
-        BoardActive.client.userDefaults?.synchronize()
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "signout"), object: nil)
-        // How to call to present the login screen from here and how to regenerate the token?
-    }
-    
 }
