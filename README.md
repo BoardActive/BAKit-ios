@@ -114,6 +114,8 @@ Just inside the declaration of the ```AppDelegate``` class, the following variab
 
     public var badgeNumber = UIApplication.shared.applicationIconBadgeNumber
 
+    private let categoryIdentifier = "PreviewNotification"
+
     private let authOptions = UNAuthorizationOptions(arrayLiteral: [.alert, .badge, .sound])
     
     private let notificationCatOptions = UNNotificationCategoryOptions(arrayLiteral: [])
