@@ -148,9 +148,6 @@ extension AppDelegate {
             
             BoardActive.client.userDefaults?.set(true, forKey: String.DeviceRegistered)
             BoardActive.client.userDefaults?.synchronize()
-            
-            let userInfo = UserInfo.init(fromDictionary: parsedJSON!)
-            StorageObject.container.userInfo = userInfo
         }
         
         self.requestNotifications()
@@ -192,10 +189,7 @@ extension AppDelegate {
      - Parameter userInfo: A dictionary that contains information related to the remote notification, potentially including a badge number for the app icon, an alert sound, an alert message to display to the user, a notification identifier, and custom data. The provider originates it as a JSON-defined dictionary that iOS converts to an `NSDictionary` object; the dictionary may contain only property-list objects plus `NSNull`. For more information about the contents of the remote notification dictionary, see Generating a Remote Notification.
      */
     public func handleNotification(application: UIApplication, userInfo: [AnyHashable: Any]) {
-        let tempUserInfo = userInfo as! [String: Any]
-        
-        // A NotificationModel was created to aid in parsing the JSON returned by SDK. Feel free to parse the JSON as you see fit.
-        var notificationModel: NotificationModel
+      // Parse the userInfo JSON as needed.
         
         badgeNumber += 1
         
