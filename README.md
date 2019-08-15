@@ -1,3 +1,9 @@
+![Cocoapods platforms](https://img.shields.io/cocoapods/p/BAKit)
+![GitHub top language](https://img.shields.io/github/languages/top/boardactive/BAKit-iOS)
+![Cocoapods](https://img.shields.io/cocoapods/v/BAKit)
+![GitHub commits since tagged version (branch)](https://img.shields.io/github/commits-since/boardactive/BAKit-ios/1.0.2)
+![GitHub issues](https://img.shields.io/github/issues/boardactive/BAKit-ios)
+
 # BAKit-iOS
 
 <img src="https://avatars0.githubusercontent.com/u/38864287?s=200&v=4" width="96" height="96"/>
