@@ -42,6 +42,7 @@ public class BoardActive: NSObject {
      A property returning the BoardActive singleton.
      */
     public static let client = BoardActive()
+    
     public var userDefaults = UserDefaults.init(suiteName: "BAKit")
     public var isDevEnv = false
     
@@ -118,8 +119,7 @@ public class BoardActive: NSObject {
     deinit {
         revokeLocationSubscription()
     }
-    
-    //If regular location updates provide a better solution, call `requestLocations(authorizationMode:AuthorizationMode)`.
+  
     /**
      Functions as an as needed means of procuring the user's current location.
      - Returns: `CLLocation?` An optional `CLLocation` obtained by `CLLocationManager's` `requestLocation()` function.
@@ -166,7 +166,7 @@ public class BoardActive: NSObject {
             String.HeaderKeys.DeviceTokenHeader     : tokenString,
             String.HeaderKeys.DeviceTypeHeader      : String.HeaderValues.DeviceType,
             String.HeaderKeys.HostHeader            : hostKey,
-            String.HeaderKeys.IsTestApp             : "1",
+            String.HeaderKeys.IsTestApp             : "0",
             String.HeaderKeys.UUIDHeader            : UIDevice.current.identifierForVendor!.uuidString
         ]
         return headers
@@ -180,6 +180,10 @@ public class BoardActive: NSObject {
         }
     }
     
+    /**
+     Retrieves a user attributes and affiliated apps.
+     - Returns: Closure containing client/user information.
+     */
     public func postLogin(email: String, password: String, completionHandler: @escaping ([String:Any]?, Error?) -> Void) {
         let path = "\(EndPoints.Login)"
         let body: [String: Any] = [
@@ -187,44 +191,24 @@ public class BoardActive: NSObject {
             String.ConfigKeys.Password: password
         ]
         
-//        var error: Error?
-//        var json: [String:Any]?
-        
         callServer(path: path, httpMethod: String.HTTPMethod.POST, body: body as Dictionary<String, AnyObject>) { parsedJSON, err in
             guard err == nil else {
-//                error = err
                 completionHandler(nil, err)
                 return
             }
             
-//            if let parsedJSON = parsedJSON {
-//                self.userDefaults?.set(payload.avatarImageId, forKey: "avatarImageId")
-//                self.userDefaults?.set(payload.avatarUrl, forKey: "avatarUrl")
-//                self.userDefaults?.set(payload.customerId, forKey: "customerId")
-//                self.userDefaults?.set(payload.firstName, forKey: "firstName")
-//                self.userDefaults?.set(payload.googleAvatarUrl, forKey: "googleAvatarUrl")
-//                self.userDefaults?.set(payload.guid, forKey: "guid")
-//                self.userDefaults?.set(email, forKey: "email")
-//                self.userDefaults?.set(password, forKey: "password")
-//                self.userDefaults?.set(self.isDevEnv, forKey: "isDevEnv")
-//                self.userDefaults?.set(payload.id, forKey: String.ConfigKeys.ID)
-//                self.userDefaults?.set(payload.apps, forKey:String.ConfigKeys.Apps)
-//                self.apps = payload.apps
-//                self.userDefaults?.set(payload.lastName, forKey: "lastName")
-//                self.userDefaults?.set(true, forKey: .LoggedIn)
-//                self.userDefaults?.synchronize()
-//
-//                print(payload)
-                os_log("[BoardActive] :: postLogin: %s", parsedJSON.debugDescription)
-//                json = parsedJSON
-                completionHandler(parsedJSON, nil)
-//                NotificationCenter.default.post(name: NSNotification.Name("LOGIN"), object: nil)
+            os_log("[BoardActive] :: postLogin: %s", parsedJSON.debugDescription)
+
+            completionHandler(parsedJSON, nil)
+            
             return
         }
-        
-//        completionHandler(json, error)
     }
     
+    /**
+     Associates a particular device with a user's account.
+     - Returns: Closure containing a user's attributes.
+     */
     public func registerDevice(completionHandler: @escaping ([String:Any]?, Error?) -> Void) {
         let path = "\(EndPoints.Me)"
         
@@ -240,12 +224,9 @@ public class BoardActive: NSObject {
                 return
             }
             
-//            if let parsedJSON = parsedJSON {
             self.userDefaults?.set(true, forKey: .DeviceRegistered)
             completionHandler(parsedJSON, nil)
-            os_log("[BoardActive] :: registerDevice : parsedJSON : %s", parsedJSON!.description)
             return
-//            }
         }
     }
     
@@ -289,7 +270,6 @@ public class BoardActive: NSObject {
         print("PATH :: \(path) \n BODY :: \(body)")
         callServer(path: path, httpMethod: String.HTTPMethod.POST, body: body) { parsedJSON, err in
             guard err == nil else {
-                fatalError()
                 return
             }
             os_log("[BA:client:updateLocation] :: jsonArray :: %s", parsedJSON.debugDescription)
@@ -313,7 +293,7 @@ public class BoardActive: NSObject {
         
         self.callServer(path: path, httpMethod: httpMethod, body: body) { parsedJSON, err in
             guard err == nil else {
-                fatalError()
+                // Handle Error
                 return
             }
             os_log("[BoardActive] : updateMe : OK : %s", (parsedJSON.debugDescription))
