@@ -1,6 +1,3 @@
-## CocoaPod Update:
-* CocoaPod is downloadable
-
 # BAKit-iOS
 
 <img src="https://avatars0.githubusercontent.com/u/38864287?s=200&v=4" width="96" height="96"/>
@@ -55,7 +52,7 @@ Once you create a related Firebase project you can download the ```GoogleService
 5. Run ```$ pod repo update``` from the terminal in your main project directory.
 6. Run ```$ pod install```  from the terminal in your main project directory, and once CocoaPods has created workspace, open the <App Name>.workspace file. 
 
-Example Podfile
+**Example Podfile**
 
 ```ruby
     platform :ios, '10.0'
@@ -76,10 +73,9 @@ Requesting location permission requires the follow entries in your ```Info.plist
 
 - `NSLocationAlwaysAndWhenInUseUsageDescription`
   - `Privacy - Location Always and When In Use Usage Description`
-  
-*If you support iOS 10, you'll need to add the following key and an appropriate value as well.*  
-
 - `NSLocationAlwaysUsageDescription`
+  - `Privacy - Location Always Usage Description`
+- `NSLocationWhenInUseUsageDescription`
   - `Privacy - Location Always Usage Description`
 
 ---
@@ -87,13 +83,11 @@ Requesting location permission requires the follow entries in your ```Info.plist
 #### Update App Capabilities
 
 Under your app's primary target you will need to edit it's **Capabilities** as follows:  
-1. Enable **Background Modes** [^1]  
+1. Enable **Background Modes**. Apple provides documentation explain the various **Background Modes** [here](https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html#//apple_ref/doc/uid/TP40009252-SW22) 
 2. Tick the checkbox *Location updates*  
 3. Tick the checkbox *Background fetch*  
 4. Tick the checkbox *Remote notifications*  
 5. Enable **Push Notifications**  
-
-[^1]: Apple provides documentation explain the various **Background Modes** [here](https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html#//apple_ref/doc/uid/TP40009252-SW22)
 
 ---
 
@@ -270,7 +264,7 @@ self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
 
 
 ## Download Example App Source Code
-There is an example app attached to CocoaPod.
+There is an example app included in the repo's code under "Example".
 
 ## Ask for Help
 
