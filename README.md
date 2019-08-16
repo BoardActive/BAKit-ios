@@ -205,14 +205,14 @@ extension AppDelegate {
         application.applicationIconBadgeNumber = badgeNumber
         
         // The code below logs default events
-        if let _ = userInfo["aps"], let gcmmessageId = userInfo["gcmmessageId"], let firebaseNotificationId = userInfo["notificationId"] {
+                if let _ = userInfo["aps"] as? String, let gcmmessageId = userInfo["gcmmessageId"] as? String, let firebaseNotificationId = userInfo["notificationId"] as? String {
             switch application.applicationState {
             case .active:
-                BoardActive.client.postEvent(name: String.Received, googleMessageId: gcmmessageId, messageId: firebaseNotificationId)
+                BoardActive.client.postEvent(name: String.Received, googleMessageId: gcmmessageId , messageId: (firebaseNotificationId as? String)!)
             case .background:
-                BoardActive.client.postEvent(name: String.Received, googleMessageId: gcmmessageId, messageId: firebaseNotificationId)
+                BoardActive.client.postEvent(name: String.Received, googleMessageId: (gcmmessageId as? String)!, messageId: (firebaseNotificationId as? String)!)
             case .inactive:
-                BoardActive.client.postEvent(name: String.Opened, googleMessageId: gcmmessageId, messageId: firebaseNotificationId)
+                BoardActive.client.postEvent(name: String.Opened, googleMessageId: (gcmmessageId as? String)!, messageId: (firebaseNotificationId as? String)!)
             default:
                 break
             }
@@ -287,3 +287,5 @@ Our team wants to help. Please contact us
 * Call us: [(678) 383-2200](tel:+6494461709)
 * Email Us [support@boardactive.com](mailto:info@boardactive.com)
 * Online Support [Web Site](https://www.boardactive.com/)
+
+
