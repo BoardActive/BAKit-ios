@@ -199,13 +199,13 @@ extension AppDelegate {
      */
     public func handleNotification(application: UIApplication, userInfo: [AnyHashable: Any]) {
       // Parse the userInfo JSON as needed.
-        
+
         badgeNumber += 1
         
         application.applicationIconBadgeNumber = badgeNumber
         
         // The code below logs default events
-        if let _ = notificationModel.aps, let gcmmessageId = notificationModel.gcmmessageId, let firebaseNotificationId = notificationModel.notificationId {
+        if let _ = userInfo["aps"], let gcmmessageId = userInfo["gcmmessageId"], let firebaseNotificationId = userInfo["notificationId"] {
             switch application.applicationState {
             case .active:
                 BoardActive.client.postEvent(name: String.Received, googleMessageId: gcmmessageId, messageId: firebaseNotificationId)
