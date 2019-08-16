@@ -135,7 +135,7 @@ func application(_ application: UIApplication, willFinishLaunchingWithOptions la
 }
 ```
 
-Having followed the Apple's instructions linked in the **Add Firebase Core and Firebase Messaging to Your App** section, please add the following code, ```import BAKit``` and snippets to your ```AppDelegate.swift```:
+Having followed the Apple's instructions linked in the **Add Firebase Core and Firebase Messaging to Your App** section, please add the following code, ```import BAKit``` and ```import UNUserNotificationCenter``` and snippets to your ```AppDelegate.swift```:
 
 ```swift
 extension AppDelegate {
