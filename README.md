@@ -129,7 +129,7 @@ func application(_ application: UIApplication, willFinishLaunchingWithOptions la
     Messaging.messaging().delegate = self
         
     BoardActive.client.userDefaults?.set(<#AppId#>, forKey: "AppId")
-    BoardActive.client.userDefaults?.set(<#AppKey#>, forKey: x"AppKey")
+    BoardActive.client.userDefaults?.set(<#AppKey#>, forKey: "AppKey")
         
     return true
 }
