@@ -152,7 +152,7 @@ extension AppDelegate {
     func setupSDK() {
         BoardActive.client.registerDevice { (parsedJSON, err) in
             guard err == nil else {
-            // Handle an error here
+            // Handle the returned error as needed
             }
             
             BoardActive.client.userDefaults?.set(true, forKey: String.DeviceRegistered)
