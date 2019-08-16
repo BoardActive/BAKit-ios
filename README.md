@@ -2,7 +2,7 @@
 ![GitHub top language](https://img.shields.io/github/languages/top/boardactive/BAKit-iOS)
 ![Cocoapods](https://img.shields.io/cocoapods/v/BAKit)
 ![GitHub commits since tagged version (branch)](https://img.shields.io/github/commits-since/boardactive/BAKit-ios/1.0.2)
-![GitHub issues](https://img.shields.io/github/issues/boardactive/BAKit-ios)
+![GitHub issues](https://img.shields.io/github/issues-raw/boardactive/BAKit-iOS)
 
 # BAKit-iOS
 
