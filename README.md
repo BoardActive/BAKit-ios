@@ -30,7 +30,7 @@ ___
 #### Add Firebase Core and Firebase Messaging to your app
 To use Firebase Cloud Messaging you must create a Firebase project. 
 
-* [Firebase iOS Quickstart](https://firebase.google.com/docs/ios/setup) - A guide to creating and understanding Firebase projects
+* [Firebase iOS Quickstart](https://firebase.google.com/docs/ios/setup) - A guide to creating and understanding Firebase projects.
 * [Set up a Firebase Cloud Messaging client app on iOS](https://firebase.google.com/docs/cloud-messaging/ios/client) - How to handle Firebase Cloud Messaging (the means by which BoardActive sends push notifications). 
     * Please refer to the following two articles regarding APNS, as Firebase's documentation is a bit dated. We'll also cover how to add push notifications to your account whilst installing the SDK:
         * [Enable Push Notifications](https://help.apple.com/xcode/mac/current/#/devdfd3d04a1) 
@@ -57,6 +57,7 @@ Once you create a related Firebase project you can download the ```GoogleService
     * ```pod 'Firebase/Messaging'```
 5. Run ```$ pod repo update``` from the terminal in your main project directory.
 6. Run ```$ pod install```  from the terminal in your main project directory, and once CocoaPods has created workspace, open the <App Name>.workspace file. 
+7. Incorporate your ```GoogleService-Info.plist```, previously mentioned in the **Create a Firebase Project** section, by dragging said file into your project.
 
 **Example Podfile**
 
