@@ -6,9 +6,12 @@ jobs: # a basic unit of work in a run
     steps: # a series of commands to run
       - checkout  # pull down code from your version control system.
       - run:
+          name: Change Dir
+          shell: /bin/bash
+          command: cd BAKit-ios/Example
           # run our tests using xcode's cli tool `xcodebuild`
           name: Run Unit Tests
-          command: xcodebuild test -scheme circleci-demo-macos
+          command: xcodebuild test -scheme BAKit_Tests
       - run:
           # build our application
           name: Build Application
