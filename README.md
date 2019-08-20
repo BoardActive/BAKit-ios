@@ -122,15 +122,18 @@ Just inside the declaration of the ```AppDelegate``` class, the following variab
     private let notificationCatOptions = UNNotificationCategoryOptions(arrayLiteral: [])
 ```
 
-After declaring your configuring Firebase and declaring ```AppDelegate```'s conformance to Firebase's ```MessagingDelegate```, store your BoardActive AppId and AppKey in ```BoardActive.client.userDefaults``` like so:
+After declaring your configuring Firebase and declaring ```AppDelegate```'s conformance to Firebase's ```MessagingDelegate```, store your BoardActive AppId and AppKey to ```BoardActive.client.userDefaults``` like so:
 
 ```swift
 func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
     FirebaseApp.configure()
     Messaging.messaging().delegate = self
-        
-    BoardActive.client.userDefaults?.set(<#AppId#>, forKey: "AppId")
-    BoardActive.client.userDefaults?.set(<#AppKey#>, forKey: "AppKey")
+    
+// AppId is of type String        
+BoardActive.client.userDefaults?.set(<#AppId#>, forKey: "AppId")
+
+// AppKey is of type String
+BoardActive.client.userDefaults?.set(<#AppKey#>, forKey: "AppKey")
         
     return true
 }
