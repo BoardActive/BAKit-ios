@@ -64,7 +64,12 @@ jobs:
 
     steps:
       - checkout
-
+      
+      # Navigate
+      - run:
+          name: Change Directory
+          command: cd Example
+          
       # Install CocoaPods
       - run:
           name: Install CocoaPods
