@@ -1,0 +1,4 @@
+jobs: 
+  build-macos: 
+    macos:  
+      xcode: "10.0.0" 
