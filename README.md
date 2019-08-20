@@ -76,12 +76,10 @@ Once you create a related Firebase project you can download the ```GoogleService
 ---
 
 #### Update Info.plist - Location Permission
-Requesting location permission requires the follow entries in your ```Info.plist``` file. Each entry requires an accompanying explanation as to why the user should grant their permission. 
+Requesting location permission requires the follow entries in your ```Info.plist``` file. Each entry requires an accompanying key in the form of a ```String``` explaining how user geolocation data will be used. 
 
 - `NSLocationAlwaysAndWhenInUseUsageDescription`
   - `Privacy - Location Always and When In Use Usage Description`
-- `NSLocationAlwaysUsageDescription`
-  - `Privacy - Location Always Usage Description`
 - `NSLocationWhenInUseUsageDescription`
   - `Privacy - Location Always Usage Description`
 
