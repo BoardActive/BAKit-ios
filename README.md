@@ -1,5 +1,8 @@
-## CocoaPod Update:
-* CocoaPod is downloadable
+![Cocoapods platforms](https://img.shields.io/cocoapods/p/BAKit)
+![GitHub top language](https://img.shields.io/github/languages/top/boardactive/BAKit-ios?color=orange)
+![Cocoapods](https://img.shields.io/cocoapods/v/BAKit?color=red)
+![GitHub commits since tagged version (branch)](https://img.shields.io/github/commits-since/boardactive/BAKit-ios/1.0.2)
+![GitHub issues](https://img.shields.io/github/issues-raw/boardactive/BAKit-iOS)
 
 # BAKit-iOS
 
@@ -27,7 +30,7 @@ ___
 #### Add Firebase Core and Firebase Messaging to your app
 To use Firebase Cloud Messaging you must create a Firebase project. 
 
-* [Firebase iOS Quickstart](https://firebase.google.com/docs/ios/setup) - A guide to creating and understanding Firebase projects
+* [Firebase iOS Quickstart](https://firebase.google.com/docs/ios/setup) - A guide to creating and understanding Firebase projects.
 * [Set up a Firebase Cloud Messaging client app on iOS](https://firebase.google.com/docs/cloud-messaging/ios/client) - How to handle Firebase Cloud Messaging (the means by which BoardActive sends push notifications). 
     * Please refer to the following two articles regarding APNS, as Firebase's documentation is a bit dated. We'll also cover how to add push notifications to your account whilst installing the SDK:
         * [Enable Push Notifications](https://help.apple.com/xcode/mac/current/#/devdfd3d04a1) 
@@ -54,8 +57,9 @@ Once you create a related Firebase project you can download the ```GoogleService
     * ```pod 'Firebase/Messaging'```
 5. Run ```$ pod repo update``` from the terminal in your main project directory.
 6. Run ```$ pod install```  from the terminal in your main project directory, and once CocoaPods has created workspace, open the <App Name>.workspace file. 
+7. Incorporate your ```GoogleService-Info.plist```, previously mentioned in the **Create a Firebase Project** section, by dragging said file into your project.
 
-Example Podfile
+**Example Podfile**
 
 ```ruby
     platform :ios, '10.0'
@@ -72,14 +76,11 @@ Example Podfile
 ---
 
 #### Update Info.plist - Location Permission
-Requesting location permission requires the follow entries in your ```Info.plist``` file. Each entry requires an accompanying explanation as to why the user should grant their permission. 
+Requesting location permission requires the follow entries in your ```Info.plist``` file. Each entry requires an accompanying key in the form of a ```String``` explaining how user geolocation data will be used. 
 
 - `NSLocationAlwaysAndWhenInUseUsageDescription`
   - `Privacy - Location Always and When In Use Usage Description`
-  
-*If you support iOS 10, you'll need to add the following key and an appropriate value as well.*  
-
-- `NSLocationAlwaysUsageDescription`
+- `NSLocationWhenInUseUsageDescription`
   - `Privacy - Location Always Usage Description`
 
 ---
@@ -87,13 +88,11 @@ Requesting location permission requires the follow entries in your ```Info.plist
 #### Update App Capabilities
 
 Under your app's primary target you will need to edit it's **Capabilities** as follows:  
-1. Enable **Background Modes** [^1]  
+1. Enable **Background Modes**. Apple provides documentation explain the various **Background Modes** [here](https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html#//apple_ref/doc/uid/TP40009252-SW22) 
 2. Tick the checkbox *Location updates*  
 3. Tick the checkbox *Background fetch*  
 4. Tick the checkbox *Remote notifications*  
 5. Enable **Push Notifications**  
-
-[^1]: Apple provides documentation explain the various **Background Modes** [here](https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html#//apple_ref/doc/uid/TP40009252-SW22)
 
 ---
 
@@ -121,21 +120,33 @@ Just inside the declaration of the ```AppDelegate``` class, the following variab
     private let notificationCatOptions = UNNotificationCategoryOptions(arrayLiteral: [])
 ```
 
-After declaring your configuring Firebase and declaring ```AppDelegate```'s conformance to Firebase's ```MessagingDelegate```, store your BoardActive AppId and AppKey in ```BoardActive.client.userDefaults``` like so:
+After declaring your configuring Firebase and declaring ```AppDelegate```'s conformance to Firebase's ```MessagingDelegate```, store your BoardActive AppId and AppKey to ```BoardActive.client.userDefaults``` like so:
 
 ```swift
 func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
     FirebaseApp.configure()
     Messaging.messaging().delegate = self
-        
-    BoardActive.client.userDefaults?.set(<#AppId#>, forKey: "AppId")
-    BoardActive.client.userDefaults?.set(<#AppKey#>, forKey: x"AppKey")
+    
+// AppId is of type String        
+BoardActive.client.userDefaults?.set(<#AppId#>, forKey: "AppId")
+
+// AppKey is of type String
+BoardActive.client.userDefaults?.set(<#AppKey#>, forKey: "AppKey")
         
     return true
 }
 ```
 
-Having followed the Apple's instructions linked in the **Add Firebase Core and Firebase Messaging to Your App** section, please add the following code, ```import BAKit``` and snippets to your ```AppDelegate.swift```:
+Having followed the Apple's instructions linked in the **Add Firebase Core and Firebase Messaging to Your App** section, please add the following code to your ```AppDelegate.swift```:
+
+```swift 
+import BAKit
+import Firebase
+import UIKit
+import UserNotifications
+import Messages
+```
+ snippets 
 
 ```swift
 extension AppDelegate {
@@ -143,14 +154,11 @@ extension AppDelegate {
     func setupSDK() {
         BoardActive.client.registerDevice { (parsedJSON, err) in
             guard err == nil else {
-            // Handle an error here
+            // Handle the returned error as needed
             }
             
             BoardActive.client.userDefaults?.set(true, forKey: String.DeviceRegistered)
             BoardActive.client.userDefaults?.synchronize()
-            
-            let userInfo = UserInfo.init(fromDictionary: parsedJSON!)
-            StorageObject.container.userInfo = userInfo
         }
         
         self.requestNotifications()
@@ -192,24 +200,21 @@ extension AppDelegate {
      - Parameter userInfo: A dictionary that contains information related to the remote notification, potentially including a badge number for the app icon, an alert sound, an alert message to display to the user, a notification identifier, and custom data. The provider originates it as a JSON-defined dictionary that iOS converts to an `NSDictionary` object; the dictionary may contain only property-list objects plus `NSNull`. For more information about the contents of the remote notification dictionary, see Generating a Remote Notification.
      */
     public func handleNotification(application: UIApplication, userInfo: [AnyHashable: Any]) {
-        let tempUserInfo = userInfo as! [String: Any]
-        
-        // A NotificationModel was created to aid in parsing the JSON returned by SDK. Feel free to parse the JSON as you see fit.
-        var notificationModel: NotificationModel
-        
+      // Parse the userInfo JSON as needed.
+
         badgeNumber += 1
         
         application.applicationIconBadgeNumber = badgeNumber
         
         // The code below logs default events
-        if let _ = notificationModel.aps, let gcmmessageId = notificationModel.gcmmessageId, let firebaseNotificationId = notificationModel.notificationId {
+                if let _ = userInfo["aps"] as? String, let gcmmessageId = userInfo["gcmmessageId"] as? String, let firebaseNotificationId = userInfo["notificationId"] as? String {
             switch application.applicationState {
             case .active:
-                BoardActive.client.postEvent(name: String.Received, googleMessageId: gcmmessageId, messageId: firebaseNotificationId)
+                BoardActive.client.postEvent(name: String.Received, googleMessageId: gcmmessageId , messageId: (firebaseNotificationId as? String)!)
             case .background:
-                BoardActive.client.postEvent(name: String.Received, googleMessageId: gcmmessageId, messageId: firebaseNotificationId)
+                BoardActive.client.postEvent(name: String.Received, googleMessageId: (gcmmessageId as? String)!, messageId: (firebaseNotificationId as? String)!)
             case .inactive:
-                BoardActive.client.postEvent(name: String.Opened, googleMessageId: gcmmessageId, messageId: firebaseNotificationId)
+                BoardActive.client.postEvent(name: String.Opened, googleMessageId: (gcmmessageId as? String)!, messageId: (firebaseNotificationId as? String)!)
             default:
                 break
             }
@@ -276,7 +281,7 @@ self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
 
 
 ## Download Example App Source Code
-There is an example app attached to CocoaPod.
+There is an example app included in the repo's code under "Example".
 
 ## Ask for Help
 
@@ -284,3 +289,4 @@ Our team wants to help. Please contact us
 * Call us: [(678) 383-2200](tel:+6494461709)
 * Email Us [support@boardactive.com](mailto:info@boardactive.com)
 * Online Support [Web Site](https://www.boardactive.com/)
+
