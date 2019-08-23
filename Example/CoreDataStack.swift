@@ -24,7 +24,10 @@ public class CoreDataStack: NSObject {
          application to it. This property is optional since there are legitimate
          error conditions that could cause the creation of the store to fail.
          */
+        let groupName = "group.com.boardactive.addrop"
+        let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupName)!.appendingPathComponent("BAKit.sqlite")
         let container = NSPersistentContainer(name: "BAKit")
+        container.persistentStoreDescriptions = [NSPersistentStoreDescription(url: url)]
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 // Replace this implementation with code to handle the error appropriately.
@@ -60,7 +63,22 @@ public class CoreDataStack: NSObject {
     public func createNotificationModel(fromDictionary dictionary: [String:Any]) -> NotificationModel {
         let context = CoreDataStack.sharedInstance.persistentContainer.viewContext
         let notificationModel = NSEntityDescription.insertNewObject(forEntityName: "NotificationModel", into: context) as! NotificationModel
-        notificationModel.aps = createAps(fromDictionary: (dictionary["aps"] as! [String: Any]))
+        if let receivedDate = dictionary["date"] as? String {
+            notificationModel.date = receivedDate
+        } else {
+            notificationModel.date = Date().iso8601
+        }
+        if let aps = dictionary["aps"] as? [String:Any] {
+            notificationModel.aps = createAps(fromDictionary: aps)
+        } else {
+            do {
+                let apsData = dictionary["aps"] as! String
+                let aps = try JSONSerialization.jsonObject(with: apsData.data(using: .utf8)!, options: []) as! [String:Any]
+                notificationModel.aps = createAps(fromDictionary: aps)
+            } catch {
+                fatalError()
+            }
+        }
         notificationModel.body = dictionary["body"] as? String
         notificationModel.dateCreated = dictionary["dateCreated"] as? String
         notificationModel.dateLastUpdated = dictionary["dateLastUpdated"] as? String
@@ -68,12 +86,23 @@ public class CoreDataStack: NSObject {
         notificationModel.googlecae = dictionary["google.c.a.e"] as? String
         notificationModel.imageUrl = dictionary["imageUrl"] as? String
         notificationModel.isTestMessage = dictionary["isTestMessage"] as? String
-        notificationModel.messageData = createMessageData(fromDictionary: dictionary["messageData"] as! [String: Any])
+        if let messageData = dictionary["messageData"] as? [String:Any] {
+            notificationModel.messageData = createMessageData(fromDictionary: messageData)
+        } else {
+            do {
+                let messageDataData = dictionary["messageData"] as! String
+                let messageData = try JSONSerialization.jsonObject(with: messageDataData.data(using: .utf8)!, options: []) as! [String:Any]
+                notificationModel.messageData = createMessageData(fromDictionary: messageData)
+            } catch {
+                fatalError()
+            }
+        }
         notificationModel.messageId = dictionary["messageId"] as? String
         notificationModel.notificationId = dictionary["notificationId"] as? String
         notificationModel.tap = dictionary["tap"] as? Bool ?? false
         notificationModel.title = dictionary["title"] as? String
-        CoreDataStack.sharedInstance.saveContext()
+        saveContext()
+        NotificationCenter.default.post(Notification(name: Notification.Name("Refresh HomeViewController Tableview")))
         return notificationModel
     }
     
@@ -81,11 +110,21 @@ public class CoreDataStack: NSObject {
         let context = CoreDataStack.sharedInstance.persistentContainer.viewContext
         let aps = NSEntityDescription.insertNewObject(forEntityName: "Aps", into: context) as! Aps
         aps.badge = dictionary["badge"] as! Int64
-        aps.contentavailable = dictionary["contentavailable"] as! Int64
-        aps.mutablecontent = dictionary["mutablecontent"] as! Int64
+        aps.contentavailable = dictionary["content-available"] as! Int64
+        aps.mutablecontent = dictionary["mutable-content"] as! Int64
         aps.category = dictionary["category"] as? String
         aps.sound = dictionary["sound"] as? String
-        aps.alert = createAlert(fromDictionary: (dictionary["alert"] as! [String: Any]))
+        if let alert = dictionary["alert"] as? [String:Any] {
+            aps.alert = createAlert(fromDictionary: alert)
+        } else {
+            do {
+                let alertData = dictionary["alert"] as! String
+                let alert = try JSONSerialization.jsonObject(with: alertData.data(using: .utf8)!, options: []) as! [String:Any]
+                aps.alert = createAlert(fromDictionary: alert)
+            } catch {
+                fatalError()
+            }
+        }
         return aps
     }
     
@@ -115,6 +154,14 @@ public class CoreDataStack: NSObject {
         return alert
     }
     
+    public func createBAKitApp(fromApp app: App) -> BAKitApp {
+        let context = CoreDataStack.sharedInstance.persistentContainer.viewContext
+        let baKitApp = NSEntityDescription.insertNewObject(forEntityName: "BAKitApp", into: context) as! BAKitApp
+        baKitApp.id = app.id
+        baKitApp.name = app.name
+        return baKitApp
+    }
+        
     public func fetchDataFromDatabase() -> [NSManagedObject]? {
         let context = CoreDataStack.sharedInstance.persistentContainer.viewContext
 
@@ -123,13 +170,14 @@ public class CoreDataStack: NSObject {
         calendar.timeZone = NSTimeZone.local
         
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "NotificationModel")
-        let sort = NSSortDescriptor(key: #keyPath(NotificationModel.date), ascending: true)
+        let sort = NSSortDescriptor(key: #keyPath(NotificationModel.date), ascending: false)
         request.sortDescriptors = [sort]
-        request.returnsObjectsAsFaults = false
         do {
             let result = try context.fetch(request)
             for data in result as! [NSManagedObject] {
-                print(data.value(forKey: "username") as! String)
+                if let messageData = data.value(forKey: "messageData") as? NotificationModel {
+                    print("FETCHED OBJECT DATE : MessageData :: \(messageData.debugDescription)")
+                }
             }
             return result as? [NSManagedObject]
         } catch {
@@ -137,6 +185,51 @@ public class CoreDataStack: NSObject {
         }
         return nil
     }
-}
+    
+    func deleteStoredData(entity: String) {
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        
+        // perform the delete
+        do {
+            try persistentContainer.viewContext.execute(deleteRequest)
+        } catch let error as NSError {
+            print(error)
+        }
+        
+        let req: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest<NSFetchRequestResult>(entityName: "BAKitApp")
+        let dreq = NSBatchDeleteRequest(fetchRequest: req)
+        do {
+            try persistentContainer.viewContext.execute(dreq)
+        } catch let error as NSError {
+            print(error)
+        }
+    }
+    
+    public func fetchAppsFromDatabase() -> [NSManagedObject]? {
+        let context = CoreDataStack.sharedInstance.persistentContainer.viewContext
+        
+        // Get the current calendar with local time zone
+        var calendar = Calendar.current
+        calendar.timeZone = NSTimeZone.local
+        
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BAKitApp")
+        let sort = NSSortDescriptor(key: #keyPath(BAKitApp.name), ascending: false)
+        request.sortDescriptors = [sort]
+        request.returnsObjectsAsFaults = false
+        do {
+            let result = try context.fetch(request)
+            for data in result as! [NSManagedObject] {
+                if let app = data.value(forKey: "name") as? String {
+                    print("App :: Name: \(app)")
+                }
+            }
+            return result as? [NSManagedObject]
+        } catch {
+            print("Failed")
+        }
+        return nil
+    }
 
+}
 

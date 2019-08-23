@@ -9,7 +9,7 @@ struct Onboarding{
 	var step0 : Int!
 	var step1 : Int!
 	var step2 : Int!
-
+    var step3 : Int!
 
 	/**
 	 * Instantiate the instance using the passed dictionary values to set the properties values
@@ -18,6 +18,7 @@ struct Onboarding{
 		step0 = dictionary["step0"] as? Int
 		step1 = dictionary["step1"] as? Int
 		step2 = dictionary["step2"] as? Int
+        step3 = dictionary["step3"] as? Int
 	}
 
 	/**
@@ -35,6 +36,9 @@ struct Onboarding{
 		if step2 != nil{
 			dictionary["step2"] = step2
 		}
+        if step3 != nil{
+            dictionary["step3"] = step3
+        }
 		return dictionary
 	}
 

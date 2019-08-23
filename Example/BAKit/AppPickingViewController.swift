@@ -13,22 +13,40 @@ class AppPickingViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.setHidesBackButton(true, animated: false)
         
-        self.navigationController?.navigationBar.isHidden = false
+        configureNavigationBar()
+        
+        guard let apps = CoreDataStack.sharedInstance.fetchAppsFromDatabase() else {
+            let alertController = UIAlertController(title: "No Apps Found", message: "No apps are associated with the current user.", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true) {
+                self.navigationController?.popToRootViewController(animated: true)
+            }
+            return
+        }
+        
+        StorageObject.container.apps = apps
+        
         self.tableView.tableFooterView = UIView()
         
-        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.1716355085, green: 0.7660725117, blue: 0.9729360938, alpha: 1)
-        self.navigationController?.navigationBar.tintColor = UIColor.white
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-
+        if let apps = CoreDataStack.sharedInstance.fetchAppsFromDatabase() {
+            StorageObject.container.apps = apps
+        }
+        self.tableView.reloadData()
+    }
+    
+    func configureNavigationBar() {
+        self.navigationItem.setHidesBackButton(true, animated: false)
+        self.navigationController?.navigationBar.isHidden = false
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white, NSAttributedStringKey.font: UIFont(name: "Montserrat-SemiBold", size: 21)!]
     }
     
     // MARK: - Table view data source
@@ -38,29 +56,25 @@ class AppPickingViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return StorageObject.container.apps!.count
-        // BoardActive.client.userDefaults?.array(forKey: String.ConfigKeys.Apps) as! [App]
+        return StorageObject.container.apps.count
     }
 
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-        cell.textLabel?.text = StorageObject.container.apps![indexPath.row].name
-        
-//        cell.detailTextLabel?.text = (BoardActive.client.userDefaults?.array(forKey: String.ConfigKeys.Apps) as! [App])[indexPath.row].name
+        cell.textLabel?.font = UIFont(name:"Montserrat-Regular", size:17)
+        if let text = StorageObject.container.apps[indexPath.row].value(forKey:"name") as? String {
+            cell.textLabel?.text = text
+        }
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let appId = String(StorageObject.container.apps![indexPath.row].id)
-//        String((BoardActive.client.userDefaults?.array(forKey: String.ConfigKeys.Apps) as! [App])
-        let appKey = (BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppKey))!
-        
-        BoardActive.client.userDefaults?.set(appId, forKey: String.ConfigKeys.AppId)
-        BoardActive.client.userDefaults?.synchronize()
-        
-        BoardActive.client.setupEnvironment(appID: appId, appKey: appKey)
-        
+        let selectedApp = StorageObject.container.apps[indexPath.row] as? BAKitApp
+        if let appId = selectedApp?.id {
+            let appKey = (BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppKey))!
+            BoardActive.client.setupEnvironment(appID: "\(appId)", appKey: appKey)
+        }
         (UIApplication.shared.delegate! as! AppDelegate).setupSDK()
         
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)

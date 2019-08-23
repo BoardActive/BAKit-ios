@@ -24,9 +24,9 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.view.backgroundColor = UIColor.white
         self.view.backgroundColor = UIColor.white
-        
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.font: UIFont(name: "Montserrat-Regular", size: 20)!]
+
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(LoginViewController.dismissKeyboard))
         self.view.addGestureRecognizer(tap)
         
@@ -101,8 +101,7 @@ class LoginViewController: UIViewController {
             } else {
                 BoardActive.client.userDefaults?.set(false, forKey: "isDevEnv")
             }
-//            BoardActive.client.userDefaults?.set(, forKey: <#T##String#>)
-//            var json: Dictionary<String,Any> = [:]
+            
             let operationQueue = OperationQueue()
             let registerDeviceOperation = BlockOperation {
                 BoardActive.client.postLogin(email: email, password: password) { (parsedJSON, err) in
@@ -115,20 +114,21 @@ class LoginViewController: UIViewController {
                     
                     if let parsedJSON = parsedJSON {
                         let payload: LoginPayload = LoginPayload.init(fromDictionary: parsedJSON)
-                       
+                        for app in payload.apps {
+                            StorageObject.container.apps.append(CoreDataStack.sharedInstance.createBAKitApp(fromApp: app))
+                        }
+                        
                         if payload.apps.count < 1 {
                             DispatchQueue.main.async {
                                 self.showCredentialsErrorAlert(error: parsedJSON["message"] as! String)
                                 return
                             }
                         } else {
-                            StorageObject.container.payload = payload
-                            StorageObject.container.apps = payload.apps
                             print("PAYLOAD :: APPS : \(payload.apps.description)")
                             
                             OperationQueue.main.addOperation {
                                 let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-                                let appPickingViewController = storyBoard.instantiateViewController(withIdentifier: "AppSelectViewController")
+                                let appPickingViewController = storyBoard.instantiateViewController(withIdentifier: "AppPickingViewController")
                                 self.navigationController?.pushViewController(appPickingViewController, animated: true)
                             }
                         }
@@ -143,29 +143,7 @@ class LoginViewController: UIViewController {
                 
                 BoardActive.client.userDefaults?.synchronize()
             }
-
-//            let transitionBlockOperation = BlockOperation {
-//                DispatchQueue.main.async {
-//                    let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-//                    let appPickingViewController = storyBoard.instantiateViewController(withIdentifier: "AppSelectViewController")
-//                    self.navigationController?.pushViewController(appPickingViewController, animated: true)
-//                }
-//            }
-            
-//            transitionBlockOperation.addDependency(registerDeviceOperation)
             operationQueue.addOperation(registerDeviceOperation)
-//            operationQueue.addOperation(transitionBlockOperation)
-           
-//            if payload.apps.count == 1 {
-//                let appId = String(payload.apps.first!.id)
-//                BoardActive.client.userDefaults?.set(appId, forKey: String.ConfigKeys.AppId)
-//                BoardActive.client.userDefaults?.synchronize()
-//
-//                let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-//                let homeViewController = storyBoard.instantiateViewController(withIdentifier: "HomeViewController")
-//                self.navigationController?.pushViewController(homeViewController, animated: true)
-//            } else {
-//            }
         } else {
             DispatchQueue.main.async {
                 self.showCredentialsErrorAlert(error:"Both fields must contain entries.")
