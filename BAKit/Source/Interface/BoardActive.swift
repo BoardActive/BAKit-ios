@@ -5,7 +5,6 @@
 //  Created by Hunter Brennick on 7/23/18.
 //  Copyright © 2018 BoardActive. All rights reserved.
 //
-
 import CoreLocation
 import Foundation
 import UIKit
@@ -66,13 +65,13 @@ public class BoardActive: NSObject {
     }
     
     /**
-        If error occurs, block will execute with status other than `INTULocationStatusSuccess` and subscription will be kept alive.
+     If error occurs, block will execute with status other than `INTULocationStatusSuccess` and subscription will be kept alive.
      */
     public func monitorLocation() {
         weak var weakSelf = BoardActive.client
         DispatchQueue.main.async {
             weakSelf?.currentLocationRequestID = weakSelf?.locationManager.subscribeToLocationUpdates(withDesiredAccuracy: .room) { (location, accuracy, status) in
-                guard status == INTULocationStatus.success, accuracy.rawValue == 5 else {
+                guard status == INTULocationStatus.success else {
                     os_log("[BoardActive] :: monitorLocation : status : %d", status.rawValue)
                     NotificationCenter.default.post(name: NSNotification.Name("Location Update Error"), object: ["status":status.rawValue])
                     return
@@ -119,7 +118,7 @@ public class BoardActive: NSObject {
     deinit {
         revokeLocationSubscription()
     }
-  
+    
     /**
      Functions as an as needed means of procuring the user's current location.
      - Returns: `CLLocation?` An optional `CLLocation` obtained by `CLLocationManager's` `requestLocation()` function.
@@ -166,7 +165,7 @@ public class BoardActive: NSObject {
             String.HeaderKeys.DeviceTokenHeader     : tokenString,
             String.HeaderKeys.DeviceTypeHeader      : String.HeaderValues.DeviceType,
             String.HeaderKeys.HostHeader            : hostKey,
-            String.HeaderKeys.IsTestApp             : "1",
+            String.HeaderKeys.IsTestApp             : "0",
             String.HeaderKeys.UUIDHeader            : UIDevice.current.identifierForVendor!.uuidString
         ]
         return headers
@@ -198,7 +197,7 @@ public class BoardActive: NSObject {
             }
             
             os_log("[BoardActive] :: postLogin: %s", parsedJSON.debugDescription)
-
+            
             completionHandler(parsedJSON, nil)
             
             return
@@ -266,7 +265,7 @@ public class BoardActive: NSObject {
             String.NetworkCallRelated.Latitude: "\(location.coordinate.latitude)",
             String.NetworkCallRelated.Longitude: "\(location.coordinate.longitude)",
             String.NetworkCallRelated.DeviceTime: Date().iso8601 as AnyObject
-            ]
+        ]
         print("PATH :: \(path) \n BODY :: \(body)")
         callServer(path: path, httpMethod: String.HTTPMethod.POST, body: body) { parsedJSON, err in
             guard err == nil else {
@@ -288,7 +287,7 @@ public class BoardActive: NSObject {
             String.Attribute.Attrs:[
                 String.Attribute.Stock: attributes.toDictionary()[String.Attribute.Stock],
                 String.Attribute.Custom: attributes.toDictionary()[String.Attribute.Custom]
-            ] as AnyObject
+                ] as AnyObject
         ]
         
         self.callServer(path: path, httpMethod: httpMethod, body: body) { parsedJSON, err in
