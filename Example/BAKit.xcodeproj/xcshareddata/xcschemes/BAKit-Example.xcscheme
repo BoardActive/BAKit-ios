@@ -29,8 +29,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "607FACE41AFB9204008FA782"
-               BuildableName = "AdDropTests.xctest"
-               BlueprintName = "AdDropTests"
+               BuildableName = "AdDrop_Tests.xctest"
+               BlueprintName = "AdDrop_Tests"
                ReferencedContainer = "container:BAKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

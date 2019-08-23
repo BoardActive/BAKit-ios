@@ -117,17 +117,6 @@ extension AppDelegate {
         guard let notificationModel = StorageObject.container.notification else {
             return
         }
-
-//        } else {
-//            let context = CoreDataStack.sharedInstance.persistentContainer.viewContext
-//            notificationModel = NSEntityDescription.insertNewObject(forEntityName: "NotificationModel", into: context) as! NotificationModel
-//            notificationModel.body = tempUserInfo["body"] as? String
-//            notificationModel.messageData = CoreDataStack.sharedInstance.createMessageData(fromDictionary: tempUserInfo)
-//        }
-//        CoreDataStack.sharedInstance.persistentContainer.viewContext.insert(notificationModel)
-        
-        
-        os_log("Notification Model :: %s", notificationModel.debugDescription)
         
         if let _ = notificationModel.aps, let gcmmessageId = notificationModel.gcmmessageId, let firebaseNotificationId = notificationModel.notificationId {
             switch application.applicationState {
