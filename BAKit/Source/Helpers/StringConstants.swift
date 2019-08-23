@@ -12,7 +12,11 @@ public extension String {
         public static let Prod = "b70095c6-1169-43d6-a5dd-099877b4acb3"
         public static let Dev  = "d17f0feb-4f96-4c2a-83fd-fd6302ae3a16"
     }
+<<<<<<< Updated upstream
     
+=======
+
+>>>>>>> Stashed changes
     enum ConfigKeys {
         public static let Apps        = "Apps"
         public static let AppId       = "AppId"

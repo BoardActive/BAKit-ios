@@ -1,5 +1,5 @@
 PODS:
-  - BAKit (0.1.0):
+  - BAKit (1.0.2):
     - INTULocationManager
   - Crashlytics (3.13.4):
     - Fabric (~> 1.10.2)
@@ -716,7 +716,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  BAKit: a185ecde8bd21de9d75bdf05c896b914461f598e
+  BAKit: 75be289a84a36059e5a2263f08791568b5ce9045
   Crashlytics: 2dfd686bcb918dc10ee0e76f7f853fe42c7bd552
   Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
   Firebase: 0c8cf33f266410c61ab3e2265cfa412200351d9c

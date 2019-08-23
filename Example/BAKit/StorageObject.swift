@@ -7,11 +7,12 @@
 //
 
 import UIKit
+import CoreData
 
 public class StorageObject: NSObject {
     public static let container = StorageObject()
     
-    public var apps: [App]?
+    public var apps: [NSManagedObject] = [NSManagedObject]()
     public var user: User?
     public var payload: LoginPayload?
     public var userInfo: UserInfo?

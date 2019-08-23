@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "607FACCF1AFB9204008FA782"
-               BuildableName = "BAKit_Example.app"
-               BlueprintName = "BAKit_Example"
+               BuildableName = "AdDrop.app"
+               BlueprintName = "AdDrop"
                ReferencedContainer = "container:BAKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,8 +29,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "607FACE41AFB9204008FA782"
-               BuildableName = "BAKit_Tests.xctest"
-               BlueprintName = "BAKit_Tests"
+               BuildableName = "AdDropTests.xctest"
+               BlueprintName = "AdDropTests"
                ReferencedContainer = "container:BAKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -47,8 +47,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "607FACCF1AFB9204008FA782"
-            BuildableName = "BAKit_Example.app"
-            BlueprintName = "BAKit_Example"
+            BuildableName = "AdDrop.app"
+            BlueprintName = "AdDrop"
             ReferencedContainer = "container:BAKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -70,8 +70,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "607FACCF1AFB9204008FA782"
-            BuildableName = "BAKit_Example.app"
-            BlueprintName = "BAKit_Example"
+            BuildableName = "AdDrop.app"
+            BlueprintName = "AdDrop"
             ReferencedContainer = "container:BAKit.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -93,8 +93,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "607FACCF1AFB9204008FA782"
-            BuildableName = "BAKit_Example.app"
-            BlueprintName = "BAKit_Example"
+            BuildableName = "AdDrop.app"
+            BlueprintName = "AdDrop"
             ReferencedContainer = "container:BAKit.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

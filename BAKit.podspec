@@ -10,8 +10,13 @@ Pod::Spec.new do |s|
   s.name             = 'BAKit'
   s.version          = '0.1.0'
   s.summary          = 'Location-based notifications for personalized user engagement and retention campaigns.'
+<<<<<<< Updated upstream
   s.description      = 'Board Active iOS SDK, for integrating BoardActive into your iOS application. The SDK supports iOS 10.0]+'
   s.homepage         = 'https://github.com/BoardActive/BAKit-ios.git'
+=======
+  s.description      = 'Board Active iOS SDK, for integrating BoardActive into your iOS application. The SDK supports iOS 10.0+'
+  s.homepage         = 'https://boardactive.com/'
+>>>>>>> Stashed changes
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Hunter Brennick' => 'hunter@boardactive.com', 'Ed Salter' => 'ed@boardactive.com' }
   s.author           = { 'BoardActive' => 'dev@boardactive.com' }

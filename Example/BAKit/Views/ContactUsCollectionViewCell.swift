@@ -13,5 +13,5 @@ class ContactUsCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var emailButton: UIButton!
     @IBOutlet weak var directionsButton: UIButton!
     @IBOutlet weak var callButton: UIButton!
-    
+    @IBOutlet weak var youTubeButton: UIButton!
 }

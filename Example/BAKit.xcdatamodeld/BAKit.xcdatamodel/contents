@@ -12,6 +12,10 @@
         <attribute name="sound" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="alert" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Alert" syncable="YES"/>
     </entity>
+    <entity name="BAKitApp" representedClassName="BAKitApp" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="MessageData" representedClassName="MessageData" syncable="YES" codeGenerationType="class">
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="phoneNumber" optional="YES" attributeType="String" syncable="YES"/>
@@ -28,7 +32,7 @@
     </entity>
     <entity name="NotificationModel" representedClassName="NotificationModel" syncable="YES" codeGenerationType="class">
         <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dateCreated" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="dateLastUpdated" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="gcmmessageId" optional="YES" attributeType="String" syncable="YES"/>
@@ -47,5 +51,6 @@
         <element name="Aps" positionX="-54" positionY="18" width="128" height="135"/>
         <element name="MessageData" positionX="-54" positionY="63" width="128" height="225"/>
         <element name="NotificationModel" positionX="-63" positionY="-18" width="128" height="255"/>
+        <element name="BAKitApp" positionX="-45" positionY="117" width="128" height="30"/>
     </elements>
 </model>
