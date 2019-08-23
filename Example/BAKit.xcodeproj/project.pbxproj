@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		13C0073735670A090B8E028F /* Pods_AdDrop.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 549B9F891063EB47D529BFA0 /* Pods_AdDrop.framework */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
+		7EA8624E48BEA767C3BDC430 /* Pods_AdDrop_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B16F744C5154AAEC24C1BF77 /* Pods_AdDrop_Tests.framework */; };
 		9604133822EF830100FBF8AF /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9604133722EF830100FBF8AF /* Montserrat-Regular.ttf */; };
 		9604133B22EF841000FBF8AF /* Montserrat-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9604133A22EF841000FBF8AF /* Montserrat-SemiBold.ttf */; };
 		96103D7C22FB1777006E0256 /* BAKit.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 96940A9622FB056800D2303C /* BAKit.xcdatamodeld */; };
@@ -128,7 +130,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		33321261DF89E12DCD2D3CBB /* Pods-AdDrop.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdDrop.debug.xcconfig"; path = "Target Support Files/Pods-AdDrop/Pods-AdDrop.debug.xcconfig"; sourceTree = "<group>"; };
 		4C3854B257C4F2CB6E0F1C2C /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		549B9F891063EB47D529BFA0 /* Pods_AdDrop.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AdDrop.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD01AFB9204008FA782 /* AdDrop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdDrop.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACDA1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		607FACE51AFB9204008FA782 /* AdDrop_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AdDrop_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -190,9 +194,13 @@
 		96FEC81B230F8B030087873D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		96FEC822230F8B660087873D /* NotificationPersistenceService.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NotificationPersistenceService.entitlements; sourceTree = "<group>"; };
 		96FEC826230F8EA40087873D /* Content Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Content Extension.entitlements"; sourceTree = "<group>"; };
+		B16F744C5154AAEC24C1BF77 /* Pods_AdDrop_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AdDrop_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D6944FEF35BBF5EDB9539998 /* Pods-AdDrop_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdDrop_Tests.release.xcconfig"; path = "Target Support Files/Pods-AdDrop_Tests/Pods-AdDrop_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		DF8C290BFFCEEE2136A072EA /* Pods-AdDrop_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdDrop_Tests.debug.xcconfig"; path = "Target Support Files/Pods-AdDrop_Tests/Pods-AdDrop_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		EEA030DBB7428A2965059188 /* AlertControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertControllerTests.swift; sourceTree = "<group>"; };
 		EEA03A7E035B199019AB8F60 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EEA03E92F7317CD0DF20CE77 /* AdDrop.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = AdDrop.entitlements; sourceTree = SOURCE_ROOT; };
+		EF4155C61E4733FF09DCA066 /* Pods-AdDrop.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdDrop.release.xcconfig"; path = "Target Support Files/Pods-AdDrop/Pods-AdDrop.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,6 +208,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13C0073735670A090B8E028F /* Pods_AdDrop.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,6 +216,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7EA8624E48BEA767C3BDC430 /* Pods_AdDrop_Tests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -229,6 +239,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1693C1147519D28F8B589380 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				33321261DF89E12DCD2D3CBB /* Pods-AdDrop.debug.xcconfig */,
+				EF4155C61E4733FF09DCA066 /* Pods-AdDrop.release.xcconfig */,
+				DF8C290BFFCEEE2136A072EA /* Pods-AdDrop_Tests.debug.xcconfig */,
+				D6944FEF35BBF5EDB9539998 /* Pods-AdDrop_Tests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
@@ -242,6 +263,7 @@
 				96FEC818230F8B030087873D /* NotificationPersistenceService */,
 				607FACD11AFB9204008FA782 /* Products */,
 				C4917B910CA67E361D7643CB /* Frameworks */,
+				1693C1147519D28F8B589380 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -434,6 +456,8 @@
 			children = (
 				96697B4D227D305E00794455 /* UserNotifications.framework */,
 				96697B4F227D305E00794455 /* UserNotificationsUI.framework */,
+				549B9F891063EB47D529BFA0 /* Pods_AdDrop.framework */,
+				B16F744C5154AAEC24C1BF77 /* Pods_AdDrop_Tests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -445,11 +469,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 607FACEF1AFB9204008FA782 /* Build configuration list for PBXNativeTarget "AdDrop" */;
 			buildPhases = (
+				3FBEA8392EA71831C34E6FD7 /* [CP] Check Pods Manifest.lock */,
 				607FACCC1AFB9204008FA782 /* Sources */,
 				607FACCD1AFB9204008FA782 /* Frameworks */,
 				607FACCE1AFB9204008FA782 /* Resources */,
 				961ADEC02278C2380014AB18 /* Embed App Extensions */,
 				96B06CA622F45C3800BAC58B /* ShellScript */,
+				FD4B12556DD2B0FCF04C5110 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -466,9 +492,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 607FACF21AFB9204008FA782 /* Build configuration list for PBXNativeTarget "AdDrop_Tests" */;
 			buildPhases = (
+				3A539DCDC8BC6C88B2B9EEB9 /* [CP] Check Pods Manifest.lock */,
 				607FACE11AFB9204008FA782 /* Sources */,
 				607FACE21AFB9204008FA782 /* Frameworks */,
 				607FACE31AFB9204008FA782 /* Resources */,
+				5A116E8ECC7B6ABF7361A696 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -633,6 +661,67 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		3A539DCDC8BC6C88B2B9EEB9 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AdDrop_Tests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3FBEA8392EA71831C34E6FD7 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AdDrop-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5A116E8ECC7B6ABF7361A696 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AdDrop_Tests/Pods-AdDrop_Tests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AdDrop_Tests/Pods-AdDrop_Tests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AdDrop_Tests/Pods-AdDrop_Tests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		96B06CA622F45C3800BAC58B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -650,6 +739,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/Fabric/run\"\n";
+		};
+		FD4B12556DD2B0FCF04C5110 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AdDrop/Pods-AdDrop-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AdDrop/Pods-AdDrop-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AdDrop/Pods-AdDrop-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -837,6 +943,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = singlefile;
 				SWIFT_VERSION = 4.0;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
@@ -889,17 +996,20 @@
 				SWIFT_COMPILATION_MODE = singlefile;
 				SWIFT_VERSION = 4.0;
 				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};
 		607FACF01AFB9204008FA782 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 33321261DF89E12DCD2D3CBB /* Pods-AdDrop.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = AdDrop.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = DLP7NL6GNK;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -922,17 +1032,20 @@
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
 		607FACF11AFB9204008FA782 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EF4155C61E4733FF09DCA066 /* Pods-AdDrop.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = AdDrop.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = DLP7NL6GNK;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -955,11 +1068,13 @@
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};
 		607FACF31AFB9204008FA782 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DF8C290BFFCEEE2136A072EA /* Pods-AdDrop_Tests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -990,6 +1105,7 @@
 		};
 		607FACF41AFB9204008FA782 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D6944FEF35BBF5EDB9539998 /* Pods-AdDrop_Tests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1026,6 +1142,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Content Extension/Content Extension.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = DLP7NL6GNK;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1060,6 +1177,7 @@
 				CODE_SIGN_ENTITLEMENTS = "Content Extension/Content Extension.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = DLP7NL6GNK;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "Content Extension/Info.plist";
@@ -1092,6 +1210,7 @@
 				CODE_SIGN_ENTITLEMENTS = NotificationPersistenceService/NotificationPersistenceService.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = DLP7NL6GNK;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1126,6 +1245,7 @@
 				CODE_SIGN_ENTITLEMENTS = NotificationPersistenceService/NotificationPersistenceService.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = DLP7NL6GNK;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = NotificationPersistenceService/Info.plist;
