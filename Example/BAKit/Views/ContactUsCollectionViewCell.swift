@@ -1,6 +1,6 @@
 //
 //  ContactUsCollectionViewCell.swift
-//  BAKit_Example
+//  AdDrop
 //
 //  Created by Ed Salter on 8/13/19.
 //  Copyright © 2019 BoardActive. All rights reserved.
