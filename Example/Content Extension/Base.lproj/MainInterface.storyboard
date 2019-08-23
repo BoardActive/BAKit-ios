@@ -9,6 +9,14 @@
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Montserrat-Regular.ttf">
+            <string>Montserrat-Regular</string>
+        </array>
+        <array key="Montserrat-SemiBold.ttf">
+            <string>Montserrat-SemiBold</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--Notification View Controller-->
         <scene sceneID="cwh-vc-ff4">
@@ -19,33 +27,34 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rUe-KG-aLa">
-                                <rect key="frame" x="40" y="76" width="240" height="128"/>
+                                <rect key="frame" x="0.0" y="44" width="320" height="128"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="128" id="1Ff-w9-Ocd"/>
+                                </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="icg-EG-Lyh">
-                                <rect key="frame" x="40" y="15" width="240" height="20.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <rect key="frame" x="16" y="180" width="288" height="22"/>
+                                <fontDescription key="fontDescription" name="Montserrat-SemiBold" family="Montserrat" pointSize="18"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Body" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yTS-Rg-tiE">
-                                <rect key="frame" x="40" y="226" width="240" height="20.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <rect key="frame" x="16" y="210" width="288" height="17.5"/>
+                                <fontDescription key="fontDescription" name="Montserrat-Regular" family="Montserrat" pointSize="14"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.45882353186607361" green="0.74901962280273438" blue="0.66666668653488159" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="rUe-KG-aLa" firstAttribute="leading" secondItem="2BE-c3-nQJ" secondAttribute="leading" constant="40" id="0ic-1A-EWr"/>
-                            <constraint firstItem="2BE-c3-nQJ" firstAttribute="trailing" secondItem="yTS-Rg-tiE" secondAttribute="trailing" constant="40" id="4Xh-DX-X0c"/>
-                            <constraint firstItem="rUe-KG-aLa" firstAttribute="top" secondItem="2BE-c3-nQJ" secondAttribute="top" constant="32" id="5JZ-vN-wwu"/>
-                            <constraint firstItem="icg-EG-Lyh" firstAttribute="leading" secondItem="S3S-Oj-5AN" secondAttribute="leading" constant="40" id="ETA-Qn-8ck"/>
-                            <constraint firstItem="2BE-c3-nQJ" firstAttribute="trailing" secondItem="rUe-KG-aLa" secondAttribute="trailing" constant="40" id="JGv-e4-2B1"/>
-                            <constraint firstItem="icg-EG-Lyh" firstAttribute="top" secondItem="S3S-Oj-5AN" secondAttribute="top" constant="15" id="M18-ID-fgr"/>
-                            <constraint firstItem="2BE-c3-nQJ" firstAttribute="bottom" secondItem="rUe-KG-aLa" secondAttribute="bottom" constant="43" id="XJI-Fz-THb"/>
-                            <constraint firstItem="yTS-Rg-tiE" firstAttribute="leading" secondItem="2BE-c3-nQJ" secondAttribute="leading" constant="40" id="aYx-ge-FbO"/>
-                            <constraint firstItem="yTS-Rg-tiE" firstAttribute="top" secondItem="rUe-KG-aLa" secondAttribute="bottom" constant="22" id="fbn-fd-MFp"/>
-                            <constraint firstAttribute="trailing" secondItem="icg-EG-Lyh" secondAttribute="trailing" constant="40" id="t81-tW-Pbj"/>
+                            <constraint firstItem="rUe-KG-aLa" firstAttribute="leading" secondItem="2BE-c3-nQJ" secondAttribute="leading" id="0ic-1A-EWr"/>
+                            <constraint firstItem="rUe-KG-aLa" firstAttribute="top" secondItem="2BE-c3-nQJ" secondAttribute="top" id="Cmn-9W-DyC"/>
+                            <constraint firstItem="2BE-c3-nQJ" firstAttribute="trailing" secondItem="rUe-KG-aLa" secondAttribute="trailing" id="JGv-e4-2B1"/>
+                            <constraint firstItem="yTS-Rg-tiE" firstAttribute="top" secondItem="icg-EG-Lyh" secondAttribute="bottom" constant="8" id="QYd-bZ-YXs"/>
+                            <constraint firstItem="icg-EG-Lyh" firstAttribute="top" secondItem="rUe-KG-aLa" secondAttribute="bottom" constant="8" id="YLt-Zz-78h"/>
+                            <constraint firstItem="icg-EG-Lyh" firstAttribute="leading" secondItem="2BE-c3-nQJ" secondAttribute="leading" constant="16" id="aZR-JP-qb9"/>
+                            <constraint firstItem="yTS-Rg-tiE" firstAttribute="leading" secondItem="2BE-c3-nQJ" secondAttribute="leading" constant="16" id="fOA-Nb-Wlj"/>
+                            <constraint firstItem="2BE-c3-nQJ" firstAttribute="trailing" secondItem="icg-EG-Lyh" secondAttribute="trailing" constant="16" id="mTW-oa-hBa"/>
+                            <constraint firstItem="2BE-c3-nQJ" firstAttribute="trailing" secondItem="yTS-Rg-tiE" secondAttribute="trailing" constant="16" id="vdO-S9-JVB"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="2BE-c3-nQJ"/>
                     </view>
@@ -54,9 +63,7 @@
                     <size key="freeformSize" width="320" height="281"/>
                     <connections>
                         <outlet property="bodyLabel" destination="yTS-Rg-tiE" id="wTd-vi-LFZ"/>
-                        <outlet property="mainImageView" destination="rUe-KG-aLa" id="Dh6-fO-f85"/>
                         <outlet property="mainNotificationImageView" destination="rUe-KG-aLa" id="bBL-eF-bHL"/>
-                        <outlet property="title" destination="icg-EG-Lyh" id="bfK-td-hNY"/>
                         <outlet property="titleLabel" destination="icg-EG-Lyh" id="MNE-jh-0Cm"/>
                     </connections>
                 </viewController>

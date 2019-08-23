@@ -11,7 +11,7 @@ import UIKit
 
 extension UserDefaults {
     static let suiteName = "group.BAKit"
-    static let extended = UserDefaults(suiteName: suiteName)!
+    static let extensions = UserDefaults(suiteName: suiteName)!
     static var imageCache = NSCache<NSString, AnyObject>()
     
     private enum Keys {
@@ -22,29 +22,29 @@ extension UserDefaults {
     
     var imageCache: NSCache<NSString, AnyObject> {
         get {
-            return UserDefaults.extended.value(forKey: Keys.imageCache) as! NSCache<NSString,AnyObject>
+            return UserDefaults.extensions.value(forKey: Keys.imageCache) as! NSCache<NSString,AnyObject>
         }
         set {
-            UserDefaults.extended.set(newValue, forKey: Keys.imageCache)
+            UserDefaults.extensions.set(newValue, forKey: Keys.imageCache)
         }
     }
     
     var userInfo: Dictionary<String,Any> {
         get {
-            return UserDefaults.extended.dictionary(forKey: Keys.userInfo)!
+            return UserDefaults.extensions.dictionary(forKey: Keys.userInfo)!
         }
         set {
-            UserDefaults.extended.set(newValue, forKey: Keys.badge)
+            UserDefaults.extensions.set(newValue, forKey: Keys.userInfo)
         }
     }
     
     var badge: Int {
         get {
-            return UserDefaults.extended.integer(forKey: Keys.badge)
+            return UserDefaults.extensions.integer(forKey: Keys.badge)
         }
         
         set {
-            UserDefaults.extended.set(newValue, forKey: Keys.badge)
+            UserDefaults.extensions.set(newValue, forKey: Keys.badge)
         }
     }
 }

@@ -211,5 +211,9 @@ fabric.properties
 # Sonarlint plugin
 **/.idea/sonarlint
 
+# GoogleService-Info.plist
+**/GoogleService-Info.plist
 
 # End of https://www.gitignore.io/api/swift,xcode,fastlane,cocoapods
+Example/.idea
+/Example/.idea

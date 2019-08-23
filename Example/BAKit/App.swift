@@ -4,14 +4,14 @@
 
 import Foundation
 
-public struct App{
+public struct App {
 
 	var createdBy : CreatedBy!
 	var dateCreated : String!
 	var dateLastUpdated : String!
 	var guid : String!
 	var iconUrl : AnyObject!
-	public var id : Int!
+	public var id : Int64!
 	var inbox : Inbox!
 	var itunesUrl : AnyObject!
 	var lastUpdatedBy : CreatedBy!
@@ -31,7 +31,7 @@ public struct App{
 		dateLastUpdated = dictionary["dateLastUpdated"] as? String
 		guid = dictionary["guid"] as? String
 		iconUrl = dictionary["iconUrl"] as? AnyObject
-		id = dictionary["id"] as? Int
+		id = dictionary["id"] as? Int64
 		if let inboxData = dictionary["inbox"] as? [String:Any]{
 				inbox = Inbox(fromDictionary: inboxData)
 			}
