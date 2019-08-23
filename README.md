@@ -81,7 +81,7 @@ Requesting location permission requires the follow entries in your ```Info.plist
 - `NSLocationAndWhenInUseUsageDescription`
   - `Privacy - Location Always and When In Use Usage Description`
 - `NSLocationWhenInUseUsageDescription`
-  - `Privacy - Location Always Usage Description`
+  - `Privacy - When In Use Usage Description`
 - `NSLocationAlwaysUsageDescription`
   - `Privacy - Location Always Usage Description`
 
