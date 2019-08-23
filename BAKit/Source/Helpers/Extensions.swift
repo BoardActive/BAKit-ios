@@ -6,26 +6,26 @@ public extension UIImageView {
     func loadImageUsingCache(withUrl urlString: String) {
         let url = URL(string: urlString)
         image = nil
-        
+
         // check cached image
         if let cachedImage = imageCache.object(forKey: urlString as NSString) as? UIImage {
             image = cachedImage
             return
         }
-        
+
         // if not, download image from url
         URLSession.shared.dataTask(with: url!, completionHandler: { data, _, error in
             if error != nil {
                 return
             }
-            
+
             DispatchQueue.main.async {
                 if let image = UIImage(data: data!) {
                     imageCache.setObject(image, forKey: urlString as NSString)
                     self.image = image
                 }
             }
-            
+
         }).resume()
     }
 }
@@ -56,7 +56,7 @@ public extension UIDevice {
             guard let value = element.value as? Int8, value != 0 else { return identifier }
             return identifier + String(UnicodeScalar(UInt8(value)))
         }
-        
+
         func mapToDevice(identifier: String) -> String { // swiftlint:disable:this cyclomatic_complexity
             switch identifier {
             case "iPod5,1":
@@ -144,7 +144,7 @@ public extension UIDevice {
             default: return identifier
             }
         }
-        
+
         return mapToDevice(identifier: identifier)
     }()
 }
@@ -160,16 +160,16 @@ extension UIApplication {
 
 extension UserDefaults {
     static let extensions = UserDefaults(suiteName: "group.BAKit")
-    
+
     private enum Keys {
         static let badge = "badge"
     }
-    
+
     var badge: Int {
         get {
             return UserDefaults.extensions!.integer(forKey: Keys.badge)
         }
-        
+
         set {
             UserDefaults.extensions!.set(newValue, forKey: Keys.badge)
         }
@@ -177,13 +177,13 @@ extension UserDefaults {
 }
 
 extension NSMutableAttributedString {
-    public func setAsLink(textToFind:String, linkURL:String) -> Bool {
+    public func setAsLink(textToFind: String, linkURL: String) -> Bool {
         guard !linkURL.isEmpty else {
             return false
         }
-        let foundRange = self.mutableString.range(of: textToFind)
+        let foundRange = mutableString.range(of: textToFind)
         if foundRange.location != NSNotFound {
-            self.addAttribute(.link, value: linkURL, range: foundRange)
+            addAttribute(.link, value: linkURL, range: foundRange)
             return true
         }
         return false
@@ -191,7 +191,7 @@ extension NSMutableAttributedString {
 }
 
 extension NSAttributedString {
-    static public func + (left: NSAttributedString, right: NSAttributedString) -> NSAttributedString {
+    public static func + (left: NSAttributedString, right: NSAttributedString) -> NSAttributedString {
         let result = NSMutableAttributedString()
         result.append(left)
         result.append(right)
@@ -202,10 +202,10 @@ extension NSAttributedString {
 extension NSDictionary {
     var swiftDictionary: Dictionary<String, Any> {
         var swiftDictionary = Dictionary<String, Any>()
-        
-        for key : Any in self.allKeys {
+
+        for key: Any in allKeys {
             let stringKey = key as! String
-            if let keyValue = self.value(forKey: stringKey){
+            if let keyValue = self.value(forKey: stringKey) {
                 swiftDictionary[stringKey] = keyValue
             }
         }
@@ -230,13 +230,12 @@ class DesignableButton: UIButton {
 }
 
 extension UITextField {
-    
     public typealias TextFieldConfig = (UITextField) -> Swift.Void
-    
+
     public func config(textField configurate: TextFieldConfig?) {
         configurate?(self)
     }
-    
+
     func left(image: UIImage?, color: UIColor = .black) {
         if let image = image {
             leftViewMode = UITextField.ViewMode.always
@@ -251,7 +250,7 @@ extension UITextField {
             leftView = nil
         }
     }
-    
+
     func right(image: UIImage?, color: UIColor = .black) {
         if let image = image {
             rightViewMode = UITextField.ViewMode.always
@@ -271,61 +270,58 @@ extension UITextField {
 // MARK: - Methods
 
 public extension UITextField {
-    
     /// Set placeholder text color.
     ///
     /// - Parameter color: placeholder text color.
     public func setPlaceHolderTextColor(_ color: UIColor) {
-        self.attributedPlaceholder = NSAttributedString(string:self.placeholder != nil ? self.placeholder! : "", attributes:[NSAttributedString.Key.foregroundColor: color])
+        attributedPlaceholder = NSAttributedString(string: placeholder != nil ? placeholder! : "", attributes: [NSAttributedString.Key.foregroundColor: color])
     }
-    
+
     /// Set placeholder text and its color
     func placeholder(text value: String, color: UIColor = .red) {
-        self.attributedPlaceholder = NSAttributedString(string: value, attributes: [ NSAttributedString.Key.foregroundColor : color])
+        attributedPlaceholder = NSAttributedString(string: value, attributes: [NSAttributedString.Key.foregroundColor: color])
     }
 }
 
 public extension UIColor {
-    
     convenience init(hex: Int, alpha: CGFloat) {
-        let r = CGFloat((hex & 0xFF0000) >> 16)/255
-        let g = CGFloat((hex & 0xFF00) >> 8)/255
-        let b = CGFloat(hex & 0xFF)/255
+        let r = CGFloat((hex & 0xFF0000) >> 16) / 255
+        let g = CGFloat((hex & 0xFF00) >> 8) / 255
+        let b = CGFloat(hex & 0xFF) / 255
         self.init(red: r, green: g, blue: b, alpha: alpha)
     }
-    
+
     convenience init(hex: Int) {
         self.init(hex: hex, alpha: 1.0)
     }
-    
+
     /**
      Creates an UIColor from HEX String in "#363636" format
-     
+
      - parameter hexString: HEX String in "#363636" format
      - returns: UIColor from HexString
      */
     convenience init(hexString: String) {
-        
-        let hexString: String       = (hexString as NSString).trimmingCharacters(in: .whitespacesAndNewlines)
-        let scanner                 = Scanner(string: hexString as String)
-        
+        let hexString: String = (hexString as NSString).trimmingCharacters(in: .whitespacesAndNewlines)
+        let scanner = Scanner(string: hexString as String)
+
         if hexString.hasPrefix("#") {
             scanner.scanLocation = 1
         }
         var color: UInt32 = 0
         scanner.scanHexInt32(&color)
-        
+
         let mask = 0x000000FF
         let r = Int(color >> 16) & mask
         let g = Int(color >> 8) & mask
         let b = Int(color) & mask
-        
-        let red   = CGFloat(r) / 255.0
+
+        let red = CGFloat(r) / 255.0
         let green = CGFloat(g) / 255.0
-        let blue  = CGFloat(b) / 255.0
-        self.init(red:red, green:green, blue:blue, alpha:1)
+        let blue = CGFloat(b) / 255.0
+        self.init(red: red, green: green, blue: blue, alpha: 1)
     }
-    
+
     /// Create UIColor from RGB values with optional transparency.
     ///
     /// - Parameters:

@@ -8,15 +8,6 @@
 import Foundation
 
 public extension String {
-    enum AppKeys {
-        public static let Prod = "b70095c6-1169-43d6-a5dd-099877b4acb3"
-        public static let Dev  = "d17f0feb-4f96-4c2a-83fd-fd6302ae3a16"
-    }
-<<<<<<< Updated upstream
-    
-=======
-
->>>>>>> Stashed changes
     enum ConfigKeys {
         public static let Apps        = "Apps"
         public static let AppId       = "AppId"
@@ -66,6 +57,7 @@ public extension String {
     }
     
     // MARK: Network Call Related Keys
+
     enum NetworkCallRelated {
         static let DeviceToken = String.ConfigKeys.DeviceToken
         static let MessageId   = "messageId"
@@ -75,6 +67,7 @@ public extension String {
     }
     
     // MARK: Event logging related
+
     static let Received               = "received"
     static let Opened                 = "opened"
     
@@ -82,15 +75,17 @@ public extension String {
     static let ReceivedBackground     = "RECEIVED BACKGROUND"
     
     // MARK: Calculated
+
     static let SystemVersion = UIDevice.current.systemVersion
     static let AppVersion = UIApplication.appVersion
     static let DeviceType = UIDevice.modelName
     
     // MARK: Onboarding
+
     static let Step1HeadlineText = "Welcome to BoardActive"
     static let Step1BodyText     = "This app allows you to try out the BoardActive platform."
     static let Step2HeadlineText = "Allow Notifications"
-    static let Step2BodyText     = "Enabling notifications allows your custom messages to be delivered to your phone."
+    static let Step2BodyText = "Enabling notifications allows your custom messages to be delivered to your phone."
     static let Step3HeadlineText = "Allow Location"
     static let Step3BodyText     = "Enabling Locations activates custom BoardActive Geofences."
     static let Step4HeadlineText = "Get ready to enter your App ID and Email"
@@ -99,6 +94,7 @@ public extension String {
     static let Step5BodyText     = "Enter the App ID provided when you created your account as well as the associated Email."
     
     // MARK: Notification Keys
+
     enum NotificationKeys {
         static let InfoUpdateNotification     = "infoUpdateNotification"
         static let UserSelectedNotificationId = "com.apple.UNNotificationDefaultActionIdentifier"
@@ -107,6 +103,7 @@ public extension String {
     }
     
     // MARK: CONFIG KEYS
+
     static let BAKitFirebaseAppConfigName     = "BAKit_Config"
     static let ClientAppFirebaseAppConfigName = "Client_Config"
     static let BAKit_FirebaseBundle           = "BAKit_FirebaseBundle"
