@@ -4,7 +4,7 @@ platform :ios, '10.0'
 plugin 'cocoapods-binary'
 use_frameworks!
 
-target 'BAKit_Example' do
+target 'AdDrop' do
   pod 'BAKit', :path => '../'
   
   pod 'Firebase/Core', '~> 5.0'
@@ -15,7 +15,7 @@ target 'BAKit_Example' do
   
   pod 'MaterialComponents'
   
-  target 'BAKit_Tests' do
+  target 'AdDrop_Tests' do
     inherit! :search_paths
     pod 'Quick'
     pod 'Nimble'
