@@ -18,7 +18,7 @@ BoardActive's platform connects brands to consumers using location-based engagem
 
 Use your BoardActive account to create Places (geo-fenced areas) and Messages (notifications) to deliver custom messages to your app users. 
 
-[Click Here to get a BoardActive Account](https://app.boardactive.com/signup)
+[Click Here to create a BoardActive Account](https://app.boardactive.com/signup)
 
 Once a client has established at least one geofence, the BAKit SDK leverages any smart device's native location monitoring, determines when a user enters said geofence and dispatches a  *personalized* notification of the client's composition.
 ___
