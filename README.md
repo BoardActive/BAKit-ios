@@ -148,26 +148,40 @@ import UIKit
 import UserNotifications
 import Messages
 ```
- snippets 
-
 ```swift
 extension AppDelegate {
 // Call this function after having received your FCM and APNS tokens. Additionally, you must have set your AppId and AppKey using the _BoardActive_ class's _userDefaults_.
     func setupSDK() {
-        BoardActive.client.registerDevice { (parsedJSON, err) in
-            guard err == nil else {
-            // Handle the returned error as needed
+        let operationQueue = OperationQueue()
+        let registerDeviceOperation = BlockOperation.init {
+            BoardActive.client.registerDevice { (parsedJSON, err) in
+                guard err == nil, let parsedJSON = parsedJSON else {
+                    fatalError()
+                }
+                
+                BoardActive.client.userDefaults?.set(true, forKey: String.ConfigKeys.DeviceRegistered)
+                BoardActive.client.userDefaults?.synchronize()
             }
-            
-            BoardActive.client.userDefaults?.set(true, forKey: String.DeviceRegistered)
-            BoardActive.client.userDefaults?.synchronize()
+        }
+       
+        let requestNotificationsOperation = BlockOperation.init {
+            self.requestNotifications()
         }
         
-        self.requestNotifications()
+        let monitorLocationOperation = BlockOperation.init {
+            DispatchQueue.main.async {
+                BoardActive.client.monitorLocation()
+            }
+        }
         
-        BoardActive.client.monitorLocation()
+        monitorLocationOperation.addDependency(requestNotificationsOperation)
+        requestNotificationsOperation.addDependency(registerDeviceOperation)
+        
+        operationQueue.addOperation(registerDeviceOperation)
+        operationQueue.addOperation(requestNotificationsOperation)
+        operationQueue.addOperation(monitorLocationOperation)
     }
-    
+
    public func requestNotifications() {
         UNUserNotificationCenter.current().delegate = self
         let notificationCenter = UNUserNotificationCenter.current()
