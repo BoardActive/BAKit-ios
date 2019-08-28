@@ -300,7 +300,17 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
 }
 ```
+Add the following to monitor for significant location updates whilst the app is terminated.
+```
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+        BoardActive.client.locationManager.stopMonitoringSignificantLocationChanges()
 
+    }
+
+    func applicationWillTerminate(_ application: UIApplication) {        
+        BoardActive.client.locationManager.startMonitoringSignificantLocationChanges()
+    }
+```
 
 ## Download Example App Source Code
 There is an example app included in the repo's code under "Example".
