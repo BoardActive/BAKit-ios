@@ -203,7 +203,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
             String.HeaderKeys.DeviceTokenHeader: tokenString,
             String.HeaderKeys.DeviceTypeHeader: String.HeaderValues.DeviceType,
             String.HeaderKeys.HostHeader: hostKey,
-            String.HeaderKeys.IsTestApp: "1",
+            String.HeaderKeys.IsTestApp: "0",
             String.HeaderKeys.UUIDHeader: UIDevice.current.identifierForVendor!.uuidString,
         ]
         return headers
