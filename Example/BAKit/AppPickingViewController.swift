@@ -33,14 +33,7 @@ class AppPickingViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if let apps = CoreDataStack.sharedInstance.fetchAppsFromDatabase() {
-            StorageObject.container.apps = apps
-        }
-        self.tableView.reloadData()
-    }
+
     
     func configureNavigationBar() {
         self.navigationItem.setHidesBackButton(true, animated: false)
@@ -71,12 +64,10 @@ class AppPickingViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedApp = StorageObject.container.apps[indexPath.row] as? BAKitApp
-        if let appId = selectedApp?.id {
-            let appKey = (BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppKey))!
+        if let appId = selectedApp?.id, let appKey = BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppKey) {
             BoardActive.client.setupEnvironment(appID: "\(appId)", appKey: appKey)
         }
-        (UIApplication.shared.delegate! as! AppDelegate).setupSDK()
-        
+                
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         let homeViewController = storyBoard.instantiateViewController(withIdentifier: "HomeViewController")
         self.navigationController?.pushViewController(homeViewController, animated: true)

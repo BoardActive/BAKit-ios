@@ -11,6 +11,7 @@ import BAKit
 import UserNotifications
 import MaterialComponents
 import CoreData
+import CoreLocation
 
 class HomeViewController: UIViewController, NotificationDelegate, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var tableView: UITableView!
@@ -22,30 +23,30 @@ class HomeViewController: UIViewController, NotificationDelegate, UITableViewDel
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(refreshTableView), name: Notification.Name("Refresh HomeViewController Tableview"), object: nil)
+//        BoardActive.client.editUser(attributes: Attributes(fromDictionary: ["demoAppUser": true]), httpMethod: String.HTTPMethod.PUT)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshTableView(notification:)), name: Notification.Name("Refresh HomeViewController Tableview"), object: nil)
         
         configureNavigation()
         configureTableView()
         setupLocalNotification()
+        
+        (UIApplication.shared.delegate! as! AppDelegate).setupSDK()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         models = CoreDataStack.sharedInstance.fetchDataFromDatabase()
-        for model in self.models! {
-            print("MODELS :: \(model)")
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
         }
-        self.tableView.reloadData()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
     }
     
     func appReceivedRemoteNotification(notification: [AnyHashable: Any]) {
-        let tempUserInfo = notification as! [String: Any]
-        var notificationModel = CoreDataStack.sharedInstance.createNotificationModel(fromDictionary: tempUserInfo)
-        StorageObject.container.notification = notificationModel
+        models = CoreDataStack.sharedInstance.fetchDataFromDatabase()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
         
         let storyboard = UIStoryboard(name: "NotificationBoard", bundle: Bundle.main)
         guard let viewController = storyboard.instantiateViewController(withIdentifier: "NotificationCollectionViewController") as? NotificationCollectionViewController else {
@@ -58,18 +59,29 @@ class HomeViewController: UIViewController, NotificationDelegate, UITableViewDel
 
     private func configureNavigation() {
         self.navigationItem.setHidesBackButton(false, animated: false)
-        
+        let trashImage = #imageLiteral(resourceName: "Trash")
+        let trashButton = UIBarButtonItem(image: trashImage,  style: .plain, target: self, action: #selector(didTapTrashButton(sender:)))
+
         let shuffleBackImage = #imageLiteral(resourceName: "shuffle")
         self.navigationController?.navigationBar.backIndicatorImage = shuffleBackImage
         self.navigationController?.navigationBar.backIndicatorTransitionMaskImage = shuffleBackImage
-        
-        let logOutBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "logout"), landscapeImagePhone: #imageLiteral(resourceName: "logout"), style: .plain, target: self, action: #selector(signOutAction(_:)))
-        self.navigationController!.navigationItem.rightBarButtonItem = logOutBarButtonItem
-        self.navigationItem.rightBarButtonItem = logOutBarButtonItem
+        let logoutImage = #imageLiteral(resourceName: "logout")
+        let logOutBarButtonItem = UIBarButtonItem(image: logoutImage, landscapeImagePhone: logoutImage, style: .plain, target: self, action: #selector(signOutAction(_:)))
+        navigationItem.setRightBarButtonItems([logOutBarButtonItem, trashButton], animated: true)
+
         
         (UIApplication.shared.delegate as! AppDelegate).notificationDelegate = self
         
         self.navigationController?.navigationBar.tintColor = UIColor.white
+    }
+    
+    @objc
+    func didTapTrashButton(sender: AnyObject) {
+        CoreDataStack.sharedInstance.deleteStoredData(entity: "NotificationModel")
+        models = nil
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
     
     private func configureTableView() {
@@ -82,7 +94,7 @@ class HomeViewController: UIViewController, NotificationDelegate, UITableViewDel
         if !((BoardActive.client.userDefaults?.bool(forKey: "NOT_FIRSTLOGIN"))!) {
             BoardActive.client.userDefaults?.set(true, forKey: "NOT_FIRSTLOGIN")
             BoardActive.client.userDefaults?.synchronize()
-            
+
             let dictionary = [
                 "aps":[
                     "badge": 1,
@@ -122,31 +134,30 @@ class HomeViewController: UIViewController, NotificationDelegate, UITableViewDel
                     "urlTwitter": "https://twitter.com/boardactive",
                     "urlYoutube": "https://www.youtube.com/embed/5Fi6surCFpQ"] as [String:Any]
                 ] as [String : Any]
-            
-//            let notificationModel = CoreDataStack.sharedInstance.createNotificationModel(fromDictionary: dictionary)
-//            CoreDataStack.sharedInstance.persistentContainer.viewContext.insert(notificationModel)
-            
+
             let content = UNMutableNotificationContent()
             content.title = dictionary["title"] as! String
             content.body = dictionary["body"] as! String
             content.sound = UNNotificationSound.default()
-            content.userInfo = dictionary 
-            
+            content.userInfo = dictionary
+
             let identifier = "UYLLocalNotification"
             let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
-            
+
             let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+            print("[HomeViewController] setupLocationNotification() :: \(request.content.userInfo.debugDescription)")
             let center = UNUserNotificationCenter.current()
             center.add(request, withCompletionHandler: { (error) in
                 if let error = error {
-                    print("[BA:HomeViewController] Local Notification :: \(error.localizedDescription) ")
+                    print("\n[HomeViewController] setupLocalNotification :: Error: \(error.localizedDescription) \n")
                 }
             })
         }
     }
     
     @objc
-    func refreshTableView() {
+    func refreshTableView(notification: NSNotification) {
+        models = CoreDataStack.sharedInstance.fetchDataFromDatabase()
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
@@ -154,6 +165,7 @@ class HomeViewController: UIViewController, NotificationDelegate, UITableViewDel
     
     @objc
     func signOutAction(_ sender: Any) {
+        
         CoreDataStack.sharedInstance.deleteStoredData(entity: "NotificationModel")
         CoreDataStack.sharedInstance.deleteStoredData(entity: "BAKitApp")
         
@@ -164,7 +176,7 @@ class HomeViewController: UIViewController, NotificationDelegate, UITableViewDel
         }
         
         BoardActive.client.userDefaults?.removeObject(forKey: "NOT_FIRSTLOGIN")
-        BoardActive.client.userDefaults?.removeObject(forKey: String.DeviceRegistered)
+        BoardActive.client.userDefaults?.removeObject(forKey: String.ConfigKeys.DeviceRegistered)
         BoardActive.client.userDefaults?.removeObject(forKey: String.ConfigKeys.Email)
         BoardActive.client.userDefaults?.removeObject(forKey: String.ConfigKeys.Password)
         BoardActive.client.userDefaults?.removeObject(forKey: .LoggedIn)
@@ -172,6 +184,8 @@ class HomeViewController: UIViewController, NotificationDelegate, UITableViewDel
 
         self.navigationController?.popToRootViewController(animated: true)
     }
+    
+    // MARK: - UITableViewDelegate
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -198,6 +212,7 @@ class HomeViewController: UIViewController, NotificationDelegate, UITableViewDel
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        models?[indexPath.row].setValue(true, forKeyPath: "tap")
         StorageObject.container.notification = models?[indexPath.row] as? NotificationModel
         let storyboard = UIStoryboard(name: "NotificationBoard", bundle: Bundle.main)
         guard let viewController = storyboard.instantiateViewController(withIdentifier: "NotificationCollectionViewController") as? NotificationCollectionViewController else {

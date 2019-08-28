@@ -1,6 +1,5 @@
 PODS:
-  - BAKit (1.0.2):
-    - INTULocationManager
+  - BAKit (1.2.0)
   - Crashlytics (3.13.4):
     - Fabric (~> 1.10.2)
   - Fabric (1.10.2)
@@ -61,7 +60,6 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (5.8.0):
     - GoogleUtilities/Logger
-  - INTULocationManager (4.3.2)
   - MaterialComponents (88.0.1):
     - MaterialComponents/ActionSheet (= 88.0.1)
     - "MaterialComponents/ActionSheet+Theming (= 88.0.1)"
@@ -733,7 +731,6 @@ SPEC REPOS:
     - FirebaseMessaging
     - GoogleAppMeasurement
     - GoogleUtilities
-    - INTULocationManager
     - MaterialComponents
     - MDFInternationalization
     - MDFTextAccessibility
@@ -750,7 +747,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  BAKit: 75be289a84a36059e5a2263f08791568b5ce9045
+  BAKit: 76bf9449bd28d270b38d79cc609819c6337c4c5f
   Crashlytics: 2dfd686bcb918dc10ee0e76f7f853fe42c7bd552
   Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
   Firebase: 0c8cf33f266410c61ab3e2265cfa412200351d9c
@@ -761,7 +758,6 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 4235f949ce1c4e827aeb19705ba5c53f9b85aa10
   GoogleAppMeasurement: ffe513e90551844a739e7bcbb1d2aca1c28a4338
   GoogleUtilities: 04fce34bcd5620c1ee76fb79172105c74a4df335
-  INTULocationManager: e5dc524611b0cd582f473bc56cc8c389adb2f338
   MaterialComponents: e98245f7a1a9802fe442fa4d1f3acbb727ece9ec
   MDFInternationalization: 010097556d6b09d2c4ea38e0820ea6d37be6a314
   MDFTextAccessibility: 85c09a1bd9c321f494348e632a25063bcda35a53

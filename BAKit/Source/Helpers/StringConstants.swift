@@ -22,6 +22,7 @@ public extension String {
         public static let Password = "password"
         public static let ID = "id"
         public static let DeviceToken = "deviceToken"
+        public static let DeviceRegistered = "deviceRegistered"
     }
 
     enum HeaderKeys {
@@ -61,7 +62,7 @@ public extension String {
         static let UUID = UIDevice.current.identifierForVendor!.uuidString
     }
 
-    // MARK: Network Call Related Keys
+    // MARK: - Network Call Related Keys
 
     enum NetworkCallRelated {
         static let DeviceToken = String.ConfigKeys.DeviceToken
@@ -71,7 +72,7 @@ public extension String {
         static let DeviceTime = "deviceTime"
     }
 
-    // MARK: Event logging related
+    // MARK: - Event logging related
 
     static let Received = "received"
     static let Opened = "opened"
@@ -79,26 +80,13 @@ public extension String {
     static let TappedAndTransitioning = "TAPPED & TRANSITIONING"
     static let ReceivedBackground = "RECEIVED BACKGROUND"
 
-    // MARK: Calculated
+    // MARK: - Calculated
 
     static let SystemVersion = UIDevice.current.systemVersion
     static let AppVersion = UIApplication.appVersion
     static let DeviceType = UIDevice.modelName
 
-    // MARK: Onboarding
-
-    static let Step1HeadlineText = "Welcome to BoardActive"
-    static let Step1BodyText = "This app allows you to try out the BoardActive platform."
-    static let Step2HeadlineText = "Allow Notifications"
-    static let Step2BodyText = "Enabling notifications allows your custom messages to be delivered to your phone."
-    static let Step3HeadlineText = "Allow Location"
-    static let Step3BodyText = "Enabling Locations activates custom BoardActive Geofences."
-    static let Step4HeadlineText = "Get ready to enter your App ID and Email"
-    static let Step4BodyText = "The BoardActive platform provides your App ID and Email at the positions indicated above."
-    static let Step5HeadlineText = "App ID and Email"
-    static let Step5BodyText = "Enter the App ID provided when you created your account as well as the associated Email."
-
-    // MARK: Notification Keys
+    // MARK: - Notification Keys
 
     enum NotificationKeys {
         static let InfoUpdateNotification = "infoUpdateNotification"
@@ -107,12 +95,8 @@ public extension String {
         static let DecrementAppBadge = "DecrementAppBadge"
     }
 
-    // MARK: CONFIG KEYS
+    // MARK: - Config Keys
 
-    static let BAKitFirebaseAppConfigName = "BAKit_Config"
-    static let ClientAppFirebaseAppConfigName = "Client_Config"
-    static let BAKit_FirebaseBundle = "BAKit_FirebaseBundle"
-    static let DeviceRegistered = "deviceRegistered"
     static let LoggedIn = "loggedIn"
 
     enum EventKeys {
@@ -147,8 +131,8 @@ public extension String {
     }
 
     enum HTTPMethod {
-        static let GET = "GET"
-        static let POST = "POST"
-        static let PUT = "PUT"
+        public static let GET = "GET"
+        public static let POST = "POST"
+        public static let PUT = "PUT"
     }
 }

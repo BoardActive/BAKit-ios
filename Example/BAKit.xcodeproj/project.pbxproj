@@ -20,7 +20,6 @@
 		961ADEAE227125A00014AB18 /* NotificationBoard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96E00400225FA45F001F6639 /* NotificationBoard.storyboard */; };
 		961F330B23030A4600167BBC /* NotificationCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961F330A23030A4600167BBC /* NotificationCollectionViewController.swift */; };
 		961F330E23030A7A00167BBC /* TitleCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961F330D23030A7A00167BBC /* TitleCollectionViewCell.swift */; };
-		961F330F23030A7A00167BBC /* TitleCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961F330D23030A7A00167BBC /* TitleCollectionViewCell.swift */; };
 		9633AC3F227CF2BB00B2B692 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9633AC37227CF2BB00B2B692 /* LoginViewController.swift */; };
 		9633C5C923032F870081CFF3 /* PromodDateCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9633C5C823032F870081CFF3 /* PromodDateCollectionViewCell.swift */; };
 		964AB5AB227E85960000F938 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964AB5AA227E85960000F938 /* UserDefaults.swift */; };
@@ -38,11 +37,13 @@
 		9665F3EF22FB4F4B00CD818E /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9665F3EE22FB4F4B00CD818E /* NotificationViewController.swift */; };
 		9665F3F122FB4FE900CD818E /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9665F3F022FB4FE900CD818E /* Extensions.swift */; };
 		96697B47227D29C700794455 /* BoardActiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96697B46227D29C700794455 /* BoardActiveTests.swift */; };
-		96697B63227D883E00794455 /* BoardActive-Credentials.plist in Resources */ = {isa = PBXBuildFile; fileRef = 96697B62227D883E00794455 /* BoardActive-Credentials.plist */; };
-		96697B64227D883E00794455 /* BoardActive-Credentials.plist in Resources */ = {isa = PBXBuildFile; fileRef = 96697B62227D883E00794455 /* BoardActive-Credentials.plist */; };
 		96697B67227D9D3300794455 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEA03A7E035B199019AB8F60 /* AppDelegate.swift */; };
 		96697B68227D9D3D00794455 /* NotificationBoard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96E00400225FA45F001F6639 /* NotificationBoard.storyboard */; };
 		96697B71227E51B200794455 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 96697B70227E51B100794455 /* GoogleService-Info.plist */; };
+		967898B52315D7CA00C5F8CB /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964AB5AA227E85960000F938 /* UserDefaults.swift */; };
+		967898B62315D7CB00C5F8CB /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964AB5AA227E85960000F938 /* UserDefaults.swift */; };
+		967898B72315D7E200C5F8CB /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9665F3CD22FB317400CD818E /* CoreDataStack.swift */; };
+		967898B82315D7E300C5F8CB /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9665F3CD22FB317400CD818E /* CoreDataStack.swift */; };
 		9689E11222F204E400A1ABFC /* AppPickingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9689E11122F204E400A1ABFC /* AppPickingViewController.swift */; };
 		9689E11322F204E400A1ABFC /* AppPickingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9689E11122F204E400A1ABFC /* AppPickingViewController.swift */; };
 		968E17EC2266228C00062C43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 963F52682265E3C5005B4C1C /* Assets.xcassets */; };
@@ -67,11 +68,7 @@
 		96FDD23D22EA11DD00145257 /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FDD23C22EA11DD00145257 /* UIView+Extensions.swift */; };
 		96FEC81A230F8B030087873D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FEC819230F8B030087873D /* NotificationService.swift */; };
 		96FEC81E230F8B030087873D /* NotificationPersistenceService.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 96FEC817230F8B030087873D /* NotificationPersistenceService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		96FEC823230F8BB90087873D /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964AB5AA227E85960000F938 /* UserDefaults.swift */; };
-		96FEC824230F8BBA0087873D /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964AB5AA227E85960000F938 /* UserDefaults.swift */; };
 		96FEC825230F8CA70087873D /* BAKit.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 96940A9622FB056800D2303C /* BAKit.xcdatamodeld */; };
-		96FEC827230F8F0A0087873D /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9665F3CD22FB317400CD818E /* CoreDataStack.swift */; };
-		96FEC828230F8F0B0087873D /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9665F3CD22FB317400CD818E /* CoreDataStack.swift */; };
 		96FEC829230F8F270087873D /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9653255B230F7671006E2642 /* App.swift */; };
 		96FEC82A230F8F270087873D /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9653255B230F7671006E2642 /* App.swift */; };
 		96FEC82B230F8F2F0087873D /* Inbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96532561230F7688006E2642 /* Inbox.swift */; };
@@ -86,7 +83,6 @@
 		96FEC834230F8F7F0087873D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9665F3F022FB4FE900CD818E /* Extensions.swift */; };
 		96FEC835230F8F8D0087873D /* CreatedBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9653255F230F7681006E2642 /* CreatedBy.swift */; };
 		96FEC836230F8F8E0087873D /* CreatedBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9653255F230F7681006E2642 /* CreatedBy.swift */; };
-		EEA037BEDE93377EC96D148C /* AlertControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEA030DBB7428A2965059188 /* AlertControllerTests.swift */; };
 		EEA03A3A21E58BD3DB855079 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEA03A7E035B199019AB8F60 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
@@ -167,7 +163,6 @@
 		96697B46227D29C700794455 /* BoardActiveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardActiveTests.swift; sourceTree = "<group>"; };
 		96697B4D227D305E00794455 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		96697B4F227D305E00794455 /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
-		96697B62227D883E00794455 /* BoardActive-Credentials.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "BoardActive-Credentials.plist"; path = "Resources/BoardActive-Credentials.plist"; sourceTree = "<group>"; };
 		96697B6C227DAF2000794455 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
 		96697B70227E51B100794455 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Resources/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9689E11122F204E400A1ABFC /* AppPickingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPickingViewController.swift; sourceTree = "<group>"; };
@@ -197,7 +192,6 @@
 		B16F744C5154AAEC24C1BF77 /* Pods_AdDrop_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AdDrop_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6944FEF35BBF5EDB9539998 /* Pods-AdDrop_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdDrop_Tests.release.xcconfig"; path = "Target Support Files/Pods-AdDrop_Tests/Pods-AdDrop_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		DF8C290BFFCEEE2136A072EA /* Pods-AdDrop_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdDrop_Tests.debug.xcconfig"; path = "Target Support Files/Pods-AdDrop_Tests/Pods-AdDrop_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		EEA030DBB7428A2965059188 /* AlertControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertControllerTests.swift; sourceTree = "<group>"; };
 		EEA03A7E035B199019AB8F60 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EEA03E92F7317CD0DF20CE77 /* AdDrop.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = AdDrop.entitlements; sourceTree = SOURCE_ROOT; };
 		EF4155C61E4733FF09DCA066 /* Pods-AdDrop.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdDrop.release.xcconfig"; path = "Target Support Files/Pods-AdDrop/Pods-AdDrop.release.xcconfig"; sourceTree = "<group>"; };
@@ -255,7 +249,6 @@
 			children = (
 				96940A9622FB056800D2303C /* BAKit.xcdatamodeld */,
 				EEA03A7E035B199019AB8F60 /* AppDelegate.swift */,
-				9665F3CD22FB317400CD818E /* CoreDataStack.swift */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACD21AFB9204008FA782 /* Example for BAKit */,
 				607FACE81AFB9204008FA782 /* Tests */,
@@ -281,7 +274,6 @@
 		607FACD21AFB9204008FA782 /* Example for BAKit */ = {
 			isa = PBXGroup;
 			children = (
-				96BA7FEE22F2A82D00AEB5B8 /* StorageObject.swift */,
 				96FEC812230F7AD40087873D /* Views */,
 				96E00405226503BC001F6639 /* Models */,
 				96E00403225FA47A001F6639 /* Controllers */,
@@ -294,10 +286,12 @@
 		607FACD31AFB9204008FA782 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				9665F3CD22FB317400CD818E /* CoreDataStack.swift */,
+				96BA7FEE22F2A82D00AEB5B8 /* StorageObject.swift */,
+				964AB5AA227E85960000F938 /* UserDefaults.swift */,
 				9604133922EF830B00FBF8AF /* Fonts */,
 				96697B70227E51B100794455 /* GoogleService-Info.plist */,
 				964AB5B4227EEC190000F938 /* GPX Files */,
-				96697B62227D883E00794455 /* BoardActive-Credentials.plist */,
 				963F52682265E3C5005B4C1C /* Assets.xcassets */,
 				96697B6C227DAF2000794455 /* Info.plist */,
 				EEA03E92F7317CD0DF20CE77 /* AdDrop.entitlements */,
@@ -356,7 +350,6 @@
 		96BE361B2270C6030085F703 /* Controller Tests */ = {
 			isa = PBXGroup;
 			children = (
-				EEA030DBB7428A2965059188 /* AlertControllerTests.swift */,
 				96697B46227D29C700794455 /* BoardActiveTests.swift */,
 			);
 			name = "Controller Tests";
@@ -394,12 +387,10 @@
 		96E00403225FA47A001F6639 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				964AB5AA227E85960000F938 /* UserDefaults.swift */,
 				9633AC37227CF2BB00B2B692 /* LoginViewController.swift */,
 				9617529922E9F6F80001C2C3 /* HomeViewController.swift */,
 				9689E11122F204E400A1ABFC /* AppPickingViewController.swift */,
 				961F330A23030A4600167BBC /* NotificationCollectionViewController.swift */,
-				961F330D23030A7A00167BBC /* TitleCollectionViewCell.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -428,6 +419,7 @@
 			children = (
 				96CACC432265F6980059FCB0 /* Storyboards */,
 				961A58B72303394600430E5A /* ContactUsCollectionViewCell.swift */,
+				961F330D23030A7A00167BBC /* TitleCollectionViewCell.swift */,
 				96C48F9622F330EF00168079 /* CustomTableViewCell.swift */,
 				961A58BC230344ED00430E5A /* FindUsOnlineCollectionViewCell.swift */,
 				96C0C193230322A00096F2B5 /* ImageCollectionViewCell.swift */,
@@ -629,7 +621,6 @@
 				964AB5B8227EEC190000F938 /* SharedSpace.gpx in Resources */,
 				964AB5B7227EEC190000F938 /* mapstogpx20190406_015905.gpx in Resources */,
 				96CACC452265F7A90059FCB0 /* Launch Screen.storyboard in Resources */,
-				96697B63227D883E00794455 /* BoardActive-Credentials.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -639,7 +630,6 @@
 			files = (
 				96CACC462265F7A90059FCB0 /* Launch Screen.storyboard in Resources */,
 				96697B68227D9D3D00794455 /* NotificationBoard.storyboard in Resources */,
-				96697B64227D883E00794455 /* BoardActive-Credentials.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -806,7 +796,6 @@
 				96F0576222668F4600039804 /* NotificationModelSpec.swift in Sources */,
 				96697B67227D9D3300794455 /* AppDelegate.swift in Sources */,
 				9689E11322F204E400A1ABFC /* AppPickingViewController.swift in Sources */,
-				EEA037BEDE93377EC96D148C /* AlertControllerTests.swift in Sources */,
 				96697B47227D29C700794455 /* BoardActiveTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -815,16 +804,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				96FEC828230F8F0B0087873D /* CoreDataStack.swift in Sources */,
-				96FEC824230F8BBA0087873D /* UserDefaults.swift in Sources */,
 				96FEC831230F8F420087873D /* Onboarding.swift in Sources */,
 				96FEC82F230F8F3C0087873D /* Company.swift in Sources */,
 				96103D7C22FB1777006E0256 /* BAKit.xcdatamodeld in Sources */,
 				96FEC835230F8F8D0087873D /* CreatedBy.swift in Sources */,
 				96FEC82B230F8F2F0087873D /* Inbox.swift in Sources */,
 				96FEC82D230F8F340087873D /* User.swift in Sources */,
+				967898B72315D7E200C5F8CB /* CoreDataStack.swift in Sources */,
+				967898B52315D7CA00C5F8CB /* UserDefaults.swift in Sources */,
 				96FEC829230F8F270087873D /* App.swift in Sources */,
-				961F330F23030A7A00167BBC /* TitleCollectionViewCell.swift in Sources */,
 				96FEC833230F8F7F0087873D /* Extensions.swift in Sources */,
 				9665F3EF22FB4F4B00CD818E /* NotificationViewController.swift in Sources */,
 			);
@@ -837,12 +825,12 @@
 				96FEC832230F8F440087873D /* Onboarding.swift in Sources */,
 				96FEC836230F8F8E0087873D /* CreatedBy.swift in Sources */,
 				96FEC82C230F8F300087873D /* Inbox.swift in Sources */,
-				96FEC823230F8BB90087873D /* UserDefaults.swift in Sources */,
 				96FEC81A230F8B030087873D /* NotificationService.swift in Sources */,
 				96FEC825230F8CA70087873D /* BAKit.xcdatamodeld in Sources */,
 				96FEC834230F8F7F0087873D /* Extensions.swift in Sources */,
+				967898B82315D7E300C5F8CB /* CoreDataStack.swift in Sources */,
+				967898B62315D7CB00C5F8CB /* UserDefaults.swift in Sources */,
 				96FEC82A230F8F270087873D /* App.swift in Sources */,
-				96FEC827230F8F0A0087873D /* CoreDataStack.swift in Sources */,
 				96FEC82E230F8F350087873D /* User.swift in Sources */,
 				96FEC830230F8F3D0087873D /* Company.swift in Sources */,
 			);

@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'BAKit'
-  s.version          = '1.1.0'
+  s.version          = '2.0.0'
   s.summary          = 'Location-based notifications for personalized user engagement and retention campaigns.'
   s.description      = 'Board Active iOS SDK, for integrating BoardActive into your iOS application. The SDK supports iOS 10.0]+'
   s.homepage         = 'https://boardactive.com'
@@ -18,14 +18,14 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/BoardActive/BAKit-ios.git', :tag => s.version.to_s }
   
   s.ios.deployment_target = '10.0'
+
   s.swift_version         = '4.0'
+
   s.requires_arc = true
   
   s.module_name = 'BAKit'
 
   s.source_files = 'BAKit/Source/**/*.{swift,h,m}'
   
-  s.dependency 'INTULocationManager'
-
   s.static_framework = true
 end
