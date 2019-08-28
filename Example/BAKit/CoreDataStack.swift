@@ -17,6 +17,14 @@ public class CoreDataStack: NSObject {
         return fetchDataFromDatabase()
     }()
 
+    lazy var mainContext: NSManagedObjectContext = {
+        return self.persistentContainer.viewContext
+    }()
+    
+    lazy var childContext: NSManagedObjectContext = {
+       return NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+    }()
+
     lazy var persistentContainer: NSPersistentContainer = {
         /*
          The persistent container for the application. This implementation
@@ -79,13 +87,6 @@ public class CoreDataStack: NSObject {
                 fatalError()
             }
         }
-        notificationModel.body = dictionary["body"] as? String
-        notificationModel.dateCreated = dictionary["dateCreated"] as? String
-        notificationModel.dateLastUpdated = dictionary["dateLastUpdated"] as? String
-        notificationModel.gcmmessageId = dictionary["gcm.message_id"] as? String
-        notificationModel.googlecae = dictionary["google.c.a.e"] as? String
-        notificationModel.imageUrl = dictionary["imageUrl"] as? String
-        notificationModel.isTestMessage = dictionary["isTestMessage"] as? String
         if let messageData = dictionary["messageData"] as? [String:Any] {
             notificationModel.messageData = createMessageData(fromDictionary: messageData)
         } else {
@@ -97,12 +98,19 @@ public class CoreDataStack: NSObject {
                 fatalError()
             }
         }
+        notificationModel.body = dictionary["body"] as? String
+        notificationModel.dateCreated = dictionary["dateCreated"] as? String
+        notificationModel.dateLastUpdated = dictionary["dateLastUpdated"] as? String
+        notificationModel.gcmmessageId = dictionary["gcm.message_id"] as? String
+        notificationModel.googlecae = dictionary["google.c.a.e"] as? String
+        notificationModel.imageUrl = dictionary["imageUrl"] as? String
+        notificationModel.isTestMessage = dictionary["isTestMessage"] as? String
         notificationModel.messageId = dictionary["messageId"] as? String
         notificationModel.notificationId = dictionary["notificationId"] as? String
         notificationModel.tap = dictionary["tap"] as? Bool ?? false
         notificationModel.title = dictionary["title"] as? String
         saveContext()
-        NotificationCenter.default.post(Notification(name: Notification.Name("Refresh HomeViewController Tableview")))
+//        NotificationCenter.default.post(Notification(name: Notification.Name("Refresh HomeViewController Tableview")))
         return notificationModel
     }
     
@@ -187,22 +195,18 @@ public class CoreDataStack: NSObject {
     }
     
     func deleteStoredData(entity: String) {
-        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
         
-        // perform the delete
+        print("\n[CoreDataStack] deleteStoredData :: Entity: \(entity)\n")
+        let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
+        let request = NSBatchDeleteRequest(fetchRequest: fetch)
+        request.resultType = .resultTypeObjectIDs
         do {
-            try persistentContainer.viewContext.execute(deleteRequest)
-        } catch let error as NSError {
-            print(error)
-        }
-        
-        let req: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest<NSFetchRequestResult>(entityName: "BAKitApp")
-        let dreq = NSBatchDeleteRequest(fetchRequest: req)
-        do {
-            try persistentContainer.viewContext.execute(dreq)
-        } catch let error as NSError {
-            print(error)
+            let result = try CoreDataStack.sharedInstance.persistentContainer.viewContext.execute(request) as? NSBatchDeleteResult
+            let objectIDArray = result?.result as? [NSManagedObjectID]
+            let changes = [NSDeletedObjectsKey: objectIDArray]
+            NSManagedObjectContext.mergeChanges(fromRemoteContextSave:changes as [AnyHashable : Any], into:[CoreDataStack.sharedInstance.persistentContainer.viewContext])
+        } catch {
+            fatalError("Failed to execute request: \(error)")
         }
     }
     

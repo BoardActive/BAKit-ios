@@ -21,6 +21,8 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var passwordTextField: MDCTextField!
     @IBOutlet weak var isolatedView: ShadowView!
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet var tapRecognizer: UITapGestureRecognizer!
+    @IBOutlet weak var devSwitchStack: UIStackView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +32,7 @@ class LoginViewController: UIViewController {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(LoginViewController.dismissKeyboard))
         self.view.addGestureRecognizer(tap)
         
-        if BoardActive.client.userDefaults!.bool(forKey: String.DeviceRegistered), let anEmail = BoardActive.client.userDefaults!.string(forKey: String.ConfigKeys.Email), let aPassword = BoardActive.client.userDefaults!.string(forKey: String.ConfigKeys.Password)  {
+        if BoardActive.client.userDefaults!.bool(forKey: String.ConfigKeys.DeviceRegistered), let anEmail = BoardActive.client.userDefaults!.string(forKey: String.ConfigKeys.Email), let aPassword = BoardActive.client.userDefaults!.string(forKey: String.ConfigKeys.Password)  {
             self.emailTextField.text = anEmail
             self.passwordTextField.text = aPassword
             if (BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppKey) == String.AppKeys.Dev) {
@@ -42,13 +44,9 @@ class LoginViewController: UIViewController {
             }
             self.signInAction(self)
         }
-            
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
-
-//        devEnvSwitch.isHidden = true
-//        devEnvLabel.isHidden = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -62,21 +60,25 @@ class LoginViewController: UIViewController {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     @objc
     func keyboardWillShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+        
+        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let keyboardBeginHeight = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? CGRect)?.height {
             if self.view.frame.origin.y == 0 {
-                self.view.frame.origin.y -= keyboardSize.height
+                self.view.frame.origin.y -= (keyboardSize.height - 60)
+            } else if abs(Int(self.view.frame.origin.y)) == Int(keyboardBeginHeight - 60) {
+                self.view.frame.origin.y += (keyboardBeginHeight - keyboardSize.height)
             }
         }
     }
     
     @objc
     func keyboardWillHide(notification: NSNotification) {
-        self.view.frame.origin.y = 0
+        if view.frame.origin.y != 0 {
+            self.view.frame.origin.y = 0
+        }
     }
     
     @objc func dismissKeyboard() {
@@ -97,10 +99,10 @@ class LoginViewController: UIViewController {
             
             if self.devEnvSwitch.isOn {
                 BoardActive.client.userDefaults?.set(true, forKey: "isDevEnv")
-                BoardActive.client.userDefaults?.synchronize()
             } else {
                 BoardActive.client.userDefaults?.set(false, forKey: "isDevEnv")
             }
+            BoardActive.client.userDefaults?.synchronize()
             
             let operationQueue = OperationQueue()
             let registerDeviceOperation = BlockOperation {
@@ -115,7 +117,12 @@ class LoginViewController: UIViewController {
                     if let parsedJSON = parsedJSON {
                         let payload: LoginPayload = LoginPayload.init(fromDictionary: parsedJSON)
                         for app in payload.apps {
-                            StorageObject.container.apps.append(CoreDataStack.sharedInstance.createBAKitApp(fromApp: app))
+                            let newApp = CoreDataStack.sharedInstance.createBAKitApp(fromApp: app)
+                            if !StorageObject.container.apps.contains(newApp) {
+                                StorageObject.container.apps.append(newApp)
+                            } else {
+                                CoreDataStack.sharedInstance.mainContext.delete(newApp)
+                            }
                         }
                         
                         if payload.apps.count < 1 {
@@ -179,17 +186,15 @@ class LoginViewController: UIViewController {
     
     var count = 0
     
-    @IBAction func tapHandler(_ sender: Any) {
-        if count <= 6 {
+    @IBAction func tapHandler(_ sender: UITapGestureRecognizer) {
+    if count < 6 {
             count += 1
         } else {
             count = 0
-            if (devEnvSwitch.isHidden || devEnvLabel.isHidden) {
-                devEnvSwitch.isHidden = false
-                devEnvLabel.isHidden = false
+            if (devSwitchStack.isHidden) {
+                devSwitchStack.isHidden = false
             } else {
-                devEnvSwitch.isHidden = true
-                devEnvLabel.isHidden = true
+                devSwitchStack.isHidden = true
             }
         }
     }
