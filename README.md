@@ -313,7 +313,7 @@ Add the following to monitor for significant location updates whilst the app is 
 ```
 
 ## Download Example App Source Code
-There is an example app included in the repo's code under "Example".
+There is an example app included in the repo's code under ["Example"](https://github.com/BoardActive/BAKit-ios/tree/master/Example).
 
 ## Ask for Help
 
