@@ -1,6 +1,6 @@
 //
 //  StringConstants.swift
-//  BAKit
+//  AdDrop
 //
 //  Created by Ed Salter on 3/20/19.
 //
@@ -54,7 +54,7 @@ public extension String {
         static let DevHostKey = "springer-api.boardactive.com"
         static let ProdHostKey = "api.boardactive.com"
         static let iOS = "iOS"
-        static let FCMToken = String.ConfigKeys.DeviceToken
+        public static let FCMToken = String.ConfigKeys.DeviceToken
         static let AppId = BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppId)
         static let AppKey = BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppKey)
         static let DeviceOSVersion = UIDevice.current.systemVersion

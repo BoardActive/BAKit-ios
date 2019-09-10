@@ -1,6 +1,10 @@
 //
-//	Stock.swift
-//	Model file generated using JSONExport: https://github.com/Ahmed-Ali/JSONExport
+//  Stock.swift
+//  AdDrop
+//
+//  Created by Ed Salter on 7/25/19.
+//  Copyright © 2019 BoardActive. All rights reserved.
+//
 
 import Foundation
 

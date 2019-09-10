@@ -7,6 +7,7 @@
 //
 
 import UserNotifications
+import os.log
 
 class NotificationService: UNNotificationServiceExtension {
 
@@ -30,8 +31,17 @@ class NotificationService: UNNotificationServiceExtension {
                     UserDefaults.extensions.badge = new
                     bestAttemptContent.badge = NSNumber(value: new)
                 }
-                UserDefaults.extensions.synchronize()
             }
+            
+            if let categoryChosen = UserDefaults.extensions.string(forKey: "categoryIdentifier") {
+                bestAttemptContent.categoryIdentifier = categoryChosen
+                bestAttemptContent.setValue(categoryChosen, forKey: "categoryIdentifier")
+            }
+            
+            UserDefaults.extensions.synchronize()
+            
+            os_log("[NotificaitonService] :: didReceive :: bestAttempt: %s", bestAttemptContent.debugDescription)
+            
             contentHandler(bestAttemptContent)
         }
     }

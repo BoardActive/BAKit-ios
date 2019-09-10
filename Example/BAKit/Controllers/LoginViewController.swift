@@ -1,7 +1,7 @@
 
 //
 //  ViewController.swift
-//  BAKit
+//  AdDrop
 //
 //  Created by HVNT on 08/23/2018.
 //  Copyright (c) 2018 HVNT. All rights reserved.
@@ -23,7 +23,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet var tapRecognizer: UITapGestureRecognizer!
     @IBOutlet weak var devSwitchStack: UIStackView!
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
@@ -32,9 +32,10 @@ class LoginViewController: UIViewController {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(LoginViewController.dismissKeyboard))
         self.view.addGestureRecognizer(tap)
         
-        if BoardActive.client.userDefaults!.bool(forKey: String.ConfigKeys.DeviceRegistered), let anEmail = BoardActive.client.userDefaults!.string(forKey: String.ConfigKeys.Email), let aPassword = BoardActive.client.userDefaults!.string(forKey: String.ConfigKeys.Password)  {
+        if BoardActive.client.userDefaults!.bool(forKey: String.ConfigKeys.DeviceRegistered), BoardActive.client.userDefaults!.bool(forKey: "AppSelected"), let anEmail = BoardActive.client.userDefaults!.string(forKey: String.ConfigKeys.Email), let aPassword = BoardActive.client.userDefaults!.string(forKey: String.ConfigKeys.Password)  {
             self.emailTextField.text = anEmail
             self.passwordTextField.text = aPassword
+            
             if (BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppKey) == String.AppKeys.Dev) {
                 devEnvSwitch.setOn(true, animated: false)
                 BoardActive.client.isDevEnv = true
@@ -43,6 +44,13 @@ class LoginViewController: UIViewController {
                 BoardActive.client.isDevEnv = false
             }
             self.signInAction(self)
+        }
+
+        if (BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppKey) == String.AppKeys.Dev) {
+            devEnvSwitch.setOn(true, animated: false)
+            BoardActive.client.isDevEnv = true
+        } else {
+            devEnvSwitch.setOn(false, animated: false)
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
@@ -55,6 +63,9 @@ class LoginViewController: UIViewController {
         emailTextField.text = ""
         passwordTextField.text = ""
         
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+        
         self.navigationController!.navigationBar.isHidden = true
     }
     
@@ -64,7 +75,12 @@ class LoginViewController: UIViewController {
     
     @objc
     func keyboardWillShow(notification: NSNotification) {
+        let info:NSDictionary = notification.userInfo! as NSDictionary
+
+        let animationDurationValue = info[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber
         
+        let animationDuration: TimeInterval = animationDurationValue.doubleValue
+
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let keyboardBeginHeight = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? CGRect)?.height {
             if self.view.frame.origin.y == 0 {
                 self.view.frame.origin.y -= (keyboardSize.height - 60)
@@ -102,6 +118,7 @@ class LoginViewController: UIViewController {
             } else {
                 BoardActive.client.userDefaults?.set(false, forKey: "isDevEnv")
             }
+            
             BoardActive.client.userDefaults?.synchronize()
             
             let operationQueue = OperationQueue()
@@ -160,11 +177,13 @@ class LoginViewController: UIViewController {
 
     @objc
     func showCredentialsErrorAlert(error: String) {
+//        let alert = MDCAlertController(title: "Login Error", message: error)
+//        alert.addAction(MDCAlertAction(title: "OK", handler: nil)
         let alert = UIAlertController(title: "Login Error", message: error, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default) { (action) in
-            self.dismiss(animated: true, completion: nil)
-        }
+        let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil)
+        
         alert.addAction(okAction)
+//            .applyScheme(MDCAlertScheme, to: <#T##MDCAlertController#>) applyScheme(MDCAlertScheme(), to: alert)
         self.present(alert, animated: true, completion: nil)
     }
     
@@ -203,6 +222,17 @@ class LoginViewController: UIViewController {
 extension LoginViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-        return true
+        
+        let tag = textField.tag + 1
+        
+        if let nextTextfield = textField.superview?.viewWithTag(tag) {
+            nextTextfield.becomeFirstResponder()
+        } else {
+            textField.resignFirstResponder()
+            signInAction(self)
+        }
+        
+        
+        return false
     }
 }

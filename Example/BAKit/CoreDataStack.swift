@@ -1,28 +1,28 @@
 //
 //  CoreDataStack.swift
-//  BAKit
+//  AdDrop
 //
 //  Created by Ed Salter on 8/7/19.
 //  Copyright © 2019 BoardActive. All rights reserved.
 //
 
-import UIKit
 import CoreData
+import UIKit
 
 public class CoreDataStack: NSObject {
     public static let sharedInstance = CoreDataStack()
     private override init() {}
 
-    lazy var managedObjects:[NSManagedObject]?  = {
-        return fetchDataFromDatabase()
+    lazy var managedObjects: [NSManagedObject]? = {
+        fetchDataFromDatabase()
     }()
 
     lazy var mainContext: NSManagedObjectContext = {
-        return self.persistentContainer.viewContext
+        self.persistentContainer.viewContext
     }()
-    
+
     lazy var childContext: NSManagedObjectContext = {
-       return NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
     }()
 
     lazy var persistentContainer: NSPersistentContainer = {
@@ -36,7 +36,7 @@ public class CoreDataStack: NSObject {
         let url = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: groupName)!.appendingPathComponent("BAKit.sqlite")
         let container = NSPersistentContainer(name: "BAKit")
         container.persistentStoreDescriptions = [NSPersistentStoreDescription(url: url)]
-        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+        container.loadPersistentStores(completionHandler: { _, error in
             if let error = error as NSError? {
                 // Replace this implementation with code to handle the error appropriately.
                 // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
@@ -53,7 +53,7 @@ public class CoreDataStack: NSObject {
         })
         return container
     }()
-    
+
     public func saveContext() {
         let context = persistentContainer.viewContext
         if context.hasChanges {
@@ -67,8 +67,8 @@ public class CoreDataStack: NSObject {
             }
         }
     }
-    
-    public func createNotificationModel(fromDictionary dictionary: [String:Any]) -> NotificationModel {
+
+    public func createNotificationModel(fromDictionary dictionary: [String: Any]) -> NotificationModel {
         let context = CoreDataStack.sharedInstance.persistentContainer.viewContext
         let notificationModel = NSEntityDescription.insertNewObject(forEntityName: "NotificationModel", into: context) as! NotificationModel
         if let receivedDate = dictionary["date"] as? String {
@@ -76,28 +76,31 @@ public class CoreDataStack: NSObject {
         } else {
             notificationModel.date = Date().iso8601
         }
-        if let aps = dictionary["aps"] as? [String:Any] {
+        
+        if let aps = dictionary["aps"] as? [String: Any] {
             notificationModel.aps = createAps(fromDictionary: aps)
         } else {
             do {
                 let apsData = dictionary["aps"] as! String
-                let aps = try JSONSerialization.jsonObject(with: apsData.data(using: .utf8)!, options: []) as! [String:Any]
+                let aps = try JSONSerialization.jsonObject(with: apsData.data(using: .utf8)!, options: []) as! [String: Any]
                 notificationModel.aps = createAps(fromDictionary: aps)
             } catch {
                 fatalError()
             }
         }
-        if let messageData = dictionary["messageData"] as? [String:Any] {
+        
+        if let messageData = dictionary["messageData"] as? [String: Any] {
             notificationModel.messageData = createMessageData(fromDictionary: messageData)
         } else {
             do {
                 let messageDataData = dictionary["messageData"] as! String
-                let messageData = try JSONSerialization.jsonObject(with: messageDataData.data(using: .utf8)!, options: []) as! [String:Any]
+                let messageData = try JSONSerialization.jsonObject(with: messageDataData.data(using: .utf8)!, options: []) as! [String: Any]
                 notificationModel.messageData = createMessageData(fromDictionary: messageData)
             } catch {
                 fatalError()
             }
         }
+        
         notificationModel.body = dictionary["body"] as? String
         notificationModel.dateCreated = dictionary["dateCreated"] as? String
         notificationModel.dateLastUpdated = dictionary["dateLastUpdated"] as? String
@@ -113,7 +116,7 @@ public class CoreDataStack: NSObject {
 //        NotificationCenter.default.post(Notification(name: Notification.Name("Refresh HomeViewController Tableview")))
         return notificationModel
     }
-    
+
     public func createAps(fromDictionary dictionary: [String: Any]) -> Aps {
         let context = CoreDataStack.sharedInstance.persistentContainer.viewContext
         let aps = NSEntityDescription.insertNewObject(forEntityName: "Aps", into: context) as! Aps
@@ -122,12 +125,12 @@ public class CoreDataStack: NSObject {
         aps.mutablecontent = dictionary["mutable-content"] as! Int64
         aps.category = dictionary["category"] as? String
         aps.sound = dictionary["sound"] as? String
-        if let alert = dictionary["alert"] as? [String:Any] {
+        if let alert = dictionary["alert"] as? [String: Any] {
             aps.alert = createAlert(fromDictionary: alert)
         } else {
             do {
                 let alertData = dictionary["alert"] as! String
-                let alert = try JSONSerialization.jsonObject(with: alertData.data(using: .utf8)!, options: []) as! [String:Any]
+                let alert = try JSONSerialization.jsonObject(with: alertData.data(using: .utf8)!, options: []) as! [String: Any]
                 aps.alert = createAlert(fromDictionary: alert)
             } catch {
                 fatalError()
@@ -135,7 +138,7 @@ public class CoreDataStack: NSObject {
         }
         return aps
     }
-    
+
     public func createMessageData(fromDictionary dictionary: [String: Any]) -> MessageData {
         let context = CoreDataStack.sharedInstance.persistentContainer.viewContext
         let messageData = NSEntityDescription.insertNewObject(forEntityName: "MessageData", into: context) as! MessageData
@@ -153,7 +156,7 @@ public class CoreDataStack: NSObject {
         messageData.urlYoutube = dictionary["urlYoutube"] as? String
         return messageData
     }
-    
+
     public func createAlert(fromDictionary dictionary: [String: Any]) -> Alert {
         let context = CoreDataStack.sharedInstance.persistentContainer.viewContext
         let alert = NSEntityDescription.insertNewObject(forEntityName: "Alert", into: context) as! Alert
@@ -161,7 +164,7 @@ public class CoreDataStack: NSObject {
         alert.body = dictionary["body"] as? String
         return alert
     }
-    
+
     public func createBAKitApp(fromApp app: App) -> BAKitApp {
         let context = CoreDataStack.sharedInstance.persistentContainer.viewContext
         let baKitApp = NSEntityDescription.insertNewObject(forEntityName: "BAKitApp", into: context) as! BAKitApp
@@ -169,14 +172,14 @@ public class CoreDataStack: NSObject {
         baKitApp.name = app.name
         return baKitApp
     }
-        
+
     public func fetchDataFromDatabase() -> [NSManagedObject]? {
         let context = CoreDataStack.sharedInstance.persistentContainer.viewContext
 
         // Get the current calendar with local time zone
         var calendar = Calendar.current
         calendar.timeZone = NSTimeZone.local
-        
+
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "NotificationModel")
         let sort = NSSortDescriptor(key: #keyPath(NotificationModel.date), ascending: false)
         request.sortDescriptors = [sort]
@@ -193,10 +196,10 @@ public class CoreDataStack: NSObject {
         }
         return nil
     }
-    
+
     func deleteStoredData(entity: String) {
-        
         print("\n[CoreDataStack] deleteStoredData :: Entity: \(entity)\n")
+        
         let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: entity)
         let request = NSBatchDeleteRequest(fetchRequest: fetch)
         request.resultType = .resultTypeObjectIDs
@@ -204,36 +207,47 @@ public class CoreDataStack: NSObject {
             let result = try CoreDataStack.sharedInstance.persistentContainer.viewContext.execute(request) as? NSBatchDeleteResult
             let objectIDArray = result?.result as? [NSManagedObjectID]
             let changes = [NSDeletedObjectsKey: objectIDArray]
-            NSManagedObjectContext.mergeChanges(fromRemoteContextSave:changes as [AnyHashable : Any], into:[CoreDataStack.sharedInstance.persistentContainer.viewContext])
+            NSManagedObjectContext.mergeChanges(fromRemoteContextSave: changes as [AnyHashable: Any], into: [CoreDataStack.sharedInstance.persistentContainer.viewContext])
         } catch {
-            fatalError("Failed to execute request: \(error)")
+            print("\n[CoreDataStack] deleteStoredData :: Failed to execute request: \(error)\n")
         }
     }
-    
+
     public func fetchAppsFromDatabase() -> [NSManagedObject]? {
         let context = CoreDataStack.sharedInstance.persistentContainer.viewContext
-        
+
         // Get the current calendar with local time zone
         var calendar = Calendar.current
         calendar.timeZone = NSTimeZone.local
-        
+
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "BAKitApp")
         let sort = NSSortDescriptor(key: #keyPath(BAKitApp.name), ascending: false)
         request.sortDescriptors = [sort]
         request.returnsObjectsAsFaults = false
         do {
             let result = try context.fetch(request)
-            for data in result as! [NSManagedObject] {
-                if let app = data.value(forKey: "name") as? String {
-                    print("App :: Name: \(app)")
+
+//            for data in result as! [NSManagedObject] {
+//                if let app = data.value(forKey: "name") as? String {
+//                    print("[CoreDataStack] fetchAppsFromDatabase :: Name: \(app)")
+//                }
+//            }
+
+            if result.count > 0 {
+                for x in result as! [NSManagedObject] {
+                    for app in StorageObject.container.apps {
+                        if app.value(forKey: "id") as! Int64 == x.value(forKey: "id") as! Int64 {
+                            print("[CoreDataStack] fetchAppsFromDatabase :: Object exists : \(x)")
+                            context.delete(x)
+                        }
+                    }
+                    print("MANAGED OBJECT CONTEXT: \(persistentContainer.viewContext.registeredObjects)")
                 }
             }
             return result as? [NSManagedObject]
         } catch {
-            print("Failed")
+            print("[CoreDataStack] fetchAppsFromDatabase :: Fetch failed")
         }
         return nil
     }
-
 }
-

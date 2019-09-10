@@ -1,6 +1,6 @@
 //
 //  NotificationModelSpec.swift
-//  BAKit_Tests
+//  AdDrop_Tests
 //
 //  Created by Ed Salter on 4/16/19.
 //  Copyright © 2019 CocoaPods. All rights reserved.

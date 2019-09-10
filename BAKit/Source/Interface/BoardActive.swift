@@ -43,9 +43,8 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
 
     public var userDefaults = UserDefaults(suiteName: "BAKit")
     public var isDevEnv = false
-    
+    public var currentLocation: CLLocation?
     private let locationManager = CLLocationManager()
-    private var currentLocation: CLLocation?
     private var distanceBetweenLocations: CLLocationDistance?
 
     private override init() {}
@@ -63,67 +62,79 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
         userDefaults?.synchronize()
     }
 
-    deinit {
-        stopUpdatingLocation()
-    }
-    
-    /**
-     If error occurs, block will execute with status other than `INTULocationStatusSuccess` and subscription will be kept alive.
-     */
+    // MARK: - Core Location
+
     public func monitorLocation() {
-        BoardActive.client.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        BoardActive.client.locationManager.delegate = self
-        BoardActive.client.locationManager.requestAlwaysAuthorization()
-        BoardActive.client.locationManager.startUpdatingLocation()
+        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        locationManager.allowsBackgroundLocationUpdates = true
+        locationManager.delegate = self
+        locationManager.requestAlwaysAuthorization()
     }
-    
-    //MARK: - Core Location
-    
+
+    public func createRegion(location: CLLocation?, start: Bool = false) {
+        var region: CLCircularRegion?
+        
+        if CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self) {
+            locationManager.stopUpdatingLocation()
+            let coordinate = CLLocationCoordinate2DMake((location?.coordinate.latitude)!, (location?.coordinate.longitude)!)
+            let regionRadius = 100.0
+
+            region = CLCircularRegion(center: CLLocationCoordinate2D(latitude: coordinate.latitude, longitude: coordinate.longitude), radius: regionRadius, identifier: "BAKitRegion")
+
+            region?.notifyOnExit = true
+            region?.notifyOnEntry = true
+
+            guard let reg = region else {
+                return
+            }
+
+            if start {
+                locationManager.stopUpdatingLocation()
+                locationManager.startMonitoring(for: reg)
+            } else {
+                locationManager.stopMonitoring(for: reg)
+                locationManager.startUpdatingLocation()
+            }
+        }
+    }
+
+    public func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
+        print("\n[BoardActive] locationManager:didENTERRegion : Region: \(region.debugDescription)\n")
+    }
+
+    public func locationManager(_ manager: CLLocationManager, didExitRegion region: CLRegion) {
+        print("\n[BoardActive] locationManager:didEXITRegion : Region: \(region.debugDescription)\n")
+
+        locationManager.requestLocation()
+    }
+
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else {
             os_log("\n[BoardActive] didUpdateLocations :: Error: Last location of locations = nil.\n")
             return
         }
-        
-        if CLLocationManager.locationServicesEnabled() {
-            switch CLLocationManager.authorizationStatus() {
-            case .notDetermined, .restricted, .denied, .authorizedWhenInUse:
-                BoardActive.client.userDefaults?.set(false, forKey: String.Attribute.LocationPermission)
-            case .authorizedAlways:
-                BoardActive.client.userDefaults?.set(true, forKey: String.Attribute.LocationPermission)
-            }
-            BoardActive.client.userDefaults?.synchronize()
-        }
-        
-        if BoardActive.client.userDefaults?.object(forKey: String.Attribute.DateLocationPermissionRequested) == nil {
-            let date = Date().iso8601
-            BoardActive.client.userDefaults?.set(date, forKey: String.Attribute.DateLocationPermissionRequested)
-            BoardActive.client.userDefaults?.synchronize()
-//            BoardActive.client.editUser(attributes: Attributes(fromDictionary: ["dateLocationRequested": date]), httpMethod: String.HTTPMethod.PUT)
-        }
-        
-        if BoardActive.client.currentLocation == nil {
-            BoardActive.client.currentLocation = location
+
+        if currentLocation == nil {
+            currentLocation = location
             postLocation(location: location)
         }
-        
-        if let currentLocation = BoardActive.client.currentLocation, location.distance(from: currentLocation) < 2.0 {
-            BoardActive.client.distanceBetweenLocations = (BoardActive.client.distanceBetweenLocations ?? 0.0) + location.distance(from: currentLocation)
+
+        if let currentLocation = currentLocation, location.distance(from: currentLocation) < 2.0 {
+            distanceBetweenLocations = (distanceBetweenLocations ?? 0.0) + location.distance(from: currentLocation)
         } else {
             postLocation(location: location)
-            BoardActive.client.distanceBetweenLocations = 0.0
-            
+            distanceBetweenLocations = 0.0
         }
-        
-        BoardActive.client.currentLocation = location
+
+        currentLocation = location
     }
-    
+
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         guard let clError = error as? CLError else {
             os_log("\n[BoardActive] didFailWithError :: %s \n", error.localizedDescription)
             return
         }
-        
+
         switch clError.errorCode {
         case 0:
             os_log("\n[BoardActive] didFailWithError :: Error: Location Unknown \n")
@@ -140,23 +151,26 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
             break
         }
     }
-    
+
     public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        var isAppAuthorized = false
-        switch status {
-        case .notDetermined, .restricted, .denied, .authorizedWhenInUse:
-            os_log("\n[BoardActive] didChangeAuthorization :: status: Always\n")
-            userDefaults?.set(false, forKey: String.Attribute.LocationPermission)
-        case .authorizedAlways:
-            os_log("\n[BoardActive] didChangeAuthorization :: status: Always\n")
-            userDefaults?.set(true, forKey: String.Attribute.LocationPermission)
-            isAppAuthorized = true
+        if userDefaults?.object(forKey: String.Attribute.DateLocationPermissionRequested) == nil {
+            let date = Date().iso8601
+            userDefaults?.set(date, forKey: String.Attribute.DateLocationPermissionRequested)
+        }
+
+        if CLLocationManager.locationServicesEnabled() {
+            switch CLLocationManager.authorizationStatus() {
+            case .notDetermined, .restricted, .denied:
+                userDefaults?.set(false, forKey: String.Attribute.LocationPermission)
+                locationManager.stopUpdatingLocation()
+            case .authorizedAlways, .authorizedWhenInUse:
+                userDefaults?.set(true, forKey: String.Attribute.LocationPermission)
+                locationManager.startUpdatingLocation()
+            }
         }
         userDefaults?.synchronize()
-
-//        BoardActive.client.editUser(attributes: Attributes(fromDictionary: ["locationPermission": isAppAuthorized]), httpMethod: String.HTTPMethod.PUT)
     }
-    
+
     /**
      Functions as an as needed means of procuring the user's current location.
      - Returns: `CLLocation?` An optional `CLLocation` obtained by `CLLocationManager's` `requestLocation()` function.
@@ -172,10 +186,20 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
      Calls `stopUpdatingLocation` on BoardActive's private CLLocationManager property.
      */
     public func stopUpdatingLocation() {
-        BoardActive.client.locationManager.stopUpdatingLocation()
+        locationManager.stopUpdatingLocation()
     }
-
-    // MARK: SDK Functions
+    
+    public func startMonitoringSignificantLocationChanges() {
+        locationManager.startMonitoringSignificantLocationChanges()
+    }
+    
+    public func stopMonitoringSignificantLocationChanges() {
+        locationManager.stopMonitoringSignificantLocationChanges()
+    }
+    
+    public func requestLocation() {
+        locationManager.requestLocation()
+    }
 
     fileprivate func getHeaders() -> [String: String]? {
         guard let tokenString = userDefaults?.object(forKey: String.HeaderValues.FCMToken) as? String else {
@@ -192,8 +216,8 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
         let headers: [String: String] = [
             String.HeaderKeys.AcceptEncodingHeader: String.HeaderValues.GzipDeflate,
             String.HeaderKeys.AcceptHeader: String.HeaderValues.WildCards,
-            String.HeaderKeys.AppKeyHeader: BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppKey) ?? "",
-            String.HeaderKeys.AppIdHeader: BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppId) ?? "",
+            String.HeaderKeys.AppKeyHeader: userDefaults?.string(forKey: String.ConfigKeys.AppKey) ?? "",
+            String.HeaderKeys.AppIdHeader: userDefaults?.string(forKey: String.ConfigKeys.AppId) ?? "",
             String.HeaderKeys.AppVersionHeader: String.HeaderValues.AppVersion,
             String.HeaderKeys.CacheControlHeader: String.HeaderValues.NoCache,
             String.HeaderKeys.ConnectionHeader: String.HeaderValues.KeepAlive,
@@ -203,7 +227,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
             String.HeaderKeys.DeviceTokenHeader: tokenString,
             String.HeaderKeys.DeviceTypeHeader: String.HeaderValues.DeviceType,
             String.HeaderKeys.HostHeader: hostKey,
-            String.HeaderKeys.IsTestApp: "0",
+            String.HeaderKeys.IsTestApp: "1",
             String.HeaderKeys.UUIDHeader: UIDevice.current.identifierForVendor!.uuidString,
         ]
         return headers
@@ -250,7 +274,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
         let path = "\(EndPoints.Me)"
 
         let body: [String: Any] = [
-            String.ConfigKeys.Email: BoardActive.client.userDefaults?.object(forKey: String.ConfigKeys.Email) as Any,
+            String.ConfigKeys.Email: userDefaults?.object(forKey: String.ConfigKeys.Email) as Any,
             String.HeaderKeys.DeviceOSHeader: String.HeaderValues.iOS,
             String.HeaderKeys.DeviceOSVersionHeader: String.HeaderValues.DeviceOSVersion,
         ]
@@ -261,7 +285,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
                 return
             }
 
-            BoardActive.client.userDefaults?.set(true, forKey: String.ConfigKeys.DeviceRegistered)
+            self.userDefaults?.set(true, forKey: String.ConfigKeys.DeviceRegistered)
             completionHandler(parsedJSON, nil)
             return
         }
@@ -318,7 +342,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
 
      - Parameter attributes: `Attributes` An instance of the `Attributes` class. Include only those keys whose values you intend to edit.
      - Parameter httpMethod: `String` Either `String.HTTPMethod.POST` ("POST") or `String.HTTPMethod.PUT` ("PUT").
-      */
+     */
     public func editUser(attributes: Attributes, httpMethod: String) {
         let path = "\(EndPoints.Me)"
 
@@ -358,7 +382,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
             print("[BoardActive] :: callServer :: bodyData serialization error.")
         }
 
-        let request = NSMutableURLRequest(url: NSURL(string: destination)! as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 60.0)
+        let request = NSMutableURLRequest(url: NSURL(string: destination)! as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 20.0)
 
         guard let headers = getHeaders(), !headers.isEmpty else {
             os_log("[BA:client:callServer] :: NSMutableURLRequest:headers :: %s", getHeaders()?.debugDescription ?? "Empty Headers")
@@ -386,7 +410,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
                 if let dataString = String(data: data, encoding: .utf8) {
                     os_log("[BA:client:callServer] :: dataString : %@", dataString)
 
-                    completionHandler(BoardActive.client.convertToDictionary(text: dataString), nil)
+                    completionHandler(self.convertToDictionary(text: dataString), nil)
                     return
                 }
             }

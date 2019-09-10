@@ -1,6 +1,6 @@
 //
 //  NotificationCollectionViewController.swift
-//  BAKit
+//  AdDrop
 //
 //  Created by Ed Salter on 8/13/19.
 //  Copyright © 2019 BoardActive. All rights reserved.
@@ -8,6 +8,7 @@
 
 import UIKit
 import MessageUI
+import BAKit
 
 private let imageViewReuseIdentifier = "imageViewCell"
 private let titleLabelReuseIdentifier = "titleLabelContainer"
@@ -20,8 +21,8 @@ class NotificationCollectionViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupNavBar()
-        // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
         // Register cell classes
@@ -78,7 +79,7 @@ class NotificationCollectionViewController: UICollectionViewController {
         
         if indexPath.row == 1 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: titleLabelReuseIdentifier, for: indexPath) as! TitleCollectionViewCell
-            guard let title = StorageObject.container.notification?.messageData?.title, let body = StorageObject.container.notification?.body else {
+            guard let title = StorageObject.container.notification?.title, let body = StorageObject.container.notification?.body else {
                 cell.height = 0
                 cell.width = 0
                 cell.isHidden = true
@@ -150,6 +151,10 @@ class NotificationCollectionViewController: UICollectionViewController {
                 cell.callButton.isHidden = true
             }
             
+            if !cell.homepageButton.isUserInteractionEnabled, !cell.emailButton.isUserInteractionEnabled, !cell.directionsButton.isUserInteractionEnabled, !cell.callButton.isUserInteractionEnabled {
+                cell.contactUsLabel.isHidden = true
+            }
+            
             cell.layoutIfNeeded()
             return cell
         }
@@ -192,6 +197,11 @@ class NotificationCollectionViewController: UICollectionViewController {
                 cell.youTubeButton.height = 0
                 cell.youTubeButton.isHidden = true
             }
+            
+            if !cell.facebookButton.isUserInteractionEnabled, !cell.twitterButton.isUserInteractionEnabled, !cell.linkedInButton.isUserInteractionEnabled, !cell.youTubeButton.isUserInteractionEnabled {
+                cell.findUsOnlineLabel.isHidden = true
+            }
+            
             cell.layoutIfNeeded()
             return cell
         }

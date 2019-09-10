@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  BAKit
+//  AdDrop
 //
 //  Created by HVNT on 08/23/2018.
 //  Copyright (c) 2018 HVNT. All rights reserved.
@@ -24,7 +24,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
     
     public weak var notificationDelegate: NotificationDelegate?
     
-    private let categoryIdentifier = "PreviewNotification"
+    private let basicCategoryIdentifier = "Basic"
+    private let bigPictureategoryIdentifier = "Big Picture"
+    private let actionButtonCategoryIdentifier = "Action Button"
+    private let bigTextCategoryIdentifier = "Big Text"
+    private let inboxStyleCategoryIdentifier = "Inbox Style"
+    
+    private enum ActionIdentifier: String {
+        case accept, reject
+    }
     
     private let authOptions = UNAuthorizationOptions(arrayLiteral: [.alert, .badge, .sound])
     
@@ -32,37 +40,78 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
         UNUserNotificationCenter.current().delegate = self
-        application.applicationIconBadgeNumber = UserDefaults.extensions.badge
         
         return true
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+//        application.setMinimumBackgroundFetchInterval(600)
+        
+        BoardActive.client.stopMonitoringSignificantLocationChanges()
+
         UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedStringKey.font: UIFont(name: "Montserrat-Regular", size: 18.0)!],for: .normal)
-//        let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
-//        os_log("\n[AppDelegate] didFinishLaunchingWithOptions :: DATABASE LOCATION :: %s \n", paths[0].debugDescription)
+        let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
+        os_log("\n[AppDelegate] didFinishLaunchingWithOptions :: DATABASE LOCATION :: %s \n", paths[0].debugDescription)
+        application.applicationIconBadgeNumber = UserDefaults.extensions.badge
+
         os_log("\n[AppDelegate] didFinishLaunchingWithOptions :: BADGE NUMBER :: %s \n", application.applicationIconBadgeNumber.description)
         return true
     }
     
     func applicationDidBecomeActive(_ application: UIApplication) {
+        print("DID BECOME ACTIVE")
+        os_log("\n[AppDelegate] applicationDidBecomeActive :: BADGE NUMBER INITIAL :: %s \n", application.applicationIconBadgeNumber.description)
+
         let badgeCount = 0
-        let application = UIApplication.shared
+        UserDefaults.extensions.badge = badgeCount
+        UserDefaults.extensions.synchronize()
+        
         application.applicationIconBadgeNumber = badgeCount
+        
+        os_log("\n[AppDelegate] applicationDidBecomeActive :: BADGE NUMBER FINAL :: %s \n", application.applicationIconBadgeNumber.description)
     }
     
     func applicationWillTerminate(_ application: UIApplication) {
         CoreDataStack.sharedInstance.saveContext()
+        
+        let currentLocation = BoardActive.client.currentLocation
+        BoardActive.client.createRegion(location: currentLocation, start: true)
+        
+        BoardActive.client.startMonitoringSignificantLocationChanges()
     }
     
     private func registerCustomCategory() {
-        var previewNotificationCategory: UNNotificationCategory
+        var basicNotificationCategory: UNNotificationCategory
+        var bigPictureCategory: UNNotificationCategory
+        var actionButtonCategory: UNNotificationCategory
+        var bigTextCategory: UNNotificationCategory
+        var inboxCategory: UNNotificationCategory
+        
+        let accept = UNNotificationAction(identifier: ActionIdentifier.accept.rawValue, title: "Accept")
+        let reject = UNNotificationAction(identifier: ActionIdentifier.reject.rawValue, title: "Reject")
+        
         if #available(iOS 11.0, *) {
-            previewNotificationCategory = UNNotificationCategory(identifier: categoryIdentifier, actions: [], intentIdentifiers: [], hiddenPreviewsBodyPlaceholder: "", options: [])
+            basicNotificationCategory = UNNotificationCategory(identifier: basicCategoryIdentifier, actions: [], intentIdentifiers: [], hiddenPreviewsBodyPlaceholder: "", options: [])
+            bigPictureCategory = UNNotificationCategory(identifier: bigPictureategoryIdentifier, actions: [], intentIdentifiers: [], hiddenPreviewsBodyPlaceholder: "", options: [])
+            actionButtonCategory = UNNotificationCategory(identifier: actionButtonCategoryIdentifier, actions: [accept, reject], intentIdentifiers: [])
+            bigTextCategory = UNNotificationCategory(identifier: bigTextCategoryIdentifier, actions: [], intentIdentifiers: [])
+            inboxCategory = UNNotificationCategory(identifier: inboxStyleCategoryIdentifier, actions: [], intentIdentifiers: [])
         } else {
-            previewNotificationCategory = UNNotificationCategory(identifier: categoryIdentifier, actions: [], intentIdentifiers: [])
+            basicNotificationCategory = UNNotificationCategory(identifier: basicCategoryIdentifier, actions: [], intentIdentifiers: [])
+            bigPictureCategory = UNNotificationCategory(identifier: bigPictureategoryIdentifier, actions: [], intentIdentifiers: [])
+            actionButtonCategory = UNNotificationCategory(identifier: actionButtonCategoryIdentifier, actions: [accept, reject], intentIdentifiers: [])
+            bigTextCategory = UNNotificationCategory(identifier: bigTextCategoryIdentifier, actions: [], intentIdentifiers: [])
+            inboxCategory = UNNotificationCategory(identifier: inboxStyleCategoryIdentifier, actions: [], intentIdentifiers: [])
         }
-        UNUserNotificationCenter.current().setNotificationCategories([previewNotificationCategory])
+        let center = UNUserNotificationCenter.current()
+        center.setNotificationCategories([basicNotificationCategory, bigPictureCategory, actionButtonCategory, bigTextCategory, inboxCategory])
+    }
+    
+    func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        // Request that BoardActive's CLLocationManager update location
+//        BoardActive.client.requestLocation()
+        
+        completionHandler(.newData)
     }
 }
 
@@ -101,7 +150,8 @@ extension AppDelegate {
         operationQueue.addOperation(monitorLocationOperation)
     }
     
-    public func requestNotifications() {        
+    public func requestNotifications() {
+        registerCustomCategory()
         UNUserNotificationCenter.current().requestAuthorization(options: authOptions) { granted, error in
             if BoardActive.client.userDefaults?.object(forKey: "dateNotificationPermissionRequested") == nil {
                 BoardActive.client.userDefaults?.set(Date().iso8601, forKey: "dateNotificationPermissionRequested")
@@ -176,11 +226,14 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             return
         }
         
+        BoardActive.client.postEvent(name: String.Opened, messageId: StorageObject.container.notification!.messageId!, firebaseNotificationId: StorageObject.container.notification!.gcmmessageId!)
+        print("[AppDelegate] userNotificationCenter:didReceive: :: TAPPED & TRANSITIONING")
+        
         let userInfo = response.notification.request.content.userInfo as! [String: Any]
         
         self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
         
-        print(userInfo)
+        print("[AppDelegate] userNotificationCenter:didReceive: :: User Info: \(userInfo)")
         
         completionHandler()
     }
@@ -200,18 +253,19 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         }
         
         if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId {
+            print("\n[AppDelegate] handleNotification :: Application State: \(application.applicationState.rawValue)\n")
             switch application.applicationState {
             case .active:
-                os_log("%s", String.ReceivedBackground)
+                print("\n[AppDelegate] handleNotification :: RECEIVED ACTIVE")
                 BoardActive.client.postEvent(name: String.Received, messageId: messageId, firebaseNotificationId: firebaseNotificationId)
                 break
             case .background:
-                os_log("%s", String.ReceivedBackground)
+                print("\n[AppDelegate] handleNotification :: RECEIVED BACKGROUND")
                 BoardActive.client.postEvent(name: String.Received, messageId: messageId, firebaseNotificationId: firebaseNotificationId)
                 break
             case .inactive:
-                os_log("%s", String.TappedAndTransitioning)
-                BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId)
+                print("\n[AppDelegate] handleNotification :: RECEIVED INACTIVE\n")
+                BoardActive.client.postEvent(name: String.Received, messageId: messageId, firebaseNotificationId: firebaseNotificationId)
                 break
             default:
                 break

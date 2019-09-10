@@ -11,8 +11,6 @@ import UIKit
 class CustomTableViewCell: UITableViewCell {
     @IBOutlet weak var notificationMainImageView: UIImageView!
 
-   
-
     @IBOutlet weak var promoStarts: UILabel!
     @IBOutlet weak var startDate: UILabel!
     @IBOutlet weak var promoEnds: UILabel!

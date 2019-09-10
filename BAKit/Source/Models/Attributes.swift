@@ -1,6 +1,6 @@
 //
 //  Attributes.swift
-//  BAKit
+//  AdDrop
 //
 //  Created by Ed Salter on 5/23/19.
 //
@@ -49,7 +49,7 @@ public struct Stock {
     var linkedInUrl: String?
     var locationPermission: Bool? = UserDefaults(suiteName: "BAKit")?.bool(forKey: "locationPermission") ?? false
     var name: String?
-    var notificationPermission: Bool! = UIApplication.shared.isRegisteredForRemoteNotifications
+    var notificationPermission: Bool! = true
     var phone: String?
     var twitterUrl: String?
 

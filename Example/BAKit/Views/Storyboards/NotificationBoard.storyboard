@@ -652,6 +652,7 @@
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <outlet property="callButton" destination="XKF-GE-RCI" id="5jn-k0-PuJ"/>
+                                    <outlet property="contactUsLabel" destination="bln-OJ-VgP" id="4BS-wO-3Ig"/>
                                     <outlet property="directionsButton" destination="oNN-jg-Xyd" id="9j0-ns-Eg8"/>
                                     <outlet property="emailButton" destination="qyg-E9-uD1" id="DkZ-d3-RYT"/>
                                     <outlet property="homepageButton" destination="4Hx-xd-60b" id="FvD-Qn-ghW"/>
@@ -743,6 +744,7 @@
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <outlet property="facebookButton" destination="wc8-53-oTe" id="EzM-tL-tGb"/>
+                                    <outlet property="findUsOnlineLabel" destination="S8W-LH-4w6" id="ojx-I6-F3O"/>
                                     <outlet property="linkedInButton" destination="xKc-BV-J93" id="8gV-85-dcP"/>
                                     <outlet property="twitterButton" destination="NGL-pa-qrJ" id="dvU-qn-R2y"/>
                                     <outlet property="youTubeButton" destination="dgF-M3-cWz" id="F3Y-wE-lPa"/>
