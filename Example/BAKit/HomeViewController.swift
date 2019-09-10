@@ -36,7 +36,7 @@ class HomeViewController: UIViewController {
 
         configureNavigation()
         configureTableView()
-//        setupLocalNotification()
+        setupLocalNotification()
         (UIApplication.shared.delegate! as! AppDelegate).setupSDK()
 
         let myTimer = Timer(timeInterval: 5.0, target: self, selector: #selector(createLocalNotification), userInfo: nil, repeats: true)

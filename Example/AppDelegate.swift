@@ -127,8 +127,8 @@ extension AppDelegate {
                 BoardActive.client.userDefaults?.set(true, forKey: String.ConfigKeys.DeviceRegistered)
                 BoardActive.client.userDefaults?.synchronize()
                 
-                let userInfo = UserInfo.init(fromDictionary: parsedJSON)
-                StorageObject.container.userInfo = userInfo
+                //TODO: - Add UserInfo and Attribute parsing
+                
             }
         }
        

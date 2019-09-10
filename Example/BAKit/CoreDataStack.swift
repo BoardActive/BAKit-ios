@@ -67,6 +67,75 @@ public class CoreDataStack: NSObject {
             }
         }
     }
+    
+    public func createUserInfo(fromDictionary dictionary: [String:Any]) -> UserInfo {
+        let context = CoreDataStack.sharedInstance.persistentContainer.viewContext
+        let userInfoModel = NSEntityDescription.insertNewObject(forEntityName: "UserInfo", into: context) as! UserInfo
+        if let appId = dictionary["appId"] as? Int64 {
+            userInfoModel.appId = appId
+        }
+        if let appVersion = dictionary["appVersion"] as? String {
+            userInfoModel.appVersion = appVersion
+        }
+        if let dateCreated = dictionary["dateCreated"] as? String {
+            userInfoModel.dateCreated = dateCreated
+        }
+        if let dateLastOpenedApp = dictionary["dateLastOpenedApp"] as? String {
+            userInfoModel.dateLastOpenedApp = dateLastOpenedApp
+        }
+        if let dateLastUpdated = dictionary["dateLastUpdated"] as? String {
+            userInfoModel.dateLastUpdated = dateLastUpdated
+        }
+        if let deviceOS = dictionary["deviceOS"] as? String {
+            userInfoModel.deviceOS = deviceOS
+        }
+        if let deviceOSVersion = dictionary["deviceOSVersion"] as? String {
+            userInfoModel.deviceOSVersion = deviceOSVersion
+        }
+        if let deviceToken = dictionary["deviceToken"] as? String {
+            userInfoModel.deviceToken = deviceToken
+        }
+        if let deviceType = dictionary["deviceType"] as? String {
+            userInfoModel.deviceType = deviceType
+        }
+        if let email = dictionary["email"] as? String {
+            userInfoModel.email = email
+        }
+        if let guid = dictionary["guid"] as? String {
+            userInfoModel.guid = guid
+        }
+        if let id = dictionary["id"] as? Int64 {
+            userInfoModel.id = id
+        }
+        if let webUserId = dictionary["webUserId"] as? Int64 {
+            userInfoModel.webUserId = webUserId
+        }
+        
+        
+        return userInfoModel
+    }
+    
+    public func createAttributes(fromDictionary dictionary: [String:Any]) -> Attributes {
+        let context = CoreDataStack.sharedInstance.persistentContainer.viewContext
+        let attributesModel = NSEntityDescription.insertNewObject(forEntityName: "Attributes", into: context) as! Attributes
+        do {
+            let customDictionaryData = dictionary["custom"] as! String
+            let customDictionary = try JSONSerialization.jsonObject(with: customDictionaryData.data(using: .utf8)!, options: []) as! [String: Any]
+            attributesModel.custom = createCustomAttributes(fromDictionary: customDictionary)
+        } catch {
+            fatalError()
+        }
+        return attributesModel
+    }
+    
+    public func createCustomAttributes(fromDictionary dictionary: [String:Any]) -> Custom {
+        let context = CoreDataStack.sharedInstance.persistentContainer.viewContext
+        let customAttributesModel = NSEntityDescription.insertNewObject(forEntityName: "Custom", into: context) as! Custom
+        if let value = dictionary["value"] as? String {
+            customAttributesModel.value = value
+        }
+        return customAttributesModel
+    }
 
     public func createNotificationModel(fromDictionary dictionary: [String: Any]) -> NotificationModel {
         let context = CoreDataStack.sharedInstance.persistentContainer.viewContext
@@ -113,7 +182,6 @@ public class CoreDataStack: NSObject {
         notificationModel.tap = dictionary["tap"] as? Bool ?? false
         notificationModel.title = dictionary["title"] as? String
         saveContext()
-//        NotificationCenter.default.post(Notification(name: Notification.Name("Refresh HomeViewController Tableview")))
         return notificationModel
     }
 
