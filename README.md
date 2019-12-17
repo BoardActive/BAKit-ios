@@ -186,8 +186,8 @@ BoardActive class's userDefaults.
 
     public func requestNotifications() {        
     UNUserNotificationCenter.current().requestAuthorization(options: authOptions) { granted, error in        
-    if BoardActive.client.userDefaults?.object(forKey: "dateNotificationPermissionRequested") == nil {
-                BoardActive.client.userDefaults?.set(Date().iso8601, forKey: "dateNotificationPermissionRequested")
+    if BoardActive.client.userDefaults?.object(forKey: "dateNotificationRequested") == nil {
+                BoardActive.client.userDefaults?.set(Date().iso8601, forKey: "dateNotificationRequested")
                 BoardActive.client.userDefaults?.synchronize()
             }
             guard error == nil, granted else {

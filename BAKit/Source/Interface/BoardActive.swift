@@ -95,9 +95,9 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
             BoardActive.client.userDefaults?.synchronize()
         }
         
-        if BoardActive.client.userDefaults?.object(forKey: String.Attribute.DateLocationPermissionRequested) == nil {
+        if BoardActive.client.userDefaults?.object(forKey: String.Attribute.DateLocationRequested) == nil {
             let date = Date().iso8601
-            BoardActive.client.userDefaults?.set(date, forKey: String.Attribute.DateLocationPermissionRequested)
+            BoardActive.client.userDefaults?.set(date, forKey: String.Attribute.DateLocationRequested)
             BoardActive.client.userDefaults?.synchronize()
 //            BoardActive.client.editUser(attributes: Attributes(fromDictionary: ["dateLocationRequested": date]), httpMethod: String.HTTPMethod.PUT)
         }

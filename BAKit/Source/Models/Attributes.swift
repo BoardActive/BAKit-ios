@@ -39,18 +39,20 @@ public struct Attributes {
 }
 
 public struct Stock {
+    // permisions
+    var dateLocationRequested: Date? = UserDefaults(suiteName: "BAKit")?.object(forKey: "dateLocationRequested") as? Date
+    var dateNotificationRequested: Date? = UserDefaults(suiteName: "BAKit")?.object(forKey: "dateNotificationRequested") as? Date
+    var locationPermission: Bool? = UserDefaults(suiteName: "BAKit")?.bool(forKey: "locationPermission") ?? false
+    var notificationPermission: Bool! = UIApplication.shared.isRegisteredForRemoteNotifications
+  
     var dateBorn: Date?
-    var dateLocationPermissionRequested: Date? = UserDefaults(suiteName: "BAKit")?.object(forKey: "dateLocationPermissionRequested") as? Date
-    var dateNotificationPermissionRequested: Date? = UserDefaults(suiteName: "BAKit")?.object(forKey: "dateNotificationPermissionRequested") as? Date
+    var name: String?
     var email: String?
-    var facebookUrl: String?
     var gender: String?
+    var phone: String?
+    var facebookUrl: String?
     var instagramUrl: String?
     var linkedInUrl: String?
-    var locationPermission: Bool? = UserDefaults(suiteName: "BAKit")?.bool(forKey: "locationPermission") ?? false
-    var name: String?
-    var notificationPermission: Bool! = UIApplication.shared.isRegisteredForRemoteNotifications
-    var phone: String?
     var twitterUrl: String?
 
     /**
@@ -58,13 +60,13 @@ public struct Stock {
      */
     public init(fromDictionary dictionary: [String: Any]) {
         dateBorn = dictionary["dateBorn"] as? Date
+        name = dictionary["name"] as? String
         email = dictionary["email"] as? String
-        facebookUrl = dictionary["facebookUrl"] as? String
         gender = dictionary["gender"] as? String
+        phone = dictionary["phone"] as? String
+        facebookUrl = dictionary["facebookUrl"] as? String
         instagramUrl = dictionary["instagramUrl"] as? String
         linkedInUrl = dictionary["linkedInUrl"] as? String
-        name = dictionary["name"] as? String
-        phone = dictionary["phone"] as? String
         twitterUrl = dictionary["twitterUrl"] as? String
     }
 
@@ -76,38 +78,38 @@ public struct Stock {
         if dateBorn != nil {
             dictionary["dateBorn"] = dateBorn
         }
-        if dateLocationPermissionRequested != nil {
-            dictionary["dateLocationPermissionRequested"] = dateLocationPermissionRequested
+        if dateLocationRequested != nil {
+            dictionary["dateLocationRequested"] = dateLocationRequested
         }
-        if dateNotificationPermissionRequested != nil {
-            dictionary["dateNotificationPermissionRequested"] = dateNotificationPermissionRequested
+        if dateNotificationRequested != nil {
+            dictionary["dateNotificationRequested"] = dateNotificationRequested
+        }
+        if locationPermission != nil {
+            dictionary["locationPermission"] = locationPermission
+        }
+        if notificationPermission != nil {
+            dictionary["notificationPermission"] = notificationPermission
+        }
+        if name != nil {
+            dictionary["name"] = name
         }
         if email != nil {
             dictionary["email"] = email
         }
-        if facebookUrl != nil {
-            dictionary["facebookUrl"] = facebookUrl
-        }
         if gender != nil {
             dictionary["gender"] = gender
+        }
+        if phone != nil {
+            dictionary["phone"] = phone
+        }
+        if facebookUrl != nil {
+            dictionary["facebookUrl"] = facebookUrl
         }
         if instagramUrl != nil {
             dictionary["instagramUrl"] = instagramUrl
         }
         if linkedInUrl != nil {
             dictionary["linkedInUrl"] = linkedInUrl
-        }
-        if locationPermission != nil {
-            dictionary["locationPermission"] = locationPermission
-        }
-        if name != nil {
-            dictionary["name"] = name
-        }
-        if notificationPermission != nil {
-            dictionary["notificationPermission"] = notificationPermission
-        }
-        if phone != nil {
-            dictionary["phone"] = phone
         }
         if twitterUrl != nil {
             dictionary["twitterUrl"] = twitterUrl

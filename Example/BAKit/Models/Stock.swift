@@ -8,8 +8,8 @@ public struct Stock {
 	var dateBorn : AnyObject!
 	var dateCreated : String!
 	var dateLastOpenedApp : String!
-	var dateLocationPermissionRequested : AnyObject!
-	var dateNotificationPermissionRequested : AnyObject!
+	var dateLocationRequested : AnyObject!
+	var dateNotificationRequested : AnyObject!
 	var deviceOS : String!
 	var deviceOSVersion : String!
 	var deviceType : String!
@@ -37,8 +37,8 @@ public struct Stock {
 		dateBorn = dictionary["dateBorn"] as? AnyObject
 		dateCreated = dictionary["dateCreated"] as? String
 		dateLastOpenedApp = dictionary["dateLastOpenedApp"] as? String
-		dateLocationPermissionRequested = dictionary["dateLocationPermissionRequested"] as? AnyObject
-		dateNotificationPermissionRequested = dictionary["dateNotificationPermissionRequested"] as? AnyObject
+		dateLocationRequested = dictionary["dateLocationRequested"] as? AnyObject
+		dateNotificationRequested = dictionary["dateNotificationRequested"] as? AnyObject
 		deviceOS = dictionary["deviceOS"] as? String
 		deviceOSVersion = dictionary["deviceOSVersion"] as? String
 		deviceType = dictionary["deviceType"] as? String
@@ -74,11 +74,11 @@ public struct Stock {
 		if dateLastOpenedApp != nil{
 			dictionary["dateLastOpenedApp"] = dateLastOpenedApp
 		}
-		if dateLocationPermissionRequested != nil{
-			dictionary["dateLocationPermissionRequested"] = dateLocationPermissionRequested
+		if dateLocationRequested != nil{
+			dictionary["dateLocationRequested"] = dateLocationRequested
 		}
-		if dateNotificationPermissionRequested != nil{
-			dictionary["dateNotificationPermissionRequested"] = dateNotificationPermissionRequested
+		if dateNotificationRequested != nil{
+			dictionary["dateNotificationRequested"] = dateNotificationRequested
 		}
 		if deviceOS != nil{
 			dictionary["deviceOS"] = deviceOS

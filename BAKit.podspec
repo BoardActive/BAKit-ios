@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.description      = 'Board Active iOS SDK, for integrating BoardActive into your iOS application. The SDK supports iOS 10.0]+'
   s.homepage         = 'https://boardactive.com'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'Hunter Brennick' => 'hunter@boardactive.com', 'Ed Salter' => 'ed@boardactive.com' }
+  s.author           = { 'Hunter Brennick' => 'hunter@boardactive.com' }
   s.author           = { 'BoardActive' => 'dev@boardactive.com' }
   s.source           = { :git => 'https://github.com/BoardActive/BAKit-ios.git', :tag => s.version.to_s }
   

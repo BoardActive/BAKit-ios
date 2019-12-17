@@ -124,8 +124,8 @@ public extension String {
         static let DeviceOSVersion = "deviceOSVersion"
         static let DeviceType = "deviceType"
         static let DeviceToken = String.ConfigKeys.DeviceToken
-        public static let DateLocationPermissionRequested = "dateLocationPermissionRequested"
-        static let DateNotificationPermissionRequested = "dateNotificationPermissionRequested"
+        public static let DateLocationRequested = "dateLocationRequested"
+        static let DateNotificationRequested = "dateNotificationRequested"
         static let LocationPermission = "locationPermission"
         static let NotificationPermission = "notificationPermission"
     }
