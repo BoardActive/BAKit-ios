@@ -203,7 +203,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
             String.HeaderKeys.DeviceTokenHeader: tokenString,
             String.HeaderKeys.DeviceTypeHeader: String.HeaderValues.DeviceType,
             String.HeaderKeys.HostHeader: hostKey,
-            String.HeaderKeys.IsTestApp: "0",
+            String.HeaderKeys.IsTestApp: "1",
             String.HeaderKeys.UUIDHeader: UIDevice.current.identifierForVendor!.uuidString,
         ]
         return headers
@@ -221,23 +221,24 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
      Retrieves a user attributes and affiliated apps.
      - Returns: Closure containing client/user information.
      */
-    public func postLogin(email: String, password: String, completionHandler: @escaping ([String: Any]?, Error?) -> Void) {
+    public func login(email: String, password: String, completionHandler: @escaping ([String: Any]?, Error?) -> Void) {
         let path = "\(EndPoints.Login)"
         let body: [String: Any] = [
             String.ConfigKeys.Email: email,
             String.ConfigKeys.Password: password,
         ]
-
+      
         callServer(path: path, httpMethod: String.HTTPMethod.POST, body: body as Dictionary<String, AnyObject>) { parsedJSON, err in
             guard err == nil else {
                 completionHandler(nil, err)
                 return
             }
 
-            os_log("[BoardActive] :: postLogin: %s", parsedJSON.debugDescription)
-
+            os_log("[BoardActive] :: login: %s", parsedJSON.debugDescription)
             completionHandler(parsedJSON, nil)
-
+            // since login requires email, update user after email is given
+            BoardActive.client.editUser(attributes: Attributes(fromDictionary: ["stock": ["email": email]]), httpMethod: String.HTTPMethod.PUT)
+          
             return
         }
     }
@@ -334,6 +335,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
                 // Handle Error
                 return
             }
+          
             os_log("\n[BoardActive] :: editUser: %s\n", parsedJSON.debugDescription)
         }
     }

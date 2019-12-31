@@ -42,6 +42,7 @@ public struct Stock {
     // permisions
     var dateLocationRequested: Date? = UserDefaults(suiteName: "BAKit")?.object(forKey: "dateLocationRequested") as? Date
     var dateNotificationRequested: Date? = UserDefaults(suiteName: "BAKit")?.object(forKey: "dateNotificationRequested") as? Date
+  
     var locationPermission: Bool? = UserDefaults(suiteName: "BAKit")?.bool(forKey: "locationPermission") ?? false
     var notificationPermission: Bool! = UIApplication.shared.isRegisteredForRemoteNotifications
   

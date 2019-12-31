@@ -106,7 +106,7 @@ class LoginViewController: UIViewController {
             
             let operationQueue = OperationQueue()
             let registerDeviceOperation = BlockOperation {
-                BoardActive.client.postLogin(email: email, password: password) { (parsedJSON, err) in
+                BoardActive.client.login(email: email, password: password) { (parsedJSON, err) in
                     guard (err == nil) else {
                         DispatchQueue.main.async {
                             self.showCredentialsErrorAlert(error: err!.localizedDescription)
