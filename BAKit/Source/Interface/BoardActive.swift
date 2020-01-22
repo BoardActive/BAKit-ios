@@ -107,12 +107,11 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
             postLocation(location: location)
         }
         
-        if let currentLocation = BoardActive.client.currentLocation, location.distance(from: currentLocation) < 2.0 {
+        if let currentLocation = BoardActive.client.currentLocation, location.distance(from: currentLocation) < 15.0 {
             BoardActive.client.distanceBetweenLocations = (BoardActive.client.distanceBetweenLocations ?? 0.0) + location.distance(from: currentLocation)
         } else {
             postLocation(location: location)
             BoardActive.client.distanceBetweenLocations = 0.0
-            
         }
         
         BoardActive.client.currentLocation = location
