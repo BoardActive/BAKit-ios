@@ -13,7 +13,7 @@ class AppPickingViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+      
         configureNavigationBar()
         
         guard let apps = CoreDataStack.sharedInstance.fetchAppsFromDatabase() else {

@@ -66,7 +66,7 @@ class NotificationCollectionViewController: UICollectionViewController {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: imageViewReuseIdentifier, for: indexPath) as! ImageCollectionViewCell
         
         if indexPath.row == 0 {
-            if let urlString = StorageObject.container.notification?.imageUrl {
+            if let urlString = StorageObject.container.notification?.imageUrl, !urlString.isEmpty {
                 cell.imageView.loadImageUsingCache(withUrl: urlString)
             } else {
                 cell.isHidden = true
@@ -199,7 +199,7 @@ class NotificationCollectionViewController: UICollectionViewController {
         if indexPath.row == 5 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: qrCodeCellReuseIdentifier, for: indexPath) as! QRCollectionViewCell
             
-            if let qrURLString = StorageObject.container.notification?.messageData?.urlQRCode {
+            if let qrURLString = StorageObject.container.notification?.messageData?.urlQRCode, !qrURLString.isEmpty {
                 cell.qrImageView.loadImageUsingCache(withUrl: qrURLString)
             } else {
                 cell.isHidden = true

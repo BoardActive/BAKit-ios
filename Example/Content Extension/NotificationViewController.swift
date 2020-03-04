@@ -22,7 +22,7 @@ class NotificationViewController: UIViewController, UNNotificationContentExtensi
     
     func didReceive(_ notification: UNNotification) {
         let userInfo = notification.request.content.userInfo as! [String:Any]
-        if let urlString = userInfo["imageUrl"] as? String {
+        if let urlString = userInfo["imageUrl"] as? String, !urlString.isEmpty {
 //            DispatchQueue.main.async {
                 self.mainNotificationImageView.loadImageUsingCache(withUrl: urlString)
 //            }

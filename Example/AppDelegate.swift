@@ -13,15 +13,17 @@ import UserNotifications
 import os.log
 import Messages
 import CoreData
+import CoreLocation
 
 protocol NotificationDelegate: NSObject {
     func appReceivedRemoteNotification(notification: [AnyHashable: Any])
 }
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate  {
+class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate  {
     var window: UIWindow?
     
+    var backgroundTask = UIBackgroundTaskIdentifier()
     public weak var notificationDelegate: NotificationDelegate?
     
     private let categoryIdentifier = "PreviewNotification"
@@ -33,7 +35,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
         Messaging.messaging().delegate = self
         UNUserNotificationCenter.current().delegate = self
         application.applicationIconBadgeNumber = UserDefaults.extensions.badge
-        
         return true
     }
     
@@ -42,8 +43,49 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
 //        let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
 //        os_log("\n[AppDelegate] didFinishLaunchingWithOptions :: DATABASE LOCATION :: %s \n", paths[0].debugDescription)
         os_log("\n[AppDelegate] didFinishLaunchingWithOptions :: BADGE NUMBER :: %s \n", application.applicationIconBadgeNumber.description)
+        if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
+            //You have a location when app is in killed/ not running state
+           let locationManager = CLLocationManager()
+            if CLLocationManager.locationServicesEnabled() {
+                locationManager.delegate = self
+                locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+                locationManager.startUpdatingLocation()
+            }
+            
+            
+           
+        }
         return true
     }
+    
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
+        print("locations = \(locValue.latitude) \(locValue.longitude)")
+         BoardActive.client.currentLocation = manager.location!
+         BoardActive.client.postLocation(location: manager.location!)
+         BoardActive.client.distanceBetweenLocations = 0.0
+     
+    }
+    
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        
+        backgroundTask =  application.beginBackgroundTask(withName: "MyTask", expirationHandler: {
+            application.endBackgroundTask(self.backgroundTask)
+            self.backgroundTask = UIBackgroundTaskInvalid
+        })
+        
+       DispatchQueue.global(qos: .background).async {
+            print("This is run on the background queue")
+            application.endBackgroundTask(self.backgroundTask)
+            self.backgroundTask = UIBackgroundTaskInvalid
+            DispatchQueue.main.async {
+                print("This is run on the main queue, after the previous code in outer block")
+            }
+        }
+          
+    }
+    
     
     func applicationDidBecomeActive(_ application: UIApplication) {
         let badgeCount = 0
@@ -52,7 +94,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
     }
     
     func applicationWillTerminate(_ application: UIApplication) {
+        print("app terminate")
         CoreDataStack.sharedInstance.saveContext()
+        BoardActive.client.stopUpdatingLocationandReinitialize()
     }
     
     private func registerCustomCategory() {
@@ -181,7 +225,16 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
         
         print(userInfo)
+        let tempUserInfo = userInfo as! [String: Any]
         
+        StorageObject.container.notification = CoreDataStack.sharedInstance.createNotificationModel(fromDictionary: tempUserInfo)
+        
+        guard let notificationModel = StorageObject.container.notification else {
+            return
+        }
+        if let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId {
+            BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId)
+        }
         completionHandler()
     }
     

@@ -41,9 +41,9 @@
 	<true/>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Allow location monitoring for full functionality.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Allow location monitoring for full functionality.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Allow location monitoring for full functionality.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Allow location monitoring for full functionality.</string>
 	<key>UIAppFonts</key>
 	<array>

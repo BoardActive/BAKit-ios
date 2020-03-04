@@ -28,9 +28,11 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.font: UIFont(name: "Montserrat-Regular", size: 20)!]
-
+        
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(LoginViewController.dismissKeyboard))
         self.view.addGestureRecognizer(tap)
+        
+        
         
         if BoardActive.client.userDefaults!.bool(forKey: String.ConfigKeys.DeviceRegistered), let anEmail = BoardActive.client.userDefaults!.string(forKey: String.ConfigKeys.Email), let aPassword = BoardActive.client.userDefaults!.string(forKey: String.ConfigKeys.Password)  {
             self.emailTextField.text = anEmail
@@ -117,12 +119,23 @@ class LoginViewController: UIViewController {
                     if let parsedJSON = parsedJSON {
                         let payload: LoginPayload = LoginPayload.init(fromDictionary: parsedJSON)
                         for app in payload.apps {
+                            let apps = CoreDataStack.sharedInstance.fetchAppsFromDatabase()
                             let newApp = CoreDataStack.sharedInstance.createBAKitApp(fromApp: app)
-                            if !StorageObject.container.apps.contains(newApp) {
-                                StorageObject.container.apps.append(newApp)
-                            } else {
-                                CoreDataStack.sharedInstance.mainContext.delete(newApp)
+                            let appid =  Int(truncatingIfNeeded: app.id)
+                            let newAppId =  Int(truncatingIfNeeded: newApp.id)
+                            
+                            if  apps!.count > 0 {
+                                if appid != newAppId {
+                                    StorageObject.container.apps.append(newApp)
+                                } else {
+                                    CoreDataStack.sharedInstance.mainContext.delete(newApp)
+                                }
                             }
+                            else
+                            {
+                                 StorageObject.container.apps.append(newApp)
+                            }
+                            
                         }
                         
                         if payload.apps.count < 1 {
@@ -132,12 +145,11 @@ class LoginViewController: UIViewController {
                             }
                         } else {
                             print("PAYLOAD :: APPS : \(payload.apps.description)")
-                            
-                            OperationQueue.main.addOperation {
+                            DispatchQueue.main.async {
                                 let storyBoard = UIStoryboard(name: "Main", bundle: nil)
                                 let appPickingViewController = storyBoard.instantiateViewController(withIdentifier: "AppPickingViewController")
                                 self.navigationController?.pushViewController(appPickingViewController, animated: true)
-                            }
+                        }
                         }
                     }
                 }

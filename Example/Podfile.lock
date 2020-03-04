@@ -720,7 +720,7 @@ DEPENDENCIES:
   - Quick
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  trunk:
     - Crashlytics
     - Fabric
     - Firebase
@@ -769,6 +769,6 @@ SPEC CHECKSUMS:
   Protobuf: 1097ca58584c8d9be81bfbf2c5ff5975648dd87a
   Quick: 4be43f6634acfa727dd106bdf3929ce125ffa79d
 
-PODFILE CHECKSUM: ae70eb6074dd00bfa3ae1c2a12f44c6135f84331
+PODFILE CHECKSUM: c67c3a8aae14681d2ce913df616045442364a8d4
 
 COCOAPODS: 1.8.4

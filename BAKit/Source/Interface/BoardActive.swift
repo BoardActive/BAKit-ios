@@ -153,7 +153,6 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
         }
         userDefaults?.synchronize()
 
-//        BoardActive.client.editUser(attributes: Attributes(fromDictionary: ["locationPermission": isAppAuthorized]), httpMethod: String.HTTPMethod.PUT)
     }
     
     /**
