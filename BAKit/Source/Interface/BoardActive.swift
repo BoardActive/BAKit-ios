@@ -45,8 +45,8 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
     public var isDevEnv = false
     
     private let locationManager = CLLocationManager()
-    private var currentLocation: CLLocation?
-    private var distanceBetweenLocations: CLLocationDistance?
+    public var currentLocation: CLLocation?
+    public var distanceBetweenLocations: CLLocationDistance?
 
     private override init() {}
 
@@ -67,6 +67,13 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
         stopUpdatingLocation()
     }
     
+    /**
+      Calls `stopUpdatingLocation` on BoardActive's private CLLocationManager property.
+      */
+     public func stopUpdatingLocationandReinitialize() {
+           BoardActive.client.locationManager.stopUpdatingLocation()
+           BoardActive.client.locationManager.startMonitoringSignificantLocationChanges()
+     }
     /**
      If error occurs, block will execute with status other than `INTULocationStatusSuccess` and subscription will be kept alive.
      */

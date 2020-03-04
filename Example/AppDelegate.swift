@@ -226,7 +226,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         
         print(userInfo)
         let tempUserInfo = userInfo as! [String: Any]
-        
+        if let vc = (window?.rootViewController as? UINavigationController)?.viewControllers.last as? HomeViewController{
+            vc.tableView.reloadData()
+        }
         StorageObject.container.notification = CoreDataStack.sharedInstance.createNotificationModel(fromDictionary: tempUserInfo)
         
         guard let notificationModel = StorageObject.container.notification else {
