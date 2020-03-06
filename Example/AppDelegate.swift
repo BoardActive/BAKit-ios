@@ -65,7 +65,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
          BoardActive.client.currentLocation = manager.location!
          BoardActive.client.postLocation(location: manager.location!)
          BoardActive.client.distanceBetweenLocations = 0.0
-     
+        //BoardActive.client.sendNotification(msg: "locations = \(locValue.latitude) \(locValue.longitude)")
     }
     
     func applicationDidEnterBackground(_ application: UIApplication) {
@@ -145,6 +145,7 @@ extension AppDelegate {
         operationQueue.addOperation(monitorLocationOperation)
     }
     
+     
     public func requestNotifications() {        
         UNUserNotificationCenter.current().requestAuthorization(options: authOptions) { granted, error in
             if BoardActive.client.userDefaults?.object(forKey: "dateNotificationRequested") == nil {
@@ -221,20 +222,20 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         }
         
         let userInfo = response.notification.request.content.userInfo as! [String: Any]
+                
+        print(userInfo)
+        
+        let tempUserInfo = userInfo
+        
+        StorageObject.container.notification = CoreDataStack.sharedInstance.createNotificationModel(fromDictionary: tempUserInfo)
         
         self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
-        
-        print(userInfo)
-        let tempUserInfo = userInfo as! [String: Any]
-        if let vc = (window?.rootViewController as? UINavigationController)?.viewControllers.last as? HomeViewController{
-            vc.tableView.reloadData()
-        }
-        StorageObject.container.notification = CoreDataStack.sharedInstance.createNotificationModel(fromDictionary: tempUserInfo)
         
         guard let notificationModel = StorageObject.container.notification else {
             return
         }
-        if let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId {
+        
+        if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId {
             BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId)
         }
         completionHandler()
@@ -250,6 +251,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         
         StorageObject.container.notification = CoreDataStack.sharedInstance.createNotificationModel(fromDictionary: tempUserInfo)
         
+        //if let _ = (window?.rootViewController as? UINavigationController)?.viewControllers.last as? HomeViewController{
+            NotificationCenter.default.post(name: NSNotification.Name("Refresh HomeViewController Tableview"), object: nil, userInfo: userInfo)
+       // }
         guard let notificationModel = StorageObject.container.notification else {
             return
         }

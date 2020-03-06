@@ -29,7 +29,8 @@ class AppPickingViewController: UITableViewController {
         StorageObject.container.apps = apps
         
         self.tableView.tableFooterView = UIView()
-        
+//        (UIApplication.shared.delegate! as! AppDelegate).setupSDK()
+        BoardActive.client.userDefaults?.set(true, forKey: String.ConfigKeys.DeviceRegistered)
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }

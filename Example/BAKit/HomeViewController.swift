@@ -214,6 +214,15 @@ class HomeViewController: UIViewController, NotificationDelegate, UITableViewDel
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         models?[indexPath.row].setValue(true, forKeyPath: "tap")
         StorageObject.container.notification = models?[indexPath.row] as? NotificationModel
+        
+        guard let notificationModel = StorageObject.container.notification else {
+            return
+        }
+        
+        if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId {
+            BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId)
+        }
+        
         let storyboard = UIStoryboard(name: "NotificationBoard", bundle: Bundle.main)
         guard let viewController = storyboard.instantiateViewController(withIdentifier: "NotificationCollectionViewController") as? NotificationCollectionViewController else {
             return

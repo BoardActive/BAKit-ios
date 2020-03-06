@@ -24,15 +24,66 @@ class LoginViewController: UIViewController {
     @IBOutlet var tapRecognizer: UITapGestureRecognizer!
     @IBOutlet weak var devSwitchStack: UIStackView!
     
+    let activitiController = UIActivityIndicatorView()
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+               let filepath = Bundle.main.path(forResource: "image-selection-icon3x@", ofType: "jpg")
+        
+        let bundleRoot = Bundle.main.bundlePath
+        let fm = FileManager.default
+        var dirContents: [String]? = nil
+        do {
+            dirContents = try fm.contentsOfDirectory(atPath: filepath!)
+        } catch {
+        }
+        for i in 0..<(dirContents?.count ?? 0) {
+            var attrs: [FileAttributeKey : Any]? = nil
+            do {
+                attrs = try fm.attributesOfItem(atPath: dirContents?[i] ?? "")
+            } catch {
+            }
+
+            if attrs != nil {
+                let date = attrs?[.creationDate] as? Date
+                print("Date Created: \(date?.description ?? "")")
+            } else {
+                print("Not found")
+            }
+        }
+        
+               var dateString = ""
+               do{
+                   let aFileAttributes = try FileManager.default.attributesOfItem(atPath: filepath!) as [FileAttributeKey:Any]
+                   let theCreationDate =  aFileAttributes[FileAttributeKey.creationDate] as! Date
+
+                   let formatter: DateFormatter = DateFormatter()
+                   formatter.locale = NSLocale(localeIdentifier: "en_US_POSIX") as Locale?
+                   formatter.timeZone = TimeZone.init(abbreviation: "GMT")
+                   formatter.dateFormat = "MM/dd/yyyy HH:mm:ss"
+
+                   //MARK:- Share App Submit Date
+                   if let readDate:String = formatter.string(from: theCreationDate){
+                       dateString = readDate
+                   }
+
+               } catch let theError as Error{
+                   print("file not found \(theError)")
+               }
+           
+        
+        
         self.view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.font: UIFont(name: "Montserrat-Regular", size: 20)!]
         
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(LoginViewController.dismissKeyboard))
         self.view.addGestureRecognizer(tap)
-        
-        
+        activitiController.frame = CGRect(x: (self.view.frame.width/2) - 40, y: (self.view.frame.height/2) - 40, width: 80, height: 80)
+        activitiController.backgroundColor = UIColor.lightGray
+        activitiController.activityIndicatorViewStyle = .whiteLarge
+        activitiController.layer.cornerRadius = 10
+        view.addSubview(activitiController)
         
         if BoardActive.client.userDefaults!.bool(forKey: String.ConfigKeys.DeviceRegistered), let anEmail = BoardActive.client.userDefaults!.string(forKey: String.ConfigKeys.Email), let aPassword = BoardActive.client.userDefaults!.string(forKey: String.ConfigKeys.Password)  {
             self.emailTextField.text = anEmail
@@ -96,6 +147,9 @@ class LoginViewController: UIViewController {
         }
         
         if (!email.isEmpty && !password.isEmpty) {
+            DispatchQueue.main.async {
+                self.activitiController.startAnimating()
+            }
             BoardActive.client.userDefaults?.set(email, forKey: "email")
             BoardActive.client.userDefaults?.set(password, forKey: "password")
             
@@ -112,29 +166,33 @@ class LoginViewController: UIViewController {
                     guard (err == nil) else {
                         DispatchQueue.main.async {
                             self.showCredentialsErrorAlert(error: err!.localizedDescription)
+                            self.activitiController.stopAnimating()
                         }
+                        
+                        
                         return
                     }
                     
                     if let parsedJSON = parsedJSON {
                         let payload: LoginPayload = LoginPayload.init(fromDictionary: parsedJSON)
+                        CoreDataStack.sharedInstance.deleteStoredData(entity: "BAKitApp")
                         for app in payload.apps {
-                            let apps = CoreDataStack.sharedInstance.fetchAppsFromDatabase()
+//                            let apps = CoreDataStack.sharedInstance.fetchAppsFromDatabase()
                             let newApp = CoreDataStack.sharedInstance.createBAKitApp(fromApp: app)
-                            let appid =  Int(truncatingIfNeeded: app.id)
-                            let newAppId =  Int(truncatingIfNeeded: newApp.id)
-                            
-                            if  apps!.count > 0 {
-                                if appid != newAppId {
-                                    StorageObject.container.apps.append(newApp)
-                                } else {
-                                    CoreDataStack.sharedInstance.mainContext.delete(newApp)
-                                }
-                            }
-                            else
-                            {
-                                 StorageObject.container.apps.append(newApp)
-                            }
+//                            let appid =  Int(truncatingIfNeeded: app.id)
+//                            let newAppId =  Int(truncatingIfNeeded: newApp.id)
+                             StorageObject.container.apps.append(newApp)
+//                            if  apps!.count > 0 {
+//                                if appid != newAppId {
+//                                    StorageObject.container.apps.append(newApp)
+//                                } else {
+//                                    CoreDataStack.sharedInstance.mainContext.delete(newApp)
+//                                }
+//                            }
+//                            else
+//                            {
+//                                 StorageObject.container.apps.append(newApp)
+//                            }
                             
                         }
                         
@@ -146,12 +204,17 @@ class LoginViewController: UIViewController {
                         } else {
                             print("PAYLOAD :: APPS : \(payload.apps.description)")
                             DispatchQueue.main.async {
+
                                 let storyBoard = UIStoryboard(name: "Main", bundle: nil)
                                 let appPickingViewController = storyBoard.instantiateViewController(withIdentifier: "AppPickingViewController")
                                 self.navigationController?.pushViewController(appPickingViewController, animated: true)
                         }
                         }
+                        DispatchQueue.main.async {
+                        self.activitiController.stopAnimating()
+                        }
                     }
+                    
                 }
                 
                 if BoardActive.client.isDevEnv {
