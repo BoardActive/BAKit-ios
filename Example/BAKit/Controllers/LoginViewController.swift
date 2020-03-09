@@ -28,52 +28,6 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
-               let filepath = Bundle.main.path(forResource: "image-selection-icon3x@", ofType: "jpg")
-        
-        let bundleRoot = Bundle.main.bundlePath
-        let fm = FileManager.default
-        var dirContents: [String]? = nil
-        do {
-            dirContents = try fm.contentsOfDirectory(atPath: filepath!)
-        } catch {
-        }
-        for i in 0..<(dirContents?.count ?? 0) {
-            var attrs: [FileAttributeKey : Any]? = nil
-            do {
-                attrs = try fm.attributesOfItem(atPath: dirContents?[i] ?? "")
-            } catch {
-            }
-
-            if attrs != nil {
-                let date = attrs?[.creationDate] as? Date
-                print("Date Created: \(date?.description ?? "")")
-            } else {
-                print("Not found")
-            }
-        }
-        
-               var dateString = ""
-               do{
-                   let aFileAttributes = try FileManager.default.attributesOfItem(atPath: filepath!) as [FileAttributeKey:Any]
-                   let theCreationDate =  aFileAttributes[FileAttributeKey.creationDate] as! Date
-
-                   let formatter: DateFormatter = DateFormatter()
-                   formatter.locale = NSLocale(localeIdentifier: "en_US_POSIX") as Locale?
-                   formatter.timeZone = TimeZone.init(abbreviation: "GMT")
-                   formatter.dateFormat = "MM/dd/yyyy HH:mm:ss"
-
-                   //MARK:- Share App Submit Date
-                   if let readDate:String = formatter.string(from: theCreationDate){
-                       dateString = readDate
-                   }
-
-               } catch let theError as Error{
-                   print("file not found \(theError)")
-               }
-           
-        
-        
         self.view.backgroundColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.font: UIFont(name: "Montserrat-Regular", size: 20)!]
         
