@@ -219,8 +219,8 @@ class HomeViewController: UIViewController, NotificationDelegate, UITableViewDel
             return
         }
         
-        if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId {
-            BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId)
+        if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId, let notificationId = notificationModel.notificationId {
+            BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId)
         }
         
         let storyboard = UIStoryboard(name: "NotificationBoard", bundle: Bundle.main)

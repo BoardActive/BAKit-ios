@@ -114,7 +114,7 @@ public class CoreDataStack: NSObject {
         notificationModel.googlecae = dictionary["google.c.a.e"] as? String
         notificationModel.imageUrl = dictionary["imageUrl"] as? String
         notificationModel.isTestMessage = dictionary["isTestMessage"] as? String
-        notificationModel.messageId = dictionary["messageId"] as? String
+        notificationModel.messageId = dictionary["baMessageId"] as? String
         notificationModel.notificationId = dictionary["notificationId"] as? String
         notificationModel.tap = dictionary["tap"] as? Bool ?? false
         notificationModel.title = dictionary["title"] as? String

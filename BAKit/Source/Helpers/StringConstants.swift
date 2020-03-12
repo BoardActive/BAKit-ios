@@ -101,8 +101,9 @@ public extension String {
 
     enum EventKeys {
         static let EventName = "name"
-        static let MessageId = "messageId"
-        static let Inbox = "inbox"
+        static let MessageId = "baMessageId"
+        static let NotificationId = "notificationId"
+//        static let Inbox = "inbox"
         static let FirebaseNotificationId = "firebaseNotificationId"
     }
 

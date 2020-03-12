@@ -31,6 +31,14 @@ class AppPickingViewController: UITableViewController {
         self.tableView.tableFooterView = UIView()
 //        (UIApplication.shared.delegate! as! AppDelegate).setupSDK()
         BoardActive.client.userDefaults?.set(true, forKey: String.ConfigKeys.DeviceRegistered)
+        if let loc = UserDefaults.standard.value(forKey: "locs") as? [String]{
+            let alertController = UIAlertController(title: "Location", message: "\(loc)", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true) {
+            }
+        }
+       
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }

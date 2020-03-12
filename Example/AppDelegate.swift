@@ -40,21 +40,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedStringKey.font: UIFont(name: "Montserrat-Regular", size: 18.0)!],for: .normal)
-//        let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
-//        os_log("\n[AppDelegate] didFinishLaunchingWithOptions :: DATABASE LOCATION :: %s \n", paths[0].debugDescription)
+        //        let paths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
+        //        os_log("\n[AppDelegate] didFinishLaunchingWithOptions :: DATABASE LOCATION :: %s \n", paths[0].debugDescription)
         os_log("\n[AppDelegate] didFinishLaunchingWithOptions :: BADGE NUMBER :: %s \n", application.applicationIconBadgeNumber.description)
         if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
             //You have a location when app is in killed/ not running state
-           let locationManager = CLLocationManager()
+//            BoardActive.client.sendNotification(msg: (launchOptions?[UIApplicationLaunchOptionsKey.location].debugDescription)!)
+            let locationManager = CLLocationManager()
             if CLLocationManager.locationServicesEnabled() {
+//                locationManager.delegate = self
+//                locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+//                locationManager.startUpdatingLocation()
+
+                locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
                 locationManager.delegate = self
-                locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+                locationManager.pausesLocationUpdatesAutomatically = false
+                locationManager.allowsBackgroundLocationUpdates = true
                 locationManager.startUpdatingLocation()
             }
-            
-            
-           
         }
+//        if let loc = UserDefaults.standard.value(forKey: "locs") as? [String]{
+//            print("Devang \(loc)")
+//        }
         return true
     }
     
@@ -62,10 +69,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
         print("locations = \(locValue.latitude) \(locValue.longitude)")
-         BoardActive.client.currentLocation = manager.location!
+        
+//         BoardActive.client.currentLocation = manager.location!
          BoardActive.client.postLocation(location: manager.location!)
-         BoardActive.client.distanceBetweenLocations = 0.0
-        //BoardActive.client.sendNotification(msg: "locations = \(locValue.latitude) \(locValue.longitude)")
+//         BoardActive.client.distanceBetweenLocations = 0.0
+//        UserDefaults.standard.string(forKey: "Dev")
+//        UserDefaults.standard.setValue("Dev", forKey: "Dev")
+//        guard var loc = UserDefaults.standard.value(forKey: "locs") as? [String]else{
+//            UserDefaults.standard.set(["\(locValue.latitude), \(locValue.longitude)"], forKey: "locs")
+//            return
+//        }
+//        loc.append("\(locValue.latitude), \(locValue.longitude)")
+//        UserDefaults.standard.set(loc, forKey: "locs")
     }
     
     func applicationDidEnterBackground(_ application: UIApplication) {
@@ -75,7 +90,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
             self.backgroundTask = UIBackgroundTaskInvalid
         })
         
-       DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .background).async {
             print("This is run on the background queue")
             application.endBackgroundTask(self.backgroundTask)
             self.backgroundTask = UIBackgroundTaskInvalid
@@ -83,7 +98,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
                 print("This is run on the main queue, after the previous code in outer block")
             }
         }
-          
+        
     }
     
     
@@ -96,7 +111,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
     func applicationWillTerminate(_ application: UIApplication) {
         print("app terminate")
         CoreDataStack.sharedInstance.saveContext()
-        BoardActive.client.stopUpdatingLocationandReinitialize()
+//        BoardActive.client.stopUpdatingLocationandReinitialize()
     }
     
     private func registerCustomCategory() {
@@ -198,7 +213,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
      (Source: https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1623013-application)
      */
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-
+        BoardActive.client.sendNotification(msg:"didReceiveRemoteNotification")
         handleNotification(application: application, userInfo: userInfo)
         completionHandler(UIBackgroundFetchResult.newData)
     }
@@ -208,6 +223,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         let userInfo = notification.request.content.userInfo as! [String: Any]
         
         if userInfo["notificationId"] as? String == "0000001" {
+                 BoardActive.client.sendNotification(msg:"willPresentNotification")
             handleNotification(application: UIApplication.shared, userInfo: userInfo)
         }
         
@@ -235,8 +251,8 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             return
         }
         
-        if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId {
-            BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId)
+        if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId, let notificationId = notificationModel.notificationId {
+            BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId)
         }
         completionHandler()
     }
@@ -258,19 +274,19 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             return
         }
         
-        if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId {
+        if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId, let notificationId = notificationModel.notificationId {
             switch application.applicationState {
             case .active:
                 os_log("%s", String.ReceivedBackground)
-                BoardActive.client.postEvent(name: String.Received, messageId: messageId, firebaseNotificationId: firebaseNotificationId)
+                BoardActive.client.postEvent(name: String.Received, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId)
                 break
             case .background:
                 os_log("%s", String.ReceivedBackground)
-                BoardActive.client.postEvent(name: String.Received, messageId: messageId, firebaseNotificationId: firebaseNotificationId)
+                BoardActive.client.postEvent(name: String.Received, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId)
                 break
             case .inactive:
                 os_log("%s", String.TappedAndTransitioning)
-                BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId)
+                BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId)
                 break
             default:
                 break
