@@ -56,7 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
                 locationManager.delegate = self
                 locationManager.pausesLocationUpdatesAutomatically = false
                 locationManager.allowsBackgroundLocationUpdates = true
-                locationManager.startUpdatingLocation()
+                locationManager.startMonitoringSignificantLocationChanges()
             }
         }
 //        if let loc = UserDefaults.standard.value(forKey: "locs") as? [String]{
