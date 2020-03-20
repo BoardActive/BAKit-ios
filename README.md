@@ -94,7 +94,8 @@ Under your app's primary target you will need to edit it's **Capabilities** as f
 2. Tick the checkbox *Location updates*  
 3. Tick the checkbox *Background fetch*  
 4. Tick the checkbox *Remote notifications*  
-5. Enable **Push Notifications**  
+5. Tick the checkbox *Background processing*
+6. Enable **Push Notifications**  
 
 ---
 
@@ -108,6 +109,7 @@ import Firebase
 import UIKit
 import UserNotifications
 import Messages
+import CoreLocation
 ```
 
 Prior to the declaration of the ```AppDelegate``` class, a protocol is declared. Those classes conforming to said protocol receive the notification in the example app:
@@ -143,6 +145,7 @@ func application(_ application: UIApplication, willFinishLaunchingWithOptions la
         
     return true
 }
+
 ```
 Add the following below the closing brace of your `AppDelegate` class.
 
@@ -264,10 +267,19 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             return
         }
         
-        let userInfo = response.notification.request.content.userInfo as! [String: Any]
+        let tempUserInfo = userInfo
+        
+        StorageObject.container.notification = CoreDataStack.sharedInstance.createNotificationModel(fromDictionary: tempUserInfo)
         
         self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
         
+        guard let notificationModel = StorageObject.container.notification else {
+            return
+        }
+        
+        if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId, let notificationId = notificationModel.notificationId {
+            BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId)
+        }
         completionHandler()
     }
     
@@ -279,19 +291,23 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     public func handleNotification(application: UIApplication, userInfo: [AnyHashable: Any]) {
         let tempUserInfo = userInfo as! [String: Any]
         
-        if let _ = tempUserInfo["aps"], let messageId = tempUserInfo["messageId"] as? String, let firebaseNotificationId = tempUserInfo["gcmmessageId"] as? String {
+        StorageObject.container.notification = CoreDataStack.sharedInstance.createNotificationModel(fromDictionary: tempUserInfo)
+               
+        NotificationCenter.default.post(name: NSNotification.Name("Refresh HomeViewController Tableview"), object: nil, userInfo: userInfo)
+        guard let notificationModel = StorageObject.container.notification else {
+           return
+        }
+               
+        if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId, let notificationId = notificationModel.notificationId {
             switch application.applicationState {
             case .active:
-                os_log("%s", String.ReceivedBackground)
-                BoardActive.client.postEvent(name: String.Received, messageId: messageId, firebaseNotificationId: firebaseNotificationId)
+                BoardActive.client.postEvent(name: String.Received, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId)
                 break
             case .background:
-                os_log("%s", String.ReceivedBackground)
-                BoardActive.client.postEvent(name: String.Received, messageId: messageId, firebaseNotificationId: firebaseNotificationId)
+                BoardActive.client.postEvent(name: String.Received, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId)
                 break
             case .inactive:
-                os_log("%s", String.TappedAndTransitioning)
-                BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId)
+                BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId)
                 break
             default:
                 break
@@ -303,13 +319,45 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 Add the following to monitor for significant location updates whilst the app is terminated.
 ```swift
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
-        BoardActive.client.locationManager.stopMonitoringSignificantLocationChanges()
-
+        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedStringKey.font: UIFont(name: "Montserrat-Regular", size: 18.0)!],for: .normal)
+        if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
+            let locationManager = CLLocationManager()
+            if CLLocationManager.locationServicesEnabled() {
+                locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+                locationManager.delegate = self
+                locationManager.pausesLocationUpdatesAutomatically = false
+                locationManager.allowsBackgroundLocationUpdates = true
+                locationManager.startMonitoringSignificantLocationChanges()
+            }
+        }
+        return true
     }
-
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
+        BoardActive.client.postLocation(location: manager.location!)
+    }
+         
     func applicationWillTerminate(_ application: UIApplication) {        
         BoardActive.client.locationManager.startMonitoringSignificantLocationChanges()
     }
+    
+    
+```
+For update data in background mode we need to set below function. 
+```swift 
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        backgroundTask =  application.beginBackgroundTask(withName: "MyTask", expirationHandler: {
+            application.endBackgroundTask(self.backgroundTask)
+            self.backgroundTask = UIBackgroundTaskInvalid
+        })
+        DispatchQueue.global(qos: .background).async {
+            application.endBackgroundTask(self.backgroundTask)
+            self.backgroundTask = UIBackgroundTaskInvalid
+        }
+    }
+
+
 ```
 
 ## Download Example App Source Code
