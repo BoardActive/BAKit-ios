@@ -34,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
         UNUserNotificationCenter.current().delegate = self
-        application.applicationIconBadgeNumber = UserDefaults.extensions.badge
+        //application.applicationIconBadgeNumber = UserDefaults.extensions.badge
         return true
     }
     
