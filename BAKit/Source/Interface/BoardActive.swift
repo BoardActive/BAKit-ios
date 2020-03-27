@@ -308,7 +308,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
      - Parameter messageId: `String` The value associated with the key "messageId" in notifications.
      - Parameter firebaseNotificationId: `String` The value associated with key "gcm.message_id" in notifications.
      */
-    public func postEvent(name: String, messageId: String, firebaseNotificationId: String, notificationId: String) {
+    public func postEvent(name: String, messageId: String, firebaseNotificationId: String, notificationId: String, completionHandler: (() -> Void)? = nil) {
         let path = "\(EndPoints.Events)"
 
         let body: [String: Any] = [
@@ -318,10 +318,18 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
             String.EventKeys.NotificationId: notificationId
 //            String.EventKeys.Inbox: ["": ""],
         ]
+        
+        print("body: \(body)")
 
         callServer(path: path, httpMethod: String.HTTPMethod.POST, body: body) { _, err in
             guard err == nil else {
+                if completionHandler != nil {
+                    completionHandler!()
+                }
                 return
+            }
+            if completionHandler != nil {
+                completionHandler!()
             }
         }
     }
@@ -332,16 +340,17 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
      - Parameter location: `CLLocation`
      */
     public func postLocation(location: CLLocation) {
-        let path = "\(EndPoints.Locations)"
+//        let path = "\(EndPoints.Locations)"
 
         let body: [String: Any] = [
             String.NetworkCallRelated.Latitude: location.coordinate.latitude,
             String.NetworkCallRelated.Longitude: location.coordinate.longitude,
             String.NetworkCallRelated.DeviceTime: Date().iso8601 as AnyObject,
         ]
-        print("PATH :: \(path) \n BODY :: \(body)")
-        callServer(path: path, httpMethod: String.HTTPMethod.POST, body: body) { parsedJSON, err in
+//        print("PATH :: \(path) \n BODY :: \(body)")
+        callServer(path: EndPoints.Locations, httpMethod: String.HTTPMethod.POST, body: body) { parsedJSON, err in
             guard err == nil else {
+//                BoardActive.client.sendNotification(msg:"error in making post")
                 return
             }
 //            print("location:  \(body["latitude"]) + \(body["longitude"])")

@@ -11,8 +11,17 @@ import BAKit
 
 class AppPickingViewController: UITableViewController {
     
+    var appDelegate = UIApplication.shared.delegate as! AppDelegate
+    var indicatorView = UIActivityIndicatorView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        indicatorView.frame = CGRect(x: (self.view.frame.width/2) - 40, y: (self.view.frame.height/2) - 40, width: 80, height: 80)
+        indicatorView.backgroundColor = UIColor.lightGray
+        indicatorView.activityIndicatorViewStyle = .whiteLarge
+        indicatorView.layer.cornerRadius = 10
+        view.addSubview(indicatorView)
+
       
         configureNavigationBar()
         
@@ -31,18 +40,42 @@ class AppPickingViewController: UITableViewController {
         self.tableView.tableFooterView = UIView()
 //        (UIApplication.shared.delegate! as! AppDelegate).setupSDK()
         BoardActive.client.userDefaults?.set(true, forKey: String.ConfigKeys.DeviceRegistered)
-        if let loc = UserDefaults.standard.value(forKey: "locs") as? [String]{
-            let alertController = UIAlertController(title: "Location", message: "\(loc)", preferredStyle: .alert)
-            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-            alertController.addAction(okAction)
-            self.present(alertController, animated: true) {
-            }
-        }
+        NotificationCenter.default.addObserver(self, selector:  #selector(displayNotification), name: Notification.Name("display"), object: nil)
+//        if let loc = UserDefaults.standard.value(forKey: "locs") as? [String]{
+//            let alertController = UIAlertController(title: "Location", message: "\(loc)", preferredStyle: .alert)
+//            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+//            alertController.addAction(okAction)
+//            self.present(alertController, animated: true) {
+//            }
+//        }
        
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        if (appDelegate.isNotificationStatusActive) {
+            appDelegate.isNotificationStatusActive = false
+            guard let notificationModel = StorageObject.container.notification else {
+                    return }
+            if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId, let notificationId = notificationModel.notificationId {
+                indicatorView.startAnimating()
+                BoardActive.client.postEvent(name: String.Received, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId) {
+                    BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId) {
+//                        BoardActive.client.sendNotification(msg: "both event is updated")
+                        DispatchQueue.main.async {
+                            self.indicatorView.stopAnimating()
+                            let storyboard = UIStoryboard(name: "NotificationBoard", bundle: Bundle.main)
+                            guard let viewController = storyboard.instantiateViewController(withIdentifier: "NotificationCollectionViewController") as? NotificationCollectionViewController else {
+                                return
+                            }
+                            self.present(viewController, animated: true, completion: nil)
+                        }
+                    }
+                }
+            }
+        }
+    }
     
     func configureNavigationBar() {
         self.navigationItem.setHidesBackButton(true, animated: false)
@@ -82,6 +115,27 @@ class AppPickingViewController: UITableViewController {
         self.navigationController?.pushViewController(homeViewController, animated: true)
     }
     
+    @objc func displayNotification() {
+            appDelegate.isNotificationStatusActive = false
+            guard let notificationModel = StorageObject.container.notification else {
+                    return }
+            if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId, let notificationId = notificationModel.notificationId {
+                indicatorView.startAnimating()
+                BoardActive.client.postEvent(name: String.Received, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId) {
+                    BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId) {
+//                        BoardActive.client.sendNotification(msg: "both event is updated")
+                        DispatchQueue.main.async {
+                            self.indicatorView.stopAnimating()
+                            let storyboard = UIStoryboard(name: "NotificationBoard", bundle: Bundle.main)
+                            guard let viewController = storyboard.instantiateViewController(withIdentifier: "NotificationCollectionViewController") as? NotificationCollectionViewController else {
+                                return
+                            }
+                            self.present(viewController, animated: true, completion: nil)
+                        }
+                    }
+                }
+            }
+        }
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -98,7 +152,7 @@ class AppPickingViewController: UITableViewController {
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+        }
     }
     */
 

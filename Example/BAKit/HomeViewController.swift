@@ -19,10 +19,16 @@ class HomeViewController: UIViewController, NotificationDelegate, UITableViewDel
     private let authOptions = UNAuthorizationOptions(arrayLiteral: [.alert, .badge, .sound])
     private let refreshControl = UIRefreshControl()
     private var models: [NSManagedObject]?
-    
+    var indicatorView = UIActivityIndicatorView()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        indicatorView.frame = CGRect(x: (self.view.frame.width/2) - 40, y: (self.view.frame.height/2) - 40, width: 80, height: 80)
+        indicatorView.backgroundColor = UIColor.lightGray
+        indicatorView.activityIndicatorViewStyle = .whiteLarge
+        indicatorView.layer.cornerRadius = 10
+        view.addSubview(indicatorView)
+
 //        BoardActive.client.editUser(attributes: Attributes(fromDictionary: ["demoAppUser": true]), httpMethod: String.HTTPMethod.PUT)
         
         NotificationCenter.default.addObserver(self, selector: #selector(refreshTableView(notification:)), name: Notification.Name("Refresh HomeViewController Tableview"), object: nil)
@@ -47,14 +53,25 @@ class HomeViewController: UIViewController, NotificationDelegate, UITableViewDel
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
-        
-        let storyboard = UIStoryboard(name: "NotificationBoard", bundle: Bundle.main)
-        guard let viewController = storyboard.instantiateViewController(withIdentifier: "NotificationCollectionViewController") as? NotificationCollectionViewController else {
-            return
+
+        guard let notificationModel = StorageObject.container.notification else {
+                return }
+        if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId, let notificationId = notificationModel.notificationId {
+            
+            BoardActive.client.postEvent(name: String.Received, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId) {
+                BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId) {
+                    
+                    DispatchQueue.main.async {
+                        self.indicatorView.stopAnimating()
+                        let storyboard = UIStoryboard(name: "NotificationBoard", bundle: Bundle.main)
+                        guard let viewController = storyboard.instantiateViewController(withIdentifier: "NotificationCollectionViewController") as? NotificationCollectionViewController else {
+                            return
+                        }
+                        self.navigationController?.pushViewController(viewController, animated: true)
+                    }
+                }
+            }
         }
-        
-        viewController.loadViewIfNeeded()
-        self.navigationController?.pushViewController(viewController, animated: true)
     }
 
     private func configureNavigation() {

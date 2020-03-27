@@ -152,20 +152,22 @@ class LoginViewController: UIViewController {
                         
                         if payload.apps.count < 1 {
                             DispatchQueue.main.async {
+                                self.activitiController.stopAnimating()
                                 self.showCredentialsErrorAlert(error: parsedJSON["message"] as! String)
                                 return
                             }
                         } else {
                             print("PAYLOAD :: APPS : \(payload.apps.description)")
                             DispatchQueue.main.async {
-
+                                self.activitiController.stopAnimating()
                                 let storyBoard = UIStoryboard(name: "Main", bundle: nil)
                                 let appPickingViewController = storyBoard.instantiateViewController(withIdentifier: "AppPickingViewController")
                                 self.navigationController?.pushViewController(appPickingViewController, animated: true)
+                            }
                         }
-                        }
+                    } else {
                         DispatchQueue.main.async {
-                        self.activitiController.stopAnimating()
+                            self.activitiController.stopAnimating()
                         }
                     }
                     
