@@ -17,6 +17,7 @@ import CoreLocation
 
 protocol NotificationDelegate: NSObject {
     func appReceivedRemoteNotification(notification: [AnyHashable: Any])
+    func appReceivedRemoteNotificationInForeground(notification: [AnyHashable: Any])
 }
 
 @UIApplicationMain
@@ -29,6 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
     private let authOptions = UNAuthorizationOptions(arrayLiteral: [.alert, .badge, .sound])
     var isNotificationStatusActive = false
     var isApplicationInBackground = false
+    var isAppActive = false
     
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         FirebaseApp.configure()
@@ -62,6 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
     
     func applicationDidEnterBackground(_ application: UIApplication) {
         isApplicationInBackground = true
+        isAppActive = false
         backgroundTask =  application.beginBackgroundTask(withName: "MyTask", expirationHandler: {
             application.endBackgroundTask(self.backgroundTask)
             self.backgroundTask = UIBackgroundTaskInvalid
@@ -79,7 +82,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
     
     
     func applicationDidBecomeActive(_ application: UIApplication) {
-        UIApplication.shared.applicationIconBadgeNumber = 0
+        isAppActive = true
     }
     
     func applicationWillTerminate(_ application: UIApplication) {
@@ -225,22 +228,22 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         }
         
         if isApplicationInBackground && !isNotificationStatusActive {
-            isNotificationStatusActive = false
-            isApplicationInBackground = false
-            if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId, let notificationId = notificationModel.notificationId {
-                
-                self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
-
-
-//                BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId)
-            }
-//            self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
+           isNotificationStatusActive = false
+           isApplicationInBackground = false
+           if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId, let notificationId = notificationModel.notificationId {
+               self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
+           }
+            
+        } else if isAppActive && !isNotificationStatusActive {
+            
+            self.notificationDelegate?.appReceivedRemoteNotificationInForeground(notification: userInfo)
             
         } else {
             isNotificationStatusActive = true
             isApplicationInBackground = false
             NotificationCenter.default.post(name: Notification.Name("display"), object: nil)
         }
+               
         completionHandler()
     }
     

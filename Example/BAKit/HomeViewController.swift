@@ -67,12 +67,38 @@ class HomeViewController: UIViewController, NotificationDelegate, UITableViewDel
                         guard let viewController = storyboard.instantiateViewController(withIdentifier: "NotificationCollectionViewController") as? NotificationCollectionViewController else {
                             return
                         }
+                        
+                        viewController.loadViewIfNeeded()
                         self.navigationController?.pushViewController(viewController, animated: true)
                     }
                 }
             }
         }
     }
+    
+    func appReceivedRemoteNotificationInForeground(notification: [AnyHashable: Any]) {
+         models = CoreDataStack.sharedInstance.fetchDataFromDatabase()
+         DispatchQueue.main.async {
+             self.tableView.reloadData()
+         }
+
+         guard let notificationModel = StorageObject.container.notification else {
+                 return }
+         if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId, let notificationId = notificationModel.notificationId {
+            
+             BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId) {
+                 DispatchQueue.main.async {
+                     self.indicatorView.stopAnimating()
+                     let storyboard = UIStoryboard(name: "NotificationBoard", bundle: Bundle.main)
+                     guard let viewController = storyboard.instantiateViewController(withIdentifier: "NotificationCollectionViewController") as? NotificationCollectionViewController else {
+                         return
+                     }
+                     viewController.loadViewIfNeeded()
+                     self.navigationController?.pushViewController(viewController, animated: true)
+                 }
+             }
+         }
+     }
 
     private func configureNavigation() {
         self.navigationItem.setHidesBackButton(false, animated: false)
