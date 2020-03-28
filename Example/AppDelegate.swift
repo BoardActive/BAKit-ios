@@ -31,6 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
     var isNotificationStatusActive = false
     var isApplicationInBackground = false
     var isAppActive = false
+    var isReceviedEventUpdated = false
     
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         FirebaseApp.configure()
@@ -231,12 +232,21 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
            isNotificationStatusActive = false
            isApplicationInBackground = false
            if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId, let notificationId = notificationModel.notificationId {
-               self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
+            if (isReceviedEventUpdated) {
+                self.notificationDelegate?.appReceivedRemoteNotificationInForeground(notification: userInfo)
+            } else {
+                self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
+            }
            }
             
         } else if isAppActive && !isNotificationStatusActive {
             
-            self.notificationDelegate?.appReceivedRemoteNotificationInForeground(notification: userInfo)
+            if (isReceviedEventUpdated) {
+                self.notificationDelegate?.appReceivedRemoteNotificationInForeground(notification: userInfo)
+
+            } else {
+                self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
+            }
             
         } else {
             isNotificationStatusActive = true
@@ -255,7 +265,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     public func handleNotification(application: UIApplication, userInfo: [AnyHashable: Any]) {
         let tempUserInfo = userInfo as! [String: Any]
         print("tempuserinfo: \(tempUserInfo)")
-        
+        isReceviedEventUpdated = true
         StorageObject.container.notification = CoreDataStack.sharedInstance.createNotificationModel(fromDictionary: tempUserInfo)
         
         //if let _ = (window?.rootViewController as? UINavigationController)?.viewControllers.last as? HomeViewController{
