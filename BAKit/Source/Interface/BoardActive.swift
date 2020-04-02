@@ -103,8 +103,6 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
             return
         }
         
-       // sendNotification()
-        
         if CLLocationManager.locationServicesEnabled() {
             switch CLLocationManager.authorizationStatus() {
             case .notDetermined, .restricted, .denied, .authorizedWhenInUse:
@@ -122,29 +120,26 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
 //            BoardActive.client.editUser(attributes: Attributes(fromDictionary: ["dateLocationRequested": date]), httpMethod: String.HTTPMethod.PUT)
         }
         
-        postLocation(location: location)
-
-        
         if BoardActive.client.currentLocation == nil {
             BoardActive.client.currentLocation = location
-//            postLocation(location: location)
+            postLocation(location: location)
         }
         
-        if let currentLocation = BoardActive.client.currentLocation, location.distance(from: currentLocation) < 15.0 {
+        if let currentLocation = BoardActive.client.currentLocation, location.distance(from: currentLocation) < 1000.0 {
             BoardActive.client.distanceBetweenLocations = (BoardActive.client.distanceBetweenLocations ?? 0.0) + location.distance(from: currentLocation)
         } else {
-//            postLocation(location: location)
+            postLocation(location: location)
             BoardActive.client.distanceBetweenLocations = 0.0
         }
         
         BoardActive.client.currentLocation = location
-         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-        guard var loc = UserDefaults.standard.value(forKey: "locs") as? [String]else{
-            UserDefaults.standard.set(["\(locValue.latitude), \(locValue.longitude)"], forKey: "locs")
-            return
-        }
-        loc.append("\(locValue.latitude), \(locValue.longitude)")
-        UserDefaults.standard.set(loc, forKey: "locs")
+//        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
+//        guard var loc = UserDefaults.standard.value(forKey: "locs") as? [String]else{
+//            UserDefaults.standard.set(["\(locValue.latitude), \(locValue.longitude)"], forKey: "locs")
+//            return
+//        }
+//        loc.append("\(locValue.latitude), \(locValue.longitude)")
+//        UserDefaults.standard.set(loc, forKey: "locs")
     }
     
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -340,24 +335,17 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
      - Parameter location: `CLLocation`
      */
     public func postLocation(location: CLLocation) {
-//        let path = "\(EndPoints.Locations)"
 
         let body: [String: Any] = [
             String.NetworkCallRelated.Latitude: location.coordinate.latitude,
             String.NetworkCallRelated.Longitude: location.coordinate.longitude,
             String.NetworkCallRelated.DeviceTime: Date().iso8601 as AnyObject,
         ]
-//        print("PATH :: \(path) \n BODY :: \(body)")
+
         callServer(path: EndPoints.Locations, httpMethod: String.HTTPMethod.POST, body: body) { parsedJSON, err in
             guard err == nil else {
-//                BoardActive.client.sendNotification(msg:"error in making post")
                 return
             }
-//            print("location:  \(body["latitude"]) + \(body["longitude"])")
-//            os_log("[BA:client:updateLocation] :: jsonArray :: %s", parsedJSON.debugDescription)
-////            UserDefaults.standard.setValue("API Call Done", forKey: "Dev")
-//           //  self.sendNotification(msg: "API Call Done")
-//             self.sendNotification(msg:" \(body["latitude"]) + \(body["longitude"])" + parsedJSON.debugDescription)
         }
     }
 
