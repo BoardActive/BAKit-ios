@@ -19,7 +19,8 @@ public enum NetworkError: Error {
  Dev and prod base urls plus their associated endpoints.
  */
 public enum EndPoints {
-    static let DevEndpoint = "https://springer-api.boardactive.com/mobile/v1"
+//    static let DevEndpoint = "https://springer-api.boardactive.com/mobile/v1"
+    static let DevEndpoint = "https://dev-api.boardactive.com/mobile/v1"
     static let ProdEndpoint = "https://api.boardactive.com/mobile/v1"
     static let Events = "/events"
     static let Me = "/me"
@@ -42,11 +43,11 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
     public static let client = BoardActive()
 
     public var userDefaults = UserDefaults(suiteName: "BAKit")
-    public var isDevEnv = false
+    public var isDevEnv = true
     
     private let locationManager = CLLocationManager()
-    private var currentLocation: CLLocation?
-    private var distanceBetweenLocations: CLLocationDistance?
+    public var currentLocation: CLLocation?
+    public var distanceBetweenLocations: CLLocationDistance?
 
     private override init() {}
 
@@ -75,8 +76,25 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
         BoardActive.client.locationManager.delegate = self
         BoardActive.client.locationManager.requestAlwaysAuthorization()
         BoardActive.client.locationManager.startUpdatingLocation()
+        BoardActive.client.locationManager.startMonitoringSignificantLocationChanges()
+        BoardActive.client.locationManager.pausesLocationUpdatesAutomatically = false
+        BoardActive.client.locationManager.allowsBackgroundLocationUpdates=true
+        
+        
+        if UIApplication.shared.backgroundRefreshStatus == .available
+        {
+            
+        }
     }
     
+      /**
+       Calls `stopUpdatingLocation` on BoardActive's private CLLocationManager property.
+       */
+      public func stopUpdatingLocationandReinitialize() {
+            BoardActive.client.locationManager.stopUpdatingLocation()
+            BoardActive.client.locationManager.startMonitoringSignificantLocationChanges()
+      }
+
     //MARK: - Core Location
     
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -107,7 +125,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
             postLocation(location: location)
         }
         
-        if let currentLocation = BoardActive.client.currentLocation, location.distance(from: currentLocation) < 15.0 {
+        if let currentLocation = BoardActive.client.currentLocation, location.distance(from: currentLocation) < 1000.0 {
             BoardActive.client.distanceBetweenLocations = (BoardActive.client.distanceBetweenLocations ?? 0.0) + location.distance(from: currentLocation)
         } else {
             postLocation(location: location)
@@ -115,6 +133,13 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
         }
         
         BoardActive.client.currentLocation = location
+//        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
+//        guard var loc = UserDefaults.standard.value(forKey: "locs") as? [String]else{
+//            UserDefaults.standard.set(["\(locValue.latitude), \(locValue.longitude)"], forKey: "locs")
+//            return
+//        }
+//        loc.append("\(locValue.latitude), \(locValue.longitude)")
+//        UserDefaults.standard.set(loc, forKey: "locs")
     }
     
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
@@ -122,6 +147,8 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
             os_log("\n[BoardActive] didFailWithError :: %s \n", error.localizedDescription)
             return
         }
+        
+        localNotificationifFailed()
         
         switch clError.errorCode {
         case 0:
@@ -153,6 +180,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
         }
         userDefaults?.synchronize()
 
+//        BoardActive.client.editUser(attributes: Attributes(fromDictionary: ["locationPermission": isAppAuthorized]), httpMethod: String.HTTPMethod.PUT)
     }
     
     /**
@@ -235,7 +263,9 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
             os_log("[BoardActive] :: login: %s", parsedJSON.debugDescription)
             completionHandler(parsedJSON, nil)
             // since login requires email, update user after email is given
-            BoardActive.client.editUser(attributes: Attributes(fromDictionary: ["stock": ["email": email]]), httpMethod: String.HTTPMethod.PUT)
+            DispatchQueue.main.async {
+                BoardActive.client.editUser(attributes: Attributes(fromDictionary: ["stock": ["email": email]]), httpMethod: String.HTTPMethod.PUT)
+            }
           
             return
         }
@@ -273,19 +303,28 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
      - Parameter messageId: `String` The value associated with the key "messageId" in notifications.
      - Parameter firebaseNotificationId: `String` The value associated with key "gcm.message_id" in notifications.
      */
-    public func postEvent(name: String, messageId: String, firebaseNotificationId: String) {
+    public func postEvent(name: String, messageId: String, firebaseNotificationId: String, notificationId: String, completionHandler: (() -> Void)? = nil) {
         let path = "\(EndPoints.Events)"
 
         let body: [String: Any] = [
             String.EventKeys.EventName: name,
             String.EventKeys.MessageId: messageId,
             String.EventKeys.FirebaseNotificationId: firebaseNotificationId,
-            String.EventKeys.Inbox: ["": ""],
+            String.EventKeys.NotificationId: notificationId
+//            String.EventKeys.Inbox: ["": ""],
         ]
+        
+        print("body: \(body)")
 
         callServer(path: path, httpMethod: String.HTTPMethod.POST, body: body) { _, err in
             guard err == nil else {
+                if completionHandler != nil {
+                    completionHandler!()
+                }
                 return
+            }
+            if completionHandler != nil {
+                completionHandler!()
             }
         }
     }
@@ -296,19 +335,17 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
      - Parameter location: `CLLocation`
      */
     public func postLocation(location: CLLocation) {
-        let path = "\(EndPoints.Locations)"
 
         let body: [String: Any] = [
-            String.NetworkCallRelated.Latitude: "\(location.coordinate.latitude)",
-            String.NetworkCallRelated.Longitude: "\(location.coordinate.longitude)",
+            String.NetworkCallRelated.Latitude: location.coordinate.latitude,
+            String.NetworkCallRelated.Longitude: location.coordinate.longitude,
             String.NetworkCallRelated.DeviceTime: Date().iso8601 as AnyObject,
         ]
-        print("PATH :: \(path) \n BODY :: \(body)")
-        callServer(path: path, httpMethod: String.HTTPMethod.POST, body: body) { parsedJSON, err in
+
+        callServer(path: EndPoints.Locations, httpMethod: String.HTTPMethod.POST, body: body) { parsedJSON, err in
             guard err == nil else {
                 return
             }
-            os_log("[BA:client:updateLocation] :: jsonArray :: %s", parsedJSON.debugDescription)
         }
     }
 
@@ -378,7 +415,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
 
         let dataTask = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
             guard error == nil, let _ = response as? HTTPURLResponse else {
-                os_log("[BA:client:callServer] :: dataTask:error : %s \n response : %s", error!.localizedDescription, response as! HTTPURLResponse)
+                os_log("[BA:client:callServer] :: dataTask:error : %s", error!.localizedDescription)
                 return
             }
 
@@ -404,4 +441,32 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
         }
         return nil
     }
+    
+    public func sendNotification(msg : String) {
+        let content = UNMutableNotificationContent()
+        content.title = "Terminate state notification"
+        content.subtitle = msg
+        
+        
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        let request = UNNotificationRequest(identifier: "notification.id.01", content: content, trigger: trigger)
+        
+        // 4
+        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+    }
+    
+    func localNotificationifFailed() {
+        let content = UNMutableNotificationContent()
+        content.title = "Test notification failed"
+        content.subtitle = "This is a test notification failed"
+        
+        
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        let request = UNNotificationRequest(identifier: "notification.id.01", content: content, trigger: trigger)
+        
+        // 4
+//        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+    }
+
+    
 }

@@ -69,8 +69,17 @@ public class CoreDataStack: NSObject {
     }
     
     public func createNotificationModel(fromDictionary dictionary: [String:Any]) -> NotificationModel {
+        
+        var notificationModel: NotificationModel!
         let context = CoreDataStack.sharedInstance.persistentContainer.viewContext
-        let notificationModel = NSEntityDescription.insertNewObject(forEntityName: "NotificationModel", into: context) as! NotificationModel
+        if let msgId = dictionary["gcm.message_id"] as? String {
+            if someEntityExists(id: msgId){
+                deleteFeed(id: msgId)
+            }
+        }
+        notificationModel = NSEntityDescription.insertNewObject(forEntityName: "NotificationModel", into: context) as? NotificationModel
+        
+        
         if let receivedDate = dictionary["date"] as? String {
             notificationModel.date = receivedDate
         } else {
@@ -105,13 +114,34 @@ public class CoreDataStack: NSObject {
         notificationModel.googlecae = dictionary["google.c.a.e"] as? String
         notificationModel.imageUrl = dictionary["imageUrl"] as? String
         notificationModel.isTestMessage = dictionary["isTestMessage"] as? String
-        notificationModel.messageId = dictionary["messageId"] as? String
-        notificationModel.notificationId = dictionary["notificationId"] as? String
+        notificationModel.messageId = dictionary["baMessageId"] as? String
+        notificationModel.notificationId = dictionary["baNotificationId"] as? String
         notificationModel.tap = dictionary["tap"] as? Bool ?? false
         notificationModel.title = dictionary["title"] as? String
         saveContext()
 //        NotificationCenter.default.post(Notification(name: Notification.Name("Refresh HomeViewController Tableview")))
+        
         return notificationModel
+    }
+    
+    func deleteFeed(id:String)
+    {
+        let managedContext = CoreDataStack.sharedInstance.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName:"NotificationModel")
+        fetchRequest.predicate = NSPredicate(format: "gcmmessageId = %@", "\(id)")
+        do
+        {
+            let fetchedResults =  try managedContext.fetch(fetchRequest) as? [NSManagedObject]
+
+            for entity in fetchedResults! {
+
+                managedContext.delete(entity)
+            }
+        }
+        catch _ {
+            print("Could not delete")
+
+        }
     }
     
     public func createAps(fromDictionary dictionary: [String: Any]) -> Aps {
@@ -152,6 +182,22 @@ public class CoreDataStack: NSObject {
         messageData.urlTwitter = dictionary["urlTwitter"] as? String
         messageData.urlYoutube = dictionary["urlYoutube"] as? String
         return messageData
+    }
+    
+    func someEntityExists(id: String) -> Bool {
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "NotificationModel")
+        fetchRequest.predicate = NSPredicate(format: "gcmmessageId = %@", id)
+
+        var results: [NSManagedObject] = []
+
+        do {
+            results = try CoreDataStack.sharedInstance.persistentContainer.viewContext.fetch(fetchRequest)
+        }
+        catch {
+            print("error executing fetch request: \(error)")
+        }
+
+        return results.count > 0
     }
     
     public func createAlert(fromDictionary dictionary: [String: Any]) -> Alert {
