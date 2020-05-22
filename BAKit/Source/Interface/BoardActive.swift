@@ -26,6 +26,7 @@ public enum EndPoints {
     static let Me = "/me"
     static let Locations = "/locations"
     static let Login = "/login"
+    static let Attributes = "/attributes"
 }
 
 /**
@@ -141,6 +142,46 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
 //        loc.append("\(locValue.latitude), \(locValue.longitude)")
 //        UserDefaults.standard.set(loc, forKey: "locs")
     }
+    
+    public func getAttributes(completionHandler: @escaping([[String: Any]]?, Error?) -> Void) {
+          let path = EndPoints.Attributes
+          callServer(forList: path, httpMethod: String.HTTPMethod.GET, body: [:]) { (parsedJson, error) in
+              if error != nil {
+                  completionHandler(nil, error)
+              } else {
+                  completionHandler(parsedJson, nil)
+              }
+          }
+      }
+      
+      
+      public func updateUserData(body: [String: Any], completionHandler: @escaping ([String: Any]?, Error?) -> Void) {
+          let path = "\(EndPoints.Me)"
+
+          callServer(path: path, httpMethod: String.HTTPMethod.PUT, body: body) { parsedJSON, err in
+              guard err == nil else {
+                  completionHandler(nil, err)
+                  return
+              }
+
+              completionHandler(parsedJSON, nil)
+              return
+          }
+      }
+      
+      public func getMe(completionHandler: @escaping([String: Any]?, Error?) -> Void) {
+          let path = "\(EndPoints.Me)"
+
+          callServer(path: path, httpMethod: String.HTTPMethod.GET, body: [:]) { parsedJSON, err in
+                       guard err == nil else {
+                           completionHandler(nil, err)
+                           return
+                       }
+                  os_log("[BoardActive] :: login: %s", parsedJSON.debugDescription)
+                       completionHandler(parsedJSON, nil)
+                       return
+                   }
+      }
     
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         guard let clError = error as? CLError else {
@@ -431,6 +472,49 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
         dataTask.resume()
     }
 
+    public func callServer(forList path: String, httpMethod: String, body: [String: Any], completionHandler:@escaping ([[String: Any]]?, Error?) -> Void) {
+          let destination = retrievePath(isDev: isDevEnv) + path
+          let parameters = body as [String: Any]
+
+          let request = NSMutableURLRequest(url: NSURL(string: destination)! as URL, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 60.0)
+
+          guard let headers = getHeaders(), !headers.isEmpty else {
+              os_log("[BA:client:callServer] :: NSMutableURLRequest:headers :: %s", getHeaders()?.debugDescription ?? "Empty Headers")
+              return
+          }
+          request.allHTTPHeaderFields = headers
+          request.httpMethod = httpMethod
+          let session = URLSession.shared
+
+          let dataTask = session.dataTask(with: request as URLRequest, completionHandler: { (data, response, error) -> Void in
+              guard error == nil, let _ = response as? HTTPURLResponse else {
+                  os_log("[BA:client:callServer] :: dataTask:error : %s", error!.localizedDescription)
+                  return
+              }
+
+              if let data = data, (try? JSONSerialization.jsonObject(with: data)) != nil {
+                  if let dataString = String(data: data, encoding: .utf8) {
+                      os_log("[BA:client:callServer] :: dataString : %@", dataString)
+
+                      completionHandler(BoardActive.client.convertToDictionary(ofArray: dataString), nil)
+                      return
+                  }
+              }
+          })
+          dataTask.resume()
+      }
+      
+    func convertToDictionary(ofArray text: String) -> [[String: Any]]? {
+           if let data = text.data(using: .utf8) {
+               do {
+                   return try JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]]
+               } catch {
+                   print(error.localizedDescription)
+               }
+           }
+           return nil
+       }
+    
     func convertToDictionary(text: String) -> [String: Any]? {
         if let data = text.data(using: .utf8) {
             do {

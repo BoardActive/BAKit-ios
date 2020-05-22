@@ -128,6 +128,7 @@ class HomeViewController: UIViewController, NotificationDelegate, UITableViewDel
     }
     
     private func configureTableView() {
+        self.tableView.register(UINib(nibName: ButtonCell.identifier, bundle: nil), forCellReuseIdentifier: ButtonCell.identifier)
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.tableFooterView = UIView()
@@ -236,27 +237,54 @@ class HomeViewController: UIViewController, NotificationDelegate, UITableViewDel
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let count = models?.count {
-            return count
+            return count + 2
         } else {
-            return 0
+            return 1
         }
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-        cell.textLabel?.font = UIFont(name:"Montserrat-SemiBold", size:17)
-        cell.detailTextLabel?.font = UIFont(name:"Montserrat-Regular", size:14)
-        
-        if let modelObject = models?[indexPath.row] as? NotificationModel {
-            cell.textLabel?.text = modelObject.title!
-            cell.detailTextLabel?.text = modelObject.date!
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if ((indexPath.row == 0) || indexPath.row==1) {
+            return 75.0
         }
-        return cell
+        return UITableViewAutomaticDimension
+    }
+
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if (indexPath.row == 0) {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ButtonCell.identifier) as? ButtonCell
+            cell?.delegateButton = self
+            cell?.setUpButton(title: "USER ATTRIBUTES")
+            return cell ?? UITableViewCell()
+            
+        }
+        if (indexPath.row == 1) {
+            let cell = tableView.dequeueReusableCell(withIdentifier: ButtonCell.identifier) as? ButtonCell
+            cell?.delegateButton = self
+            cell?.setUpButton(title: "STOCK ATTRIBUTES")
+            return cell ?? UITableViewCell()
+                       
+        }
+        else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+            cell.textLabel?.font = UIFont(name:"Montserrat-SemiBold", size:17)
+            cell.detailTextLabel?.font = UIFont(name:"Montserrat-Regular", size:14)
+            
+            if let modelObject = models?[indexPath.row - 2] as? NotificationModel {
+                cell.textLabel?.text = modelObject.title!
+                cell.detailTextLabel?.text = modelObject.date!
+            }
+            return cell
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        models?[indexPath.row].setValue(true, forKeyPath: "tap")
-        StorageObject.container.notification = models?[indexPath.row] as? NotificationModel
+        if (indexPath.row == 0) {return}
+        if (indexPath.row == 1) {return}
+        let index = indexPath.row - 1
+        models?[index].setValue(true, forKeyPath: "tap")
+        StorageObject.container.notification = models?[index] as? NotificationModel
         
         guard let notificationModel = StorageObject.container.notification else {
             return
@@ -275,4 +303,20 @@ class HomeViewController: UIViewController, NotificationDelegate, UITableViewDel
         self.navigationController?.pushViewController(viewController, animated: true)
     }
 
+}
+
+//MARK:- ButtonCellDelegate methods
+extension HomeViewController: ButtonCellDelegate {
+    func buttonAction(sender: UIButton) {
+        if sender.titleLabel?.text ==  "USER ATTRIBUTES"{
+            self.performSegue(withIdentifier: "userAttribute", sender: nil)
+            print("USER tapped")
+        }
+        else
+        {
+            self.performSegue(withIdentifier: "stockAttribute", sender: nil)
+            print("Stock tapped")
+        }
+        
+    }
 }

@@ -83,6 +83,17 @@
 		96FEC834230F8F7F0087873D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9665F3F022FB4FE900CD818E /* Extensions.swift */; };
 		96FEC835230F8F8D0087873D /* CreatedBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9653255F230F7681006E2642 /* CreatedBy.swift */; };
 		96FEC836230F8F8E0087873D /* CreatedBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9653255F230F7681006E2642 /* CreatedBy.swift */; };
+		B5A571CE24782BA1003C09BD /* AttributeList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A571CD24782BA1003C09BD /* AttributeList.swift */; };
+		B5A571D124782BCB003C09BD /* UserAttributesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A571CF24782BCB003C09BD /* UserAttributesVC.swift */; };
+		B5A571D224782BCB003C09BD /* StockAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A571D024782BCB003C09BD /* StockAttributes.swift */; };
+		B5A571DB24782C67003C09BD /* TextBoxCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5A571D324782C67003C09BD /* TextBoxCell.xib */; };
+		B5A571DC24782C67003C09BD /* DateCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5A571D424782C67003C09BD /* DateCell.xib */; };
+		B5A571DD24782C67003C09BD /* ButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A571D524782C67003C09BD /* ButtonCell.swift */; };
+		B5A571DE24782C67003C09BD /* ButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5A571D624782C67003C09BD /* ButtonCell.xib */; };
+		B5A571DF24782C67003C09BD /* RadioButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A571D724782C67003C09BD /* RadioButtonCell.swift */; };
+		B5A571E024782C67003C09BD /* TextBoxCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A571D824782C67003C09BD /* TextBoxCell.swift */; };
+		B5A571E124782C67003C09BD /* RadioButtonCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B5A571D924782C67003C09BD /* RadioButtonCell.xib */; };
+		B5A571E224782C67003C09BD /* DateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5A571DA24782C67003C09BD /* DateCell.swift */; };
 		EEA03A3A21E58BD3DB855079 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEA03A7E035B199019AB8F60 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
@@ -190,6 +201,17 @@
 		96FEC822230F8B660087873D /* NotificationPersistenceService.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NotificationPersistenceService.entitlements; sourceTree = "<group>"; };
 		96FEC826230F8EA40087873D /* Content Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Content Extension.entitlements"; sourceTree = "<group>"; };
 		B16F744C5154AAEC24C1BF77 /* Pods_AdDrop_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AdDrop_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B5A571CD24782BA1003C09BD /* AttributeList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AttributeList.swift; path = Models/AttributeList.swift; sourceTree = "<group>"; };
+		B5A571CF24782BCB003C09BD /* UserAttributesVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserAttributesVC.swift; path = Controllers/UserAttributesVC.swift; sourceTree = "<group>"; };
+		B5A571D024782BCB003C09BD /* StockAttributes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StockAttributes.swift; path = Controllers/StockAttributes.swift; sourceTree = "<group>"; };
+		B5A571D324782C67003C09BD /* TextBoxCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextBoxCell.xib; sourceTree = "<group>"; };
+		B5A571D424782C67003C09BD /* DateCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DateCell.xib; sourceTree = "<group>"; };
+		B5A571D524782C67003C09BD /* ButtonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonCell.swift; sourceTree = "<group>"; };
+		B5A571D624782C67003C09BD /* ButtonCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ButtonCell.xib; sourceTree = "<group>"; };
+		B5A571D724782C67003C09BD /* RadioButtonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RadioButtonCell.swift; sourceTree = "<group>"; };
+		B5A571D824782C67003C09BD /* TextBoxCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextBoxCell.swift; sourceTree = "<group>"; };
+		B5A571D924782C67003C09BD /* RadioButtonCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RadioButtonCell.xib; sourceTree = "<group>"; };
+		B5A571DA24782C67003C09BD /* DateCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateCell.swift; sourceTree = "<group>"; };
 		D6944FEF35BBF5EDB9539998 /* Pods-AdDrop_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdDrop_Tests.release.xcconfig"; path = "Target Support Files/Pods-AdDrop_Tests/Pods-AdDrop_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		DF8C290BFFCEEE2136A072EA /* Pods-AdDrop_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdDrop_Tests.debug.xcconfig"; path = "Target Support Files/Pods-AdDrop_Tests/Pods-AdDrop_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		EEA03A7E035B199019AB8F60 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -387,6 +409,8 @@
 		96E00403225FA47A001F6639 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				B5A571D024782BCB003C09BD /* StockAttributes.swift */,
+				B5A571CF24782BCB003C09BD /* UserAttributesVC.swift */,
 				9633AC37227CF2BB00B2B692 /* LoginViewController.swift */,
 				9617529922E9F6F80001C2C3 /* HomeViewController.swift */,
 				9689E11122F204E400A1ABFC /* AppPickingViewController.swift */,
@@ -398,6 +422,7 @@
 		96E00405226503BC001F6639 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B5A571CD24782BA1003C09BD /* AttributeList.swift */,
 				9653255B230F7671006E2642 /* App.swift */,
 				96C48F9022F3086D00168079 /* Attribute.swift */,
 				9653255D230F767B006E2642 /* Company.swift */,
@@ -417,6 +442,14 @@
 		96FEC812230F7AD40087873D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				B5A571D524782C67003C09BD /* ButtonCell.swift */,
+				B5A571D624782C67003C09BD /* ButtonCell.xib */,
+				B5A571DA24782C67003C09BD /* DateCell.swift */,
+				B5A571D424782C67003C09BD /* DateCell.xib */,
+				B5A571D724782C67003C09BD /* RadioButtonCell.swift */,
+				B5A571D924782C67003C09BD /* RadioButtonCell.xib */,
+				B5A571D824782C67003C09BD /* TextBoxCell.swift */,
+				B5A571D324782C67003C09BD /* TextBoxCell.xib */,
 				96CACC432265F6980059FCB0 /* Storyboards */,
 				961A58B72303394600430E5A /* ContactUsCollectionViewCell.swift */,
 				961F330D23030A7A00167BBC /* TitleCollectionViewCell.swift */,
@@ -613,8 +646,12 @@
 			files = (
 				9604133822EF830100FBF8AF /* Montserrat-Regular.ttf in Resources */,
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
+				B5A571DE24782C67003C09BD /* ButtonCell.xib in Resources */,
 				96697B71227E51B200794455 /* GoogleService-Info.plist in Resources */,
+				B5A571DC24782C67003C09BD /* DateCell.xib in Resources */,
+				B5A571DB24782C67003C09BD /* TextBoxCell.xib in Resources */,
 				96B06CA522F3885600BAC58B /* Apartment_SharedSpace_Stadium_Battery.gpx in Resources */,
+				B5A571E124782C67003C09BD /* RadioButtonCell.xib in Resources */,
 				961ADEAE227125A00014AB18 /* NotificationBoard.storyboard in Resources */,
 				9604133B22EF841000FBF8AF /* Montserrat-SemiBold.ttf in Resources */,
 				968E17EC2266228C00062C43 /* Assets.xcassets in Resources */,
@@ -758,17 +795,21 @@
 				9665F3F122FB4FE900CD818E /* Extensions.swift in Sources */,
 				96FDD23D22EA11DD00145257 /* UIView+Extensions.swift in Sources */,
 				966114E922F487F200FA9F2A /* ShadowView.swift in Sources */,
+				B5A571D124782BCB003C09BD /* UserAttributesVC.swift in Sources */,
 				96532566230F7698006E2642 /* User.swift in Sources */,
 				9617529A22E9F6F80001C2C3 /* HomeViewController.swift in Sources */,
 				961A58B82303394600430E5A /* ContactUsCollectionViewCell.swift in Sources */,
 				96C394A522E6D71C008122E7 /* UserInfo.swift in Sources */,
 				96C0C194230322A00096F2B5 /* ImageCollectionViewCell.swift in Sources */,
 				96532560230F7681006E2642 /* CreatedBy.swift in Sources */,
+				B5A571DD24782C67003C09BD /* ButtonCell.swift in Sources */,
 				9665F3CE22FB317400CD818E /* CoreDataStack.swift in Sources */,
 				9653255C230F7671006E2642 /* App.swift in Sources */,
 				96C48F9722F330EF00168079 /* CustomTableViewCell.swift in Sources */,
+				B5A571CE24782BA1003C09BD /* AttributeList.swift in Sources */,
 				9653255E230F767B006E2642 /* Company.swift in Sources */,
 				96C48F9522F3086E00168079 /* Stock.swift in Sources */,
+				B5A571DF24782C67003C09BD /* RadioButtonCell.swift in Sources */,
 				964AB5AB227E85960000F938 /* UserDefaults.swift in Sources */,
 				96940A9822FB056800D2303C /* BAKit.xcdatamodeld in Sources */,
 				96BA7FEF22F2A82D00AEB5B8 /* StorageObject.swift in Sources */,
@@ -780,7 +821,10 @@
 				96FDD23922EA0F4600145257 /* TextField.swift in Sources */,
 				96C48F9422F3086E00168079 /* Custom.swift in Sources */,
 				9633AC3F227CF2BB00B2B692 /* LoginViewController.swift in Sources */,
+				B5A571D224782BCB003C09BD /* StockAttributes.swift in Sources */,
+				B5A571E224782C67003C09BD /* DateCell.swift in Sources */,
 				961F330B23030A4600167BBC /* NotificationCollectionViewController.swift in Sources */,
+				B5A571E024782C67003C09BD /* TextBoxCell.swift in Sources */,
 				961F330E23030A7A00167BBC /* TitleCollectionViewCell.swift in Sources */,
 				96C48F9322F3086E00168079 /* Attribute.swift in Sources */,
 				EEA03A3A21E58BD3DB855079 /* AppDelegate.swift in Sources */,
