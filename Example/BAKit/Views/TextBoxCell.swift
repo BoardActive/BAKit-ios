@@ -68,6 +68,17 @@ extension TextBoxCell: UITextFieldDelegate {
 
     }
     
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if let text = textField.text,
+           let textRange = Range(range, in: text) {
+           let updatedText = text.replacingCharacters(in: textRange,
+                                                       with: string)
+         self.delegateTextfieldCell?.storeValues(textString: updatedText, index: textField.tag - 101)
+        }
+        
+        return true
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool  {
         textField.resignFirstResponder()
         self.delegateTextfieldCell?.storeValues(textString: textField.text ?? "", index: textField.tag - 101)
