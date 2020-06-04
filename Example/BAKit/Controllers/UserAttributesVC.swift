@@ -23,7 +23,6 @@ class UserAttributesVC: UIViewController {
         registerCells()
         configureActivityIndicator()
         getAttributeList()
-        getMe()
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -48,38 +47,35 @@ class UserAttributesVC: UIViewController {
         activitiController.startAnimating()
         BoardActive.client.getAttributes { (responseArray, error) in
             DispatchQueue.main.async {
-                self.activitiController.stopAnimating()
                 if (responseArray != nil) {
                     for i in 0..<(responseArray?.count ?? 0) {
                     self.arrAttributeList.append(AttributeElement(dataList: responseArray![i]))
                     }
                     self.arrAttributeList = self.arrAttributeList.filter { $0.isStock! == false }
-                    self.tblContentLayout.reloadData()
+                    self.getMe()
+                } else {
+                    self.activitiController.stopAnimating()
                 }
             }
         }
     }
     
     fileprivate func getMe() {
-           activitiController.startAnimating()
-           BoardActive.client.getMe { (responseArray, error) in
-               DispatchQueue.main.async {
-                   self.activitiController.stopAnimating()
-                   if (responseArray != nil) {
+        BoardActive.client.getMe { (responseArray, error) in
+            DispatchQueue.main.async {
+                self.activitiController.stopAnimating()
+                if (responseArray != nil) {
                     self.arrrMeList = responseArray!
                     print(self.arrrMeList)
-                    
-                   
-                   }
-                
-                let attributes  = self.arrrMeList["attributes"] as! [String : Any]
-                print(attributes)
-                self.customattributes = attributes["custom"] as! [String : Any]
-                print(self.customattributes)
-                
-               }
-           }
-       }
+                    let attributes  = self.arrrMeList["attributes"] as! [String : Any]
+                    print(attributes)
+                    self.customattributes = attributes["custom"] as! [String : Any]
+                    print(self.customattributes)
+                }
+                self.tblContentLayout.reloadData()
+            }
+        }
+    }
     
     
     fileprivate func configureNavigation() {
@@ -149,9 +145,7 @@ extension UserAttributesVC: UITableViewDataSource, UITableViewDelegate {
                     let cell = tableView.dequeueReusableCell(withIdentifier: TextBoxCell.identifier) as? TextBoxCell
                     cell?.delegateTextfieldCell = self
                     if let val = customattributes[attributeElementObj.placeHolder!] {
-                        print(val)
-                        cell?.setupCell(placeholderText: "", textValue: val as! String, textFieldTag: indexPath.row)
-                        return cell!
+                        attributeElementObj.value = "\(val)"
                         // now val is not nil and the Optional has been unwrapped, so we can use it
                     }
                     cell?.setupCell(placeholderText: attributeElementObj.placeHolder ?? "", textValue: attributeElementObj.value, textFieldTag: indexPath.row)
@@ -161,9 +155,7 @@ extension UserAttributesVC: UITableViewDataSource, UITableViewDelegate {
                     let cell = tableView.dequeueReusableCell(withIdentifier: DateCell.identifier) as? DateCell
                     cell?.delegateDateCell = self
                     if let val = customattributes[attributeElementObj.placeHolder!] {
-                                           print(val)
-                                           cell?.setupCell(placeholderText: "", textValue: val as! String, textFieldTag: indexPath.row)
-                                           return cell!
+                        attributeElementObj.value = "\(val)"
                      }
                     cell?.setupCell(placeholderText: attributeElementObj.placeHolder ?? "", textValue: attributeElementObj.value, textFieldTag: indexPath.row)
                     return cell!
@@ -173,18 +165,19 @@ extension UserAttributesVC: UITableViewDataSource, UITableViewDelegate {
                     cell?.delegateRadioButtonCell = self
                     if (attributeElementObj.placeHolder?.lowercased() == "gender") {
                         if let val = customattributes[attributeElementObj.placeHolder!] {
-                                                                 print(val)
+                            print(val)
                             cell?.delegateRadioButtonCell = self
                             cell?.setRadioCell(title: "", titleOption1: "Female", titleOption2: "Male", buttonTag: indexPath.row, value: val as! String)
-                                                                 return cell!
-                                           }
+                            return cell!
+                        }
                         cell?.setRadioCell(title: attributeElementObj.placeHolder ?? "", titleOption1: "Female", titleOption2: "Male", buttonTag: indexPath.row, value: attributeElementObj.value)
+                        
                     } else {
                         if let val = customattributes[attributeElementObj.placeHolder!] {
-                                                                                      print(val)
-                                                 cell?.setRadioCell(title: "", titleOption1: "No", titleOption2: "Yes", buttonTag: indexPath.row, value: val as! String)
-                                                                                      return cell!
-                                                                }
+                            attributeElementObj.value = "\(val)"
+                        } else {
+                            attributeElementObj.value = "0"
+                        }
                         cell?.delegateRadioButtonCell = self
                         cell?.setRadioCell(title: attributeElementObj.placeHolder ?? "", titleOption1: "No", titleOption2: "Yes", buttonTag: indexPath.row, value: attributeElementObj.value)
                     }
@@ -213,9 +206,9 @@ extension UserAttributesVC: TextBoxCellDelegate,DateCellDelegate,RaidoButtonCell
            arrAttributeList[index].value = textdate
        }
     func RadioButtonValue(textradio: String, index: Int) {
-           arrAttributeList[index].value = textradio
+        arrAttributeList[index].value = textradio
         print(arrAttributeList[index].value)
-       }
+    }
 }
 
 
@@ -225,15 +218,20 @@ extension UserAttributesVC: ButtonCellDelegate {
     func buttonAction(sender: UIButton) {
         var tempData = StorageObject.container.userInfo?.toDictionary()
         var dictCustom: [String: Any] = [:]
-        var dictStock: [String: Any] = [:]
         for item in arrAttributeList {
             if ((item.isStock == false) && !item.value.isEmpty) {
-                dictCustom[item.placeHolder!] = item.value
-            } else if(!item.value.isEmpty) {
-                dictStock[item.placeHolder!] = item.value
+                if (item.type == .boolean) {
+                    dictCustom[item.placeHolder!] = item.value == "0" ? false : true
+                    
+                } else if (item.type == .double){
+                    dictCustom[item.placeHolder!] = Double(item.value) ?? 0.0
+                    
+                }else {
+                    dictCustom[item.placeHolder!] = item.value
+                }
             }
         }
-        tempData?["attributes"] = ["stock": dictStock, "custom": dictCustom]
+        tempData?["attributes"] = ["custom": dictCustom]
         self.activitiController.startAnimating()
         BoardActive.client.updateUserData(body: tempData!) { (response, error) in
             DispatchQueue.main.async {

@@ -22,7 +22,6 @@ class StockAttributes: UIViewController {
         configureNavigation()
         registerCells()
         configureActivityIndicator()
-        getMe()
         getAttributeList()
         
         
@@ -55,7 +54,9 @@ class StockAttributes: UIViewController {
                     self.arrAttributeList.append(AttributeElement(dataList: responseArray![i]))
                     }
                     self.arrAttributeList = self.arrAttributeList.filter { $0.isStock! == true }
-                    self.tblContentLayout.reloadData()
+                    self.getMe()
+                } else {
+                    self.activitiController.stopAnimating()
                 }
             }
         }
@@ -69,14 +70,12 @@ class StockAttributes: UIViewController {
                    if (responseArray != nil) {
                     self.arrrMeList = responseArray!
                     print(self.arrrMeList)
-                    
-                   
+                    let attributes  = self.arrrMeList["attributes"] as! [String : Any]
+                    print(attributes)
+                    self.customattributes = attributes["stock"] as! [String : Any]
+                    print(self.customattributes)
                    }
-                
-                let attributes  = self.arrrMeList["attributes"] as! [String : Any]
-                print(attributes)
-                self.customattributes = attributes["stock"] as! [String : Any]
-                print(self.customattributes)
+                self.tblContentLayout.reloadData()
                 
                }
            }
@@ -150,19 +149,20 @@ extension StockAttributes: UITableViewDataSource, UITableViewDelegate {
                     let cell = tableView.dequeueReusableCell(withIdentifier: TextBoxCell.identifier) as? TextBoxCell
                     cell?.delegateTextfieldCell = self
                     if let val = customattributes[attributeElementObj.placeHolder!] {
-                        print(val)
-                        if val is NSNull
-                        {
-                            cell?.setupCell(placeholderText: attributeElementObj.placeHolder ?? "", textValue: attributeElementObj.value, textFieldTag: indexPath.row)
-                                               return cell!
-                        }
-                        else
-                        {
-                            let s = String(describing: val)
-                            cell?.setupCell(placeholderText: "", textValue: s, textFieldTag: indexPath.row)
-                                                       return cell!
-                        }
-                           
+                        attributeElementObj.value = val is NSNull ? "" : "\(val)"
+//                        print(val)
+//                        if val is NSNull
+//                        {
+//                            cell?.setupCell(placeholderText: attributeElementObj.placeHolder ?? "", textValue: attributeElementObj.value, textFieldTag: indexPath.row)
+//                                               return cell!
+//                        }
+//                        else
+//                        {
+//                            let s = String(describing: val)
+//                            cell?.setupCell(placeholderText: "", textValue: s, textFieldTag: indexPath.row)
+//                                                       return cell!
+//                        }
+//
 
                         // now val is not nil and the Optional has been unwrapped, so we can use it
                     }
@@ -173,21 +173,23 @@ extension StockAttributes: UITableViewDataSource, UITableViewDelegate {
                     let cell = tableView.dequeueReusableCell(withIdentifier: DateCell.identifier) as? DateCell
                     cell?.delegateDateCell = self
                     if let val = customattributes[attributeElementObj.placeHolder!] {
-                                           print(val)
-                        if val is NSNull
-                         {
-                            cell?.setupCell(placeholderText: attributeElementObj.placeHolder ?? "", textValue: attributeElementObj.value, textFieldTag: indexPath.row)
-                            return cell!
-                        }
-                        else
-                        {
-                            let s = String(describing: val)
-                            cell?.setupCell(placeholderText: "", textValue: s, textFieldTag: indexPath.row)
-                            return cell!
-                        }
+                        attributeElementObj.value = val is NSNull ? "" : "\(val)"
+
+//                                           print(val)
+//                        if val is NSNull
+//                         {
+//                            cell?.setupCell(placeholderText: attributeElementObj.placeHolder ?? "", textValue: attributeElementObj.value, textFieldTag: indexPath.row)
+//                            return cell!
+//                        }
+//                        else
+//                        {
+//                            let s = String(describing: val)
+//                            cell?.setupCell(placeholderText: "", textValue: s, textFieldTag: indexPath.row)
+//                            return cell!
+//                        }
                      }
-                cell?.setupCell(placeholderText: attributeElementObj.placeHolder ?? "", textValue: attributeElementObj.value, textFieldTag: indexPath.row)
-                                          return cell!
+                    cell?.setupCell(placeholderText: attributeElementObj.placeHolder ?? "", textValue: attributeElementObj.value, textFieldTag: indexPath.row)
+                    return cell!
                 
                 case .boolean:
                     let cell = tableView.dequeueReusableCell(withIdentifier: RadioButtonCell.identifier) as? RadioButtonCell
@@ -202,11 +204,16 @@ extension StockAttributes: UITableViewDataSource, UITableViewDelegate {
                         cell?.setRadioCell(title: attributeElementObj.placeHolder ?? "", titleOption1: "Female", titleOption2: "Male", buttonTag: indexPath.row, value: attributeElementObj.value)
                     } else {
                         if let val = customattributes[attributeElementObj.placeHolder!] {
-                                                                                      print(val)
-                            let s = String(describing: val)
-                                                 cell?.setRadioCell(title: attributeElementObj.placeHolder ?? "", titleOption1: "No", titleOption2: "Yes", buttonTag: indexPath.row, value: s)
-                                                                                      return cell!
-                                                                }
+                            attributeElementObj.value = "\(val)"
+                        } else {
+                            attributeElementObj.value = "0"
+                        }
+//                        if let val = customattributes[attributeElementObj.placeHolder!] {
+//                                                                                      print(val)
+//                            let s = String(describing: val)
+//                                                 cell?.setRadioCell(title: attributeElementObj.placeHolder ?? "", titleOption1: "No", titleOption2: "Yes", buttonTag: indexPath.row, value: s)
+//                                                                                      return cell!
+//                                                                }
                         cell?.setRadioCell(title: attributeElementObj.placeHolder ?? "", titleOption1: "No", titleOption2: "Yes", buttonTag: indexPath.row, value: attributeElementObj.value)
                     }
                     return cell!
@@ -246,16 +253,21 @@ extension StockAttributes: TextBoxCellDelegate,DateCellDelegate,RaidoButtonCellD
 extension StockAttributes: ButtonCellDelegate {
     func buttonAction(sender: UIButton) {
         var tempData = StorageObject.container.userInfo?.toDictionary()
-        var dictCustom: [String: Any] = [:]
         var dictStock: [String: Any] = [:]
         for item in arrAttributeList {
             if ((item.isStock == true) && !item.value.isEmpty) {
-                dictStock[item.placeHolder!] = item.value
-            } else if(!item.value.isEmpty) {
-                dictCustom[item.placeHolder!] = item.value
+                if (item.type == .boolean) {
+                   dictStock[item.placeHolder!] = item.value == "0" ? false : true
+                   
+                } else if (item.type == .double){
+                   dictStock[item.placeHolder!] = Double(item.value) ?? 0.0
+                                   
+                } else {
+                    dictStock[item.placeHolder!] = item.value
+                }
             }
         }
-        tempData?["attributes"] = ["stock": dictStock, "custom": dictCustom]
+        tempData?["attributes"] = ["stock": dictStock]
         self.activitiController.startAnimating()
         BoardActive.client.updateUserData(body: tempData!) { (response, error) in
             DispatchQueue.main.async {
