@@ -21,7 +21,7 @@ public class AttributeElement: Codable {
         if let id = dataList["id"] as? Int {
             self.id = id
         }
-        
+        // use for datalist
         if let placeHolder = dataList["name"] as? String {
             self.placeHolder = placeHolder
         }
