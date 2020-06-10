@@ -267,38 +267,24 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             return
         }
         
-        let tempUserInfo = userInfo
-        
-        StorageObject.container.notification = CoreDataStack.sharedInstance.createNotificationModel(fromDictionary: tempUserInfo)
-        
         self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
         
-        guard let notificationModel = StorageObject.container.notification else {
-            return
-        }
-        
-        if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId, let notificationId = notificationModel.notificationId {
+       if let _ = userInfo["aps"] as? [String: Any], let messageId = userInfo["baMessageId"] as? String, let firebaseNotificationId = userInfo["gcm.message_id"] as? String, let notificationId =  userInfo["baNotificationId"] as? String {
             BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId)
         }
         completionHandler()
     }
     
     /**
-     Creates an instance of `NotificationModel` from `userInfo`, validates said instance, and calls `createEvent`, capturing the current application state.
+     Use `userInfo` for validating said instance, and calls `createEvent`, capturing the current application state.
      
      - Parameter userInfo: A dictionary that contains information related to the remote notification, potentially including a badge number for the app icon, an alert sound, an alert message to display to the user, a notification identifier, and custom data. The provider originates it as a JSON-defined dictionary that iOS converts to an `NSDictionary` object; the dictionary may contain only property-list objects plus `NSNull`. For more information about the contents of the remote notification dictionary, see Generating a Remote Notification.
      */
     public func handleNotification(application: UIApplication, userInfo: [AnyHashable: Any]) {
-        let tempUserInfo = userInfo as! [String: Any]
-        
-        StorageObject.container.notification = CoreDataStack.sharedInstance.createNotificationModel(fromDictionary: tempUserInfo)
-               
+                       
         NotificationCenter.default.post(name: NSNotification.Name("Refresh HomeViewController Tableview"), object: nil, userInfo: userInfo)
-        guard let notificationModel = StorageObject.container.notification else {
-           return
-        }
                
-        if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId, let notificationId = notificationModel.notificationId {
+       if let _ = userInfo["aps"] as? [String: Any], let messageId = userInfo["baMessageId"] as? String, let firebaseNotificationId = userInfo["gcm.message_id"] as? String, let notificationId =  userInfo["baNotificationId"] as? String {
             switch application.applicationState {
             case .active:
                 BoardActive.client.postEvent(name: String.Received, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId)
