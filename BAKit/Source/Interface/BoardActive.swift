@@ -20,7 +20,7 @@ public enum NetworkError: Error {
  */
 public enum EndPoints {
 //    static let DevEndpoint = "https://springer-api.boardactive.com/mobile/v1"
-    static let DevEndpoint = "https://dev-api.boardactive.com/mobile/v1"
+    static let DevEndpoint = "https://api.boardactive.com/mobile/v1"
     static let ProdEndpoint = "https://api.boardactive.com/mobile/v1"
     static let Events = "/events"
     static let Me = "/me"

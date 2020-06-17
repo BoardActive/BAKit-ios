@@ -1,5 +1,5 @@
 PODS:
-  - BAKit (2.0.1)
+  - BAKit (2.0.2)
   - Crashlytics (3.13.4):
     - Fabric (~> 1.10.2)
   - Fabric (1.10.2)
@@ -747,7 +747,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  BAKit: 50af154d4f4c6b768f6daba042d6ba8b17225797
+  BAKit: 5b3eaa9f76c65b0a8d28df72fe0002d6f770975c
   Crashlytics: 2dfd686bcb918dc10ee0e76f7f853fe42c7bd552
   Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
   Firebase: 0c8cf33f266410c61ab3e2265cfa412200351d9c
@@ -771,4 +771,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: c67c3a8aae14681d2ce913df616045442364a8d4
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.3
