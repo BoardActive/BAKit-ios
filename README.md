@@ -1,6 +1,6 @@
 ![Cocoapods platforms](https://img.shields.io/cocoapods/p/BAKit)
 ![GitHub top language](https://img.shields.io/github/languages/top/boardactive/BAKit-ios?color=orange)
-![Cocoapods](https://img.shields.io/cocoapods/v/BAKit?color=red)
+![Cocoapods](https://img.shields.io/cocoapods/v/BAKit-iOS?color=red)
 ![GitHub commits since tagged version (branch)](https://img.shields.io/github/commits-since/boardactive/BAKit-ios/1.0.2)
 ![GitHub issues](https://img.shields.io/github/issues-raw/boardactive/BAKit-iOS)
 
