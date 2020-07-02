@@ -80,12 +80,6 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
         BoardActive.client.locationManager.startMonitoringSignificantLocationChanges()
         BoardActive.client.locationManager.pausesLocationUpdatesAutomatically = false
         BoardActive.client.locationManager.allowsBackgroundLocationUpdates=true
-        
-        
-        if UIApplication.shared.backgroundRefreshStatus == .available
-        {
-            
-        }
     }
     
       /**
@@ -126,7 +120,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
             postLocation(location: location)
         }
         
-        if let currentLocation = BoardActive.client.currentLocation, location.distance(from: currentLocation) < 1000.0 {
+        if let currentLocation = BoardActive.client.currentLocation, location.distance(from: currentLocation) < 10.0 {
             BoardActive.client.distanceBetweenLocations = (BoardActive.client.distanceBetweenLocations ?? 0.0) + location.distance(from: currentLocation)
         } else {
             postLocation(location: location)
@@ -134,13 +128,6 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
         }
         
         BoardActive.client.currentLocation = location
-//        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-//        guard var loc = UserDefaults.standard.value(forKey: "locs") as? [String]else{
-//            UserDefaults.standard.set(["\(locValue.latitude), \(locValue.longitude)"], forKey: "locs")
-//            return
-//        }
-//        loc.append("\(locValue.latitude), \(locValue.longitude)")
-//        UserDefaults.standard.set(loc, forKey: "locs")
     }
     
     public func getAttributes(completionHandler: @escaping([[String: Any]]?, Error?) -> Void) {
@@ -244,7 +231,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
 
     // MARK: SDK Functions
 
-    fileprivate func getHeaders() -> [String: String]? {
+    public func getHeaders() -> [String: String]? {
         guard let tokenString = userDefaults?.object(forKey: String.HeaderValues.FCMToken) as? String else {
             return nil
         }
@@ -288,7 +275,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
      Retrieves a user attributes and affiliated apps.
      - Returns: Closure containing client/user information.
      */
-    public func login(email: String, password: String, completionHandler: @escaping ([String: Any]?, Error?) -> Void) {
+    public func postLogin(email: String, password: String, completionHandler: @escaping ([String: Any]?, Error?) -> Void) {
         let path = "\(EndPoints.Login)"
         let body: [String: Any] = [
             String.ConfigKeys.Email: email,
