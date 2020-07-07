@@ -73,7 +73,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
      If error occurs, block will execute with status other than `INTULocationStatusSuccess` and subscription will be kept alive.
      */
     public func monitorLocation() {
-        BoardActive.client.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        BoardActive.client.locationManager.desiredAccuracy = kCLLocationAccuracyBest
         BoardActive.client.locationManager.delegate = self
         BoardActive.client.locationManager.requestAlwaysAuthorization()
         BoardActive.client.locationManager.startUpdatingLocation()
