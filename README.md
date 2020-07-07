@@ -67,7 +67,7 @@ Once you create a related Firebase project you can download the ```GoogleService
     use_frameworks!
     
     target :YourTargetName do  
-        pod 'BAKit'
+        pod 'BAKit-iOS'
         pod 'Firebase/Core', '~> 5.0'
         pod 'Firebase/Messaging'
     end
