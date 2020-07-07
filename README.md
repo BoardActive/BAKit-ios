@@ -52,7 +52,7 @@ Once you create a related Firebase project you can download the ```GoogleService
 2. Close/quit Xcode.
 3. Run ```$ pod init``` via the terminal in your project directory. 
 4. Open your newly created `Podfile` and add the following pods (see the example Podfile at the end of this section).
-    * ```pod 'BAKit'```
+    * ```pod 'BAKit-iOS'```
     * ```pod 'Firebase/Core', '~> 5.0'```
     * ```pod 'Firebase/Messaging'```
 5. Run ```$ pod repo update``` from the terminal in your main project directory.
@@ -67,7 +67,7 @@ Once you create a related Firebase project you can download the ```GoogleService
     use_frameworks!
     
     target :YourTargetName do  
-        pod 'BAKit'
+        pod 'BAKit-iOS'
         pod 'Firebase/Core', '~> 5.0'
         pod 'Firebase/Messaging'
     end
