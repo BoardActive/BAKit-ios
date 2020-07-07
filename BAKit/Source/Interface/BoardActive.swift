@@ -20,7 +20,7 @@ public enum NetworkError: Error {
  */
 public enum EndPoints {
 //    static let DevEndpoint = "https://springer-api.boardactive.com/mobile/v1"
-    static let DevEndpoint = "https://api.boardactive.com/mobile/v1"
+    static let DevEndpoint = "https://dev-api.boardactive.com/mobile/v1"
     static let ProdEndpoint = "https://api.boardactive.com/mobile/v1"
     static let Events = "/events"
     static let Me = "/me"
@@ -73,7 +73,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
      If error occurs, block will execute with status other than `INTULocationStatusSuccess` and subscription will be kept alive.
      */
     public func monitorLocation() {
-        BoardActive.client.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        BoardActive.client.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         BoardActive.client.locationManager.delegate = self
         BoardActive.client.locationManager.requestAlwaysAuthorization()
         BoardActive.client.locationManager.startUpdatingLocation()
