@@ -50,6 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
             //You have a location when app is in killed/ not running state
             let locationManager = CLLocationManager()
                 locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+                locationManager.distanceFilter = 10
                 locationManager.delegate = self
                 locationManager.pausesLocationUpdatesAutomatically = false
                 locationManager.allowsBackgroundLocationUpdates = true

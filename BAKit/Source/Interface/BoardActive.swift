@@ -74,6 +74,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
      */
     public func monitorLocation() {
         BoardActive.client.locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        BoardActive.client.locationManager.distanceFilter = 10
         BoardActive.client.locationManager.delegate = self
         BoardActive.client.locationManager.requestAlwaysAuthorization()
         BoardActive.client.locationManager.startUpdatingLocation()
