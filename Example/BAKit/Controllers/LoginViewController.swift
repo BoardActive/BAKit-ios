@@ -59,8 +59,8 @@ class LoginViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        emailTextField.text = ""
-        passwordTextField.text = ""
+        emailTextField.text = "taylor@boardactive.com"
+        passwordTextField.text = "@@Madison08@@"
         
         self.navigationController!.navigationBar.isHidden = true
     }

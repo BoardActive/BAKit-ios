@@ -19,6 +19,7 @@ class HomeViewController: UIViewController, NotificationDelegate, UITableViewDel
     private let authOptions = UNAuthorizationOptions(arrayLiteral: [.alert, .badge, .sound])
     private let refreshControl = UIRefreshControl()
     private var models: [NSManagedObject]?
+    private var isDidLoadCalled: Bool = false
     var indicatorView = UIActivityIndicatorView()
 
     override func viewDidLoad() {
@@ -43,6 +44,10 @@ class HomeViewController: UIViewController, NotificationDelegate, UITableViewDel
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         models = CoreDataStack.sharedInstance.fetchDataFromDatabase()
+        if (isDidLoadCalled) {
+            NotificationCenter.default.post(name: Notification.Name("Update user permission states"), object: nil)
+        }
+        isDidLoadCalled = true
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }

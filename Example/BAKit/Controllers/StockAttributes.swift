@@ -150,21 +150,6 @@ extension StockAttributes: UITableViewDataSource, UITableViewDelegate {
                     cell?.delegateTextfieldCell = self
                     if let val = customattributes[attributeElementObj.placeHolder!] {
                         attributeElementObj.value = val is NSNull ? "" : "\(val)"
-//                        print(val)
-//                        if val is NSNull
-//                        {
-//                            cell?.setupCell(placeholderText: attributeElementObj.placeHolder ?? "", textValue: attributeElementObj.value, textFieldTag: indexPath.row)
-//                                               return cell!
-//                        }
-//                        else
-//                        {
-//                            let s = String(describing: val)
-//                            cell?.setupCell(placeholderText: "", textValue: s, textFieldTag: indexPath.row)
-//                                                       return cell!
-//                        }
-//
-
-                        // now val is not nil and the Optional has been unwrapped, so we can use it
                     }
                     cell?.setupCell(placeholderText: attributeElementObj.placeHolder ?? "", textValue: attributeElementObj.value, textFieldTag: indexPath.row)
                     return cell!
@@ -174,19 +159,6 @@ extension StockAttributes: UITableViewDataSource, UITableViewDelegate {
                     cell?.delegateDateCell = self
                     if let val = customattributes[attributeElementObj.placeHolder!] {
                         attributeElementObj.value = val is NSNull ? "" : "\(val)"
-
-//                                           print(val)
-//                        if val is NSNull
-//                         {
-//                            cell?.setupCell(placeholderText: attributeElementObj.placeHolder ?? "", textValue: attributeElementObj.value, textFieldTag: indexPath.row)
-//                            return cell!
-//                        }
-//                        else
-//                        {
-//                            let s = String(describing: val)
-//                            cell?.setupCell(placeholderText: "", textValue: s, textFieldTag: indexPath.row)
-//                            return cell!
-//                        }
                      }
                     cell?.setupCell(placeholderText: attributeElementObj.placeHolder ?? "", textValue: attributeElementObj.value, textFieldTag: indexPath.row)
                     return cell!
@@ -208,12 +180,13 @@ extension StockAttributes: UITableViewDataSource, UITableViewDelegate {
                         } else {
                             attributeElementObj.value = "0"
                         }
-//                        if let val = customattributes[attributeElementObj.placeHolder!] {
-//                                                                                      print(val)
-//                            let s = String(describing: val)
-//                                                 cell?.setRadioCell(title: attributeElementObj.placeHolder ?? "", titleOption1: "No", titleOption2: "Yes", buttonTag: indexPath.row, value: s)
-//                                                                                      return cell!
-//                                                                }
+                        if (attributeElementObj.placeHolder == "notificationPermission" || attributeElementObj.placeHolder == "locationPermission") {
+                            cell?.enableDisableRadioButton(enable: false)
+                                                  
+                        } else {
+                            cell?.enableDisableRadioButton(enable: true)
+                        }
+
                         cell?.setRadioCell(title: attributeElementObj.placeHolder ?? "", titleOption1: "No", titleOption2: "Yes", buttonTag: indexPath.row, value: attributeElementObj.value)
                     }
                     return cell!
