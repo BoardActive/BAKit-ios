@@ -63,6 +63,11 @@ class RadioButtonCell: UITableViewCell {
         btnOption2.setTitle("  \(titleOption2)", for: .selected)
     }
     
+    func enableDisableRadioButton(enable: Bool) {
+        btnOption1.isUserInteractionEnabled = enable
+        btnOption2.isUserInteractionEnabled = enable
+    }
+    
     @IBAction func btnOption1Action(sender: UIButton) {
         if (btnOption1.isSelected) {return}
         btnOption2.isSelected = false

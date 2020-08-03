@@ -32,7 +32,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
     var isApplicationInBackground = false
     var isAppActive = false
     var isReceviedEventUpdated = false
-    
+    private var notificationPermission = false
+
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
@@ -56,6 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
                 locationManager.allowsBackgroundLocationUpdates = true
                 locationManager.startMonitoringSignificantLocationChanges()
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(updatePermissionStates), name: Notification.Name("Update user permission states"), object: nil)
         return true
     }
     
@@ -85,6 +87,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
     
     
     func applicationDidBecomeActive(_ application: UIApplication) {
+        if (isApplicationInBackground) {
+            NotificationCenter.default.post(name: Notification.Name("Update user permission states"), object: nil)
+        }
         isAppActive = true
     }
     
@@ -118,6 +123,27 @@ extension AppDelegate {
                 
                 let userInfo = UserInfo.init(fromDictionary: parsedJSON)
                 StorageObject.container.userInfo = userInfo
+                
+                self.updatePermissionStates()
+                
+//                var locationSharingEnable = false
+//
+//                if CLLocationManager.locationServicesEnabled() {
+//                     switch CLLocationManager.authorizationStatus() {
+//                        case .notDetermined, .restricted, .denied:
+//                            locationSharingEnable = false
+//
+//                        case .authorizedAlways, .authorizedWhenInUse:
+//                            locationSharingEnable = true
+//                        default:
+//                            locationSharingEnable = false
+//                    }
+//                }
+//
+//                let dictPara: [String: Any] = ["notificationPermission": self.notificationPermission,
+//                                               "locationPermission": locationSharingEnable]
+//                self.updateUserAttriubtes(dictParameter: dictPara)
+
             }
         }
        
@@ -154,6 +180,48 @@ extension AppDelegate {
         
         DispatchQueue.main.async {
             UIApplication.shared.registerForRemoteNotifications()
+        }
+    }
+    
+    @objc func updatePermissionStates() {
+        if (StorageObject.container.userInfo == nil) {
+            return
+        }
+        var locationSharingEnable = false
+        let center = UNUserNotificationCenter.current()
+
+        if CLLocationManager.locationServicesEnabled() {
+             switch CLLocationManager.authorizationStatus() {
+                case .notDetermined, .restricted, .denied:
+                    locationSharingEnable = false
+                
+                case .authorizedAlways, .authorizedWhenInUse:
+                    locationSharingEnable = true
+                default:
+                    locationSharingEnable = false
+            }
+        }
+        
+        center.getNotificationSettings { (settings) in
+            if(settings.authorizationStatus == .authorized)
+            {
+                self.notificationPermission = true
+            }
+            else
+            {
+                self.notificationPermission = false
+            }
+            let dictPara: [String: Any] = ["notificationPermission": self.notificationPermission,
+                                           "locationPermission": locationSharingEnable]
+            self.updateUserAttriubtes(dictParameter: dictPara)
+        }
+    }
+    
+    fileprivate func updateUserAttriubtes(dictParameter: [String: Any] = [:]) {
+        var tempData = StorageObject.container.userInfo?.toDictionary()
+        tempData?["attributes"] =  ["stock": dictParameter]
+        BoardActive.client.updateUserData(body: tempData!) { (response, error) in
+            print(response as Any)
         }
     }
 }
