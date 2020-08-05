@@ -133,7 +133,6 @@ func application(_ application: UIApplication, willFinishLaunchingWithOptions la
     FirebaseApp.configure()
     Messaging.messaging().delegate = self
     UNUserNotificationCenter.current().delegate = self
-    application.applicationIconBadgeNumber = UserDefaults.extensions.badge
 
     // AppId is of type Int        
     BoardActive.client.userDefaults?.set(<#AppId#>, forKey: "AppId")
