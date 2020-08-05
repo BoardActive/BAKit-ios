@@ -90,9 +90,10 @@ Requesting location permission requires the follow entries in your ```Info.plist
 #### Update App Capabilities
 
 Under your app's primary target you will need to edit it's **Capabilities** as follows:  
-1. Tick the checkbox *Location updates*  
-2. Tick the checkbox *Remote notifications*  
-3. Enable **Push Notifications**  
+1. Enable **Background Modes**. Apple provides documentation explain the various **Background Modes** [here](https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html#//apple_ref/doc/uid/TP40009252-SW22) 
+2. Tick the checkbox *Location updates*  
+3. Tick the checkbox *Remote notifications*  
+4. Enable **Push Notifications**  
 
 ---
 
@@ -107,6 +108,7 @@ import UIKit
 import UserNotifications
 import Messages
 import CoreLocation
+import os.log
 ```
 
 Prior to the declaration of the ```AppDelegate``` class, a protocol is declared. Those classes conforming to said protocol receive the notification in the example app:
@@ -391,10 +393,13 @@ Add the following to monitor for significant location updates whilst the app is 
         return true
     }
 
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-        BoardActive.client.postLocation(location: manager.location!)
+    extension AppDelegate: CLLocationManagerDelegate {
+        func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+            guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
+            BoardActive.client.postLocation(location: manager.location!)
+        }
     }
+
 ```
 
 ## Download Example App Source Code
