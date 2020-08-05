@@ -124,6 +124,12 @@ Just inside the declaration of the ```AppDelegate``` class, the following variab
     public weak var notificationDelegate: NotificationDelegate?
 
     private let authOptions = UNAuthorizationOptions(arrayLiteral: [.alert, .badge, .sound])
+    
+    //Flags use to manage notification behaviour in various states
+    var isNotificationStatusActive = false
+    var isApplicationInBackground = false
+    var isAppActive = false
+    var isReceviedEventUpdated = false
 ```
 
 After configuring Firebase and declaring ```AppDelegate```'s conformance to Firebase's ```MessagingDelegate```, store your BoardActive AppId and AppKey to ```BoardActive.client.userDefaults``` like so:
@@ -133,7 +139,7 @@ func application(_ application: UIApplication, willFinishLaunchingWithOptions la
     FirebaseApp.configure()
     Messaging.messaging().delegate = self
     UNUserNotificationCenter.current().delegate = self
-
+    
     // AppId is of type Int        
     BoardActive.client.userDefaults?.set(<#AppId#>, forKey: "AppId")
 
@@ -212,7 +218,7 @@ BoardActive class's userDefaults.
     }
 
     //Find and update the location permission and notification permission in the backend.
-    @objc func updatePermissionStates() {
+    @objc func updatePermissionStates(userInfo: [String:Any]) {
 
         var locationSharingEnable = false
         let center = UNUserNotificationCenter.current()
@@ -389,11 +395,6 @@ Add the following to monitor for significant location updates whilst the app is 
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
         BoardActive.client.postLocation(location: manager.location!)
     }
-
-    func applicationWillTerminate(_ application: UIApplication) {        
-        BoardActive.client.locationManager.startMonitoringSignificantLocationChanges()
-    }
-
 ```
 
 ## Download Example App Source Code
