@@ -145,7 +145,7 @@ func application(_ application: UIApplication, willFinishLaunchingWithOptions la
 }
 
 /**
-  Update the flag values when application enters in ba
+  Update the flag values when application enters in background
 */
 func applicationDidEnterBackground(_ application: UIApplication) {
     isApplicationInBackground = true
