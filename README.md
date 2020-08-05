@@ -14,26 +14,26 @@
 
 ##### It's not about Advertising... It's about *"PERSONALIZING"*
 
-BoardActive's platform connects brands to consumers using location-based engagement. Our international patent-pending Visualmatic™ software is a powerful marketing tool allowing brands to set up a virtual perimeter around any location, measure foot-traffic, and engage users with personalized messages when they enter geolocations… AND effectively attribute campaign efficiency by seeing where users go after the impression! 
+BoardActive's platform connects brands to consumers using location-based engagement. Our international patent-pending Visualmatic™ software is a powerful marketing tool allowing brands to set up a virtual perimeter around any location, measure foot-traffic, and engage users with personalized messages when they enter geolocations… AND effectively attribute campaign efficiency by seeing where users go after the impression!
 
-Use your BoardActive account to create Places (geo-fenced areas) and Messages (notifications) to deliver custom messages to your app users. 
+Use your BoardActive account to create Places (geo-fenced areas) and Messages (notifications) to deliver custom messages to your app users.
 
 [Click Here to get a BoardActive Account](https://app.boardactive.com/signup)
 
 Once a client has established at least one geofence, the BAKit SDK leverages any smart device's native location monitoring, determines when a user enters said geofence and dispatches a  *personalized* notification of the client's composition.
 ___
 ### Required For Setup
-1. A Firebase project to which you've added your app. 
+1. A Firebase project to which you've added your app.
 2. A BoardActive account
-   
-### Create a Firebase Project 
+
+### Create a Firebase Project
 #### Add Firebase Core and Firebase Messaging to your app
-To use Firebase Cloud Messaging you must create a Firebase project. 
+To use Firebase Cloud Messaging you must create a Firebase project.
 
 * [Firebase iOS Quickstart](https://firebase.google.com/docs/ios/setup) - A guide to creating and understanding Firebase projects.
-* [Set up a Firebase Cloud Messaging client app on iOS](https://firebase.google.com/docs/cloud-messaging/ios/client) - How to handle Firebase Cloud Messaging (the means by which BoardActive sends push notifications). 
+* [Set up a Firebase Cloud Messaging client app on iOS](https://firebase.google.com/docs/cloud-messaging/ios/client) - How to handle Firebase Cloud Messaging (the means by which BoardActive sends push notifications).
     * Please refer to the following two articles regarding APNS, as Firebase's documentation is a bit dated. We'll also cover how to add push notifications to your account whilst installing the SDK:
-        * [Enable Push Notifications](https://help.apple.com/xcode/mac/current/#/devdfd3d04a1) 
+        * [Enable Push Notifications](https://help.apple.com/xcode/mac/current/#/devdfd3d04a1)
         * [Registering Your App with APNs](https://developer.apple.com/documentation/usernotifications/registering_your_app_with_apns)
 * [Click Here to go to the Firebase Console](https://console.firebase.google.com/u/0/)
 
@@ -50,13 +50,13 @@ Once you create a related Firebase project you can download the ```GoogleService
 #### CocoaPods
 1. [Setup CocoaPods](http://guides.cocoapods.org/using/getting-started.html)
 2. Close/quit Xcode.
-3. Run ```$ pod init``` via the terminal in your project directory. 
+3. Run ```$ pod init``` via the terminal in your project directory.
 4. Open your newly created `Podfile` and add the following pods (see the example Podfile at the end of this section).
     * ```pod 'BAKit-iOS'```
     * ```pod 'Firebase/Core', '~> 5.0'```
     * ```pod 'Firebase/Messaging'```
 5. Run ```$ pod repo update``` from the terminal in your main project directory.
-6. Run ```$ pod install```  from the terminal in your main project directory, and once CocoaPods has created workspace, open the <App Name>.workspace file. 
+6. Run ```$ pod install```  from the terminal in your main project directory, and once CocoaPods has created workspace, open the <App Name>.workspace file.
 7. Incorporate your ```GoogleService-Info.plist```, previously mentioned in the **Create a Firebase Project** section, by dragging said file into your project.
 
 **Example Podfile**
@@ -65,7 +65,7 @@ Once you create a related Firebase project you can download the ```GoogleService
     platform :ios, '10.0'
 
     use_frameworks!
-    
+
     target :YourTargetName do  
         pod 'BAKit-iOS'
         pod 'Firebase/Core', '~> 5.0'
@@ -76,7 +76,7 @@ Once you create a related Firebase project you can download the ```GoogleService
 ---
 
 #### Update Info.plist - Location Permission
-Requesting location permission requires the follow entries in your ```Info.plist``` file. Each entry requires an accompanying key in the form of a ```String``` explaining how user geolocation data will be used. 
+Requesting location permission requires the follow entries in your ```Info.plist``` file. Each entry requires an accompanying key in the form of a ```String``` explaining how user geolocation data will be used.
 
 - `NSLocationAndWhenInUseUsageDescription`
   - `Privacy - Location Always and When In Use Usage Description`
@@ -90,12 +90,9 @@ Requesting location permission requires the follow entries in your ```Info.plist
 #### Update App Capabilities
 
 Under your app's primary target you will need to edit it's **Capabilities** as follows:  
-1. Enable **Background Modes**. Apple provides documentation explain the various **Background Modes** [here](https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html#//apple_ref/doc/uid/TP40009252-SW22) 
-2. Tick the checkbox *Location updates*  
-3. Tick the checkbox *Background fetch*  
-4. Tick the checkbox *Remote notifications*  
-5. Tick the checkbox *Background processing*
-6. Enable **Push Notifications**  
+1. Tick the checkbox *Location updates*  
+2. Tick the checkbox *Remote notifications*  
+3. Enable **Push Notifications**  
 
 ---
 
@@ -103,7 +100,7 @@ Under your app's primary target you will need to edit it's **Capabilities** as f
 #### AppDelegate
 Having followed the Apple's instructions linked in the **Add Firebase Core and Firebase Messaging to Your App** section, please add the following code to the top of your ```AppDelegate.swift```:
 
-```swift 
+```swift
 import BAKit
 import Firebase
 import UIKit
@@ -117,6 +114,7 @@ Prior to the declaration of the ```AppDelegate``` class, a protocol is declared.
 ```swift
 protocol NotificationDelegate: NSObject {
     func appReceivedRemoteNotification(notification: [AnyHashable: Any])
+    func appReceivedRemoteNotificationInForeground(notification: [AnyHashable: Any])
 }
 ```
 
@@ -142,18 +140,27 @@ func application(_ application: UIApplication, willFinishLaunchingWithOptions la
 
     // AppKey is of type String
     BoardActive.client.userDefaults?.set(<#AppKey#>, forKey: "AppKey")
-        
+
     return true
 }
+
+/**
+  Update the flag values when application enters in ba
+*/
+func applicationDidEnterBackground(_ application: UIApplication) {
+    isApplicationInBackground = true
+    isAppActive = false
+}
+
 
 ```
 Add the following below the closing brace of your `AppDelegate` class.
 
 ```swift
 extension AppDelegate {
-/** 
-Call this function after having received your FCM and APNS tokens. 
-Additionally, you must have set your AppId and AppKey using the 
+/**
+Call this function after having received your FCM and APNS tokens.
+Additionally, you must have set your AppId and AppKey using the
 BoardActive class's userDefaults.
 */
     func setupSDK() {
@@ -163,25 +170,26 @@ BoardActive class's userDefaults.
                 guard err == nil, let parsedJSON = parsedJSON else {
                     fatalError()
                 }
-                
+
                 BoardActive.client.userDefaults?.set(true, forKey: String.ConfigKeys.DeviceRegistered)
                 BoardActive.client.userDefaults?.synchronize()
+                self.updatePermissionStates(userInfo: parsedJSON)
             }
         }
-       
+
         let requestNotificationsOperation = BlockOperation.init {
             self.requestNotifications()
         }
-        
+
         let monitorLocationOperation = BlockOperation.init {
             DispatchQueue.main.async {
                 BoardActive.client.monitorLocation()
             }
         }
-        
+
         monitorLocationOperation.addDependency(requestNotificationsOperation)
         requestNotificationsOperation.addDependency(registerDeviceOperation)
-        
+
         operationQueue.addOperation(registerDeviceOperation)
         operationQueue.addOperation(requestNotificationsOperation)
         operationQueue.addOperation(monitorLocationOperation)
@@ -198,11 +206,47 @@ BoardActive class's userDefaults.
                 return
             }
         }
-        
+
         DispatchQueue.main.async {
             UIApplication.shared.registerForRemoteNotifications()
         }
-    } 
+    }
+
+    //Find and update the location permission and notification permission in the backend.
+    @objc func updatePermissionStates() {
+
+        var locationSharingEnable = false
+        let center = UNUserNotificationCenter.current()
+
+        if CLLocationManager.locationServicesEnabled() {
+             switch CLLocationManager.authorizationStatus() {
+                case .notDetermined, .restricted, .denied:
+                    locationSharingEnable = false
+
+                case .authorizedAlways, .authorizedWhenInUse:
+                    locationSharingEnable = true
+                default:
+                    locationSharingEnable = false
+            }
+        }
+
+        center.getNotificationSettings { (settings) in
+            var notificationPermission = false
+            if(settings.authorizationStatus == .authorized) {
+                notificationPermission = true
+
+            } else {
+                notificationPermission = false
+            }
+            let dictPara: [String: Any] = ["notificationPermission": notificationPermission,
+                                           "locationPermission": locationSharingEnable]
+            var tempData = userInfo
+            tempData["attributes"] =  ["stock": dictPara]
+            BoardActive.client.updateUserData(body: tempData) { (response, error) in
+              print(response as Any)
+            }
+        }
+    }
 }
 
 ```
@@ -214,7 +258,7 @@ In an extension adhering to Firebase's ```MessagingDelegate``` that receive's th
 extension AppDelegate: MessagingDelegate {
     /**
      This function will be called once a token is available, or has been refreshed. Typically it will be called once per app start, but may be called more often, if a token is invalidated or updated. In this method, you should perform operations such as:
-     
+
      * Uploading the FCM token to your application server, so targeted notifications can be sent.
      * Subscribing to any topics.
      */
@@ -234,7 +278,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         let deviceTokenString = deviceToken.reduce("", { $0 + String(format: "%02X", $1) })
         os_log("\n[AppDelegate] didRegisterForRemoteNotificationsWithDeviceToken :: APNs TOKEN: %s \n", deviceTokenString)
     }
-    
+
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
     // Handle APNS token registration error
         os_log("\n[AppDelegate] didFailToRegisterForRemoteNotificationsWithError :: APNs TOKEN FAIL :: %s \n", error.localizedDescription)
@@ -248,42 +292,65 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         handleNotification(application: application, userInfo: userInfo)
         completionHandler(UIBackgroundFetchResult.newData)
     }
-    
+
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        
+
         let userInfo = notification.request.content.userInfo as! [String: Any]
-        
+
         if userInfo["notificationId"] as? String == "0000001" {
             handleNotification(application: UIApplication.shared, userInfo: userInfo)
         }
-        
+
         NotificationCenter.default.post(name: NSNotification.Name("Refresh HomeViewController Tableview"), object: nil, userInfo: userInfo)
         completionHandler(UNNotificationPresentationOptions.init(arrayLiteral: [.badge, .sound, .alert]))
     }
-        
+
+    /**
+        This delegate method will call when user opens the notification from the notification center.
+    */
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
 
         guard (response.actionIdentifier == UNNotificationDefaultActionIdentifier) || (response.actionIdentifier == UNNotificationDismissActionIdentifier) else {
             return
         }
-        
-        self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
-        
-       if let _ = userInfo["aps"] as? [String: Any], let messageId = userInfo["baMessageId"] as? String, let firebaseNotificationId = userInfo["gcm.message_id"] as? String, let notificationId =  userInfo["baNotificationId"] as? String {
-            BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId)
-        }
-        completionHandler()
+        let userInfo = response.notification.request.content.userInfo as! [String: Any]
+
+        if isApplicationInBackground && !isNotificationStatusActive {
+          isNotificationStatusActive = false
+          isApplicationInBackground = false
+          if let _ = userInfo["aps"] as? [String: Any], let messageId = userInfo["baMessageId"] as? String, let firebaseNotificationId = userInfo["gcm.message_id"] as? String, let notificationId =  userInfo["baNotificationId"] as? String {
+             if (isReceviedEventUpdated) {
+                 self.notificationDelegate?.appReceivedRemoteNotificationInForeground(notification: userInfo)
+             } else {
+                 self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
+             }
+          }
+
+       } else if isAppActive && !isNotificationStatusActive {         
+           if (isReceviedEventUpdated) {
+               self.notificationDelegate?.appReceivedRemoteNotificationInForeground(notification: userInfo)
+           } else {
+               self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
+           }
+
+       } else {
+           isNotificationStatusActive = true
+           isApplicationInBackground = false
+           NotificationCenter.default.post(name: Notification.Name("display"), object: nil)
+       }
+
+       completionHandler()
     }
-    
+
     /**
      Use `userInfo` for validating said instance, and calls `createEvent`, capturing the current application state.
-     
+
      - Parameter userInfo: A dictionary that contains information related to the remote notification, potentially including a badge number for the app icon, an alert sound, an alert message to display to the user, a notification identifier, and custom data. The provider originates it as a JSON-defined dictionary that iOS converts to an `NSDictionary` object; the dictionary may contain only property-list objects plus `NSNull`. For more information about the contents of the remote notification dictionary, see Generating a Remote Notification.
      */
     public func handleNotification(application: UIApplication, userInfo: [AnyHashable: Any]) {
-                       
+
         NotificationCenter.default.post(name: NSNotification.Name("Refresh HomeViewController Tableview"), object: nil, userInfo: userInfo)
-               
+
        if let _ = userInfo["aps"] as? [String: Any], let messageId = userInfo["baMessageId"] as? String, let firebaseNotificationId = userInfo["gcm.message_id"] as? String, let notificationId =  userInfo["baNotificationId"] as? String {
             switch application.applicationState {
             case .active:
@@ -318,31 +385,15 @@ Add the following to monitor for significant location updates whilst the app is 
         }
         return true
     }
-    
+
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
         BoardActive.client.postLocation(location: manager.location!)
     }
-         
+
     func applicationWillTerminate(_ application: UIApplication) {        
         BoardActive.client.locationManager.startMonitoringSignificantLocationChanges()
     }
-    
-    
-```
-For update data in background mode we need to set below function. 
-```swift 
-    func applicationDidEnterBackground(_ application: UIApplication) {
-        backgroundTask =  application.beginBackgroundTask(withName: "MyTask", expirationHandler: {
-            application.endBackgroundTask(self.backgroundTask)
-            self.backgroundTask = UIBackgroundTaskInvalid
-        })
-        DispatchQueue.global(qos: .background).async {
-            application.endBackgroundTask(self.backgroundTask)
-            self.backgroundTask = UIBackgroundTaskInvalid
-        }
-    }
-
 
 ```
 
@@ -351,9 +402,8 @@ There is an example app included in the repo's code under ["Example"](https://gi
 
 ## Ask for Help
 
-Our team wants to help. Please contact us 
+Our team wants to help. Please contact us
 * Call us: [(678) 383-2200](tel:+6494461709)
 * Email Us [support@boardactive.com](mailto:info@boardactive.com)
 * Online Support [Web Site](https://www.boardactive.com/)
-
 

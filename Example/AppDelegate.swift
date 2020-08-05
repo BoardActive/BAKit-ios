@@ -24,21 +24,20 @@ protocol NotificationDelegate: NSObject {
 class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate  {
     var window: UIWindow?
     
-    var backgroundTask = UIBackgroundTaskIdentifier()
     public weak var notificationDelegate: NotificationDelegate?
     private let categoryIdentifier = "PreviewNotification"
     private let authOptions = UNAuthorizationOptions(arrayLiteral: [.alert, .badge, .sound])
+    
+    //Flags use to manage notification behaviour in various states
     var isNotificationStatusActive = false
     var isApplicationInBackground = false
     var isAppActive = false
     var isReceviedEventUpdated = false
-    private var notificationPermission = false
 
     func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
         FirebaseApp.configure()
         Messaging.messaging().delegate = self
         UNUserNotificationCenter.current().delegate = self
-//        application.applicationIconBadgeNumber = UserDefaults.extensions.badge
         return true
     }
     
@@ -70,19 +69,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
     func applicationDidEnterBackground(_ application: UIApplication) {
         isApplicationInBackground = true
         isAppActive = false
-        backgroundTask =  application.beginBackgroundTask(withName: "MyTask", expirationHandler: {
-            application.endBackgroundTask(self.backgroundTask)
-            self.backgroundTask = UIBackgroundTaskInvalid
-        })
-        
-        DispatchQueue.global(qos: .background).async {
-            print("This is run on the background queue")
-            application.endBackgroundTask(self.backgroundTask)
-            self.backgroundTask = UIBackgroundTaskInvalid
-            DispatchQueue.main.async {
-                print("This is run on the main queue, after the previous code in outer block")
-            }
-        }
     }
     
     
@@ -123,27 +109,7 @@ extension AppDelegate {
                 
                 let userInfo = UserInfo.init(fromDictionary: parsedJSON)
                 StorageObject.container.userInfo = userInfo
-                
                 self.updatePermissionStates()
-                
-//                var locationSharingEnable = false
-//
-//                if CLLocationManager.locationServicesEnabled() {
-//                     switch CLLocationManager.authorizationStatus() {
-//                        case .notDetermined, .restricted, .denied:
-//                            locationSharingEnable = false
-//
-//                        case .authorizedAlways, .authorizedWhenInUse:
-//                            locationSharingEnable = true
-//                        default:
-//                            locationSharingEnable = false
-//                    }
-//                }
-//
-//                let dictPara: [String: Any] = ["notificationPermission": self.notificationPermission,
-//                                               "locationPermission": locationSharingEnable]
-//                self.updateUserAttriubtes(dictParameter: dictPara)
-
             }
         }
        
@@ -203,15 +169,16 @@ extension AppDelegate {
         }
         
         center.getNotificationSettings { (settings) in
+            var notificationPermission = false
             if(settings.authorizationStatus == .authorized)
             {
-                self.notificationPermission = true
+                notificationPermission = true
             }
             else
             {
-                self.notificationPermission = false
+                notificationPermission = false
             }
-            let dictPara: [String: Any] = ["notificationPermission": self.notificationPermission,
+            let dictPara: [String: Any] = ["notificationPermission": notificationPermission,
                                            "locationPermission": locationSharingEnable]
             self.updateUserAttriubtes(dictParameter: dictPara)
         }
@@ -291,9 +258,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         }
         
         let userInfo = response.notification.request.content.userInfo as! [String: Any]
-        print(userInfo)
-        let tempUserInfo = userInfo
-        StorageObject.container.notification = CoreDataStack.sharedInstance.createNotificationModel(fromDictionary: tempUserInfo)
+        StorageObject.container.notification = CoreDataStack.sharedInstance.createNotificationModel(fromDictionary: userInfo)
         guard let notificationModel = StorageObject.container.notification else {
             return
         }
@@ -301,7 +266,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         if isApplicationInBackground && !isNotificationStatusActive {
            isNotificationStatusActive = false
            isApplicationInBackground = false
-           if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId, let notificationId = notificationModel.notificationId {
+           if let _ = notificationModel.aps, let _ = notificationModel.messageId, let _ = notificationModel.gcmmessageId, let _ = notificationModel.notificationId {
             if (isReceviedEventUpdated) {
                 self.notificationDelegate?.appReceivedRemoteNotificationInForeground(notification: userInfo)
             } else {
