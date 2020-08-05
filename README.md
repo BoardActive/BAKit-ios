@@ -379,8 +379,8 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 Add the following to monitor for significant location updates whilst the app is terminated.
 ```swift
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
-        UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedStringKey.font: UIFont(name: "Montserrat-Regular", size: 18.0)!],for: .normal)
-        if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
+
+    if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
             let locationManager = CLLocationManager()
             if CLLocationManager.locationServicesEnabled() {
                 locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
