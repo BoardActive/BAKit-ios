@@ -401,6 +401,11 @@ Add the following to monitor for significant location updates whilst the app is 
     }
 
 ```
+Add the below method in the controller from which you want to start location and notification services.
+```swift
+(UIApplication.shared.delegate! as! AppDelegate).setupSDK()
+```
+
 
 ## Download Example App Source Code
 There is an example app included in the repo's code under ["Example"](https://github.com/BoardActive/BAKit-ios/tree/master/Example).
