@@ -56,7 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
                 locationManager.allowsBackgroundLocationUpdates = true
                 locationManager.startMonitoringSignificantLocationChanges()
         }
-        NotificationCenter.default.addObserver(self, selector: #selector(updatePermissionStates), name: Notification.Name("Update user permission states"), object: nil)
+        NotificationCenter.default.addObserver(BoardActive.client, selector: #selector(BoardActive.client.updatePermissionStates), name: Notification.Name("Update user permission states"), object: nil)
         return true
     }
     
@@ -109,7 +109,6 @@ extension AppDelegate {
                 
                 let userInfo = UserInfo.init(fromDictionary: parsedJSON)
                 StorageObject.container.userInfo = userInfo
-                self.updatePermissionStates()
             }
         }
        
@@ -138,7 +137,7 @@ extension AppDelegate {
                 BoardActive.client.userDefaults?.set(Date().iso8601, forKey: "dateNotificationRequested")
                 BoardActive.client.userDefaults?.synchronize()
             }
-
+            BoardActive.client.updatePermissionStates()
             guard error == nil, granted else {
                 return
             }
@@ -146,49 +145,6 @@ extension AppDelegate {
         
         DispatchQueue.main.async {
             UIApplication.shared.registerForRemoteNotifications()
-        }
-    }
-    
-    @objc func updatePermissionStates() {
-        if (StorageObject.container.userInfo == nil) {
-            return
-        }
-        var locationSharingEnable = false
-        let center = UNUserNotificationCenter.current()
-
-        if CLLocationManager.locationServicesEnabled() {
-             switch CLLocationManager.authorizationStatus() {
-                case .notDetermined, .restricted, .denied:
-                    locationSharingEnable = false
-                
-                case .authorizedAlways, .authorizedWhenInUse:
-                    locationSharingEnable = true
-                default:
-                    locationSharingEnable = false
-            }
-        }
-        
-        center.getNotificationSettings { (settings) in
-            var notificationPermission = false
-            if(settings.authorizationStatus == .authorized)
-            {
-                notificationPermission = true
-            }
-            else
-            {
-                notificationPermission = false
-            }
-            let dictPara: [String: Any] = ["notificationPermission": notificationPermission,
-                                           "locationPermission": locationSharingEnable]
-            self.updateUserAttriubtes(dictParameter: dictPara)
-        }
-    }
-    
-    fileprivate func updateUserAttriubtes(dictParameter: [String: Any] = [:]) {
-        var tempData = StorageObject.container.userInfo?.toDictionary()
-        tempData?["attributes"] =  ["stock": dictParameter]
-        BoardActive.client.updateUserData(body: tempData!) { (response, error) in
-            print(response as Any)
         }
     }
 }
@@ -239,7 +195,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         let userInfo = notification.request.content.userInfo as! [String: Any]
         
         if userInfo["notificationId"] as? String == "0000001" {
-                 BoardActive.client.sendNotification(msg:"willPresentNotification")
             handleNotification(application: UIApplication.shared, userInfo: userInfo)
         }
         
