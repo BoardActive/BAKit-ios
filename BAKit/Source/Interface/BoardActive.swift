@@ -74,7 +74,9 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
      */
     public func monitorLocation() {
         BoardActive.client.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        BoardActive.client.locationManager.distanceFilter = 10
+//        BoardActive.client.locationManager.distanceFilter = 10
+        BoardActive.client.locationManager.activityType = .otherNavigation
+
         BoardActive.client.locationManager.delegate = self
         BoardActive.client.locationManager.requestAlwaysAuthorization()
         BoardActive.client.locationManager.startUpdatingLocation()
@@ -121,7 +123,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
             postLocation(location: location)
         }
         
-        if let currentLocation = BoardActive.client.currentLocation, location.distance(from: currentLocation) < 10.0 {
+        if let currentLocation = BoardActive.client.currentLocation, location.distance(from: currentLocation) < 5.0 {
             BoardActive.client.distanceBetweenLocations = (BoardActive.client.distanceBetweenLocations ?? 0.0) + location.distance(from: currentLocation)
         } else {
             postLocation(location: location)
@@ -258,7 +260,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
             String.HeaderKeys.DeviceTokenHeader: tokenString,
             String.HeaderKeys.DeviceTypeHeader: String.HeaderValues.DeviceType,
             String.HeaderKeys.HostHeader: hostKey,
-            String.HeaderKeys.IsTestApp: "1",
+            String.HeaderKeys.IsTestApp: "0",
             String.HeaderKeys.UUIDHeader: UIDevice.current.identifierForVendor!.uuidString,
         ]
         return headers
