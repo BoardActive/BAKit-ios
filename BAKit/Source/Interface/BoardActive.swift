@@ -177,8 +177,6 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
             return
         }
         
-        localNotificationifFailed()
-        
         switch clError.errorCode {
         case 0:
             os_log("\n[BoardActive] didFailWithError :: Error: Location Unknown \n")
@@ -208,8 +206,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
             isAppAuthorized = true
         }
         userDefaults?.synchronize()
-
-//        BoardActive.client.editUser(attributes: Attributes(fromDictionary: ["locationPermission": isAppAuthorized]), httpMethod: String.HTTPMethod.PUT)
+        BoardActive.client.updatePermissionStates()
     }
     
     /**
@@ -514,31 +511,37 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
         return nil
     }
     
-    public func sendNotification(msg : String) {
-        let content = UNMutableNotificationContent()
-        content.title = "Terminate state notification"
-        content.subtitle = msg
-        
-        
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
-        let request = UNNotificationRequest(identifier: "notification.id.01", content: content, trigger: trigger)
-        
-        // 4
-        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-    }
-    
-    func localNotificationifFailed() {
-        let content = UNMutableNotificationContent()
-        content.title = "Test notification failed"
-        content.subtitle = "This is a test notification failed"
-        
-        
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
-        let request = UNNotificationRequest(identifier: "notification.id.01", content: content, trigger: trigger)
-        
-        // 4
-//        UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-    }
+    //Find and update the location permission and notification permission in the backend.
+       @objc public func updatePermissionStates() {
+           var locationSharingEnable = false
+           let center = UNUserNotificationCenter.current()
 
-    
+           if CLLocationManager.locationServicesEnabled() {
+                switch CLLocationManager.authorizationStatus() {
+                   case .notDetermined, .restricted, .denied:
+                       locationSharingEnable = false
+
+                   case .authorizedAlways, .authorizedWhenInUse:
+                       locationSharingEnable = true
+                   default:
+                       locationSharingEnable = false
+               }
+           }
+
+           center.getNotificationSettings { (settings) in
+               var notificationPermission = false
+               if(settings.authorizationStatus == .authorized) {
+                   notificationPermission = true
+
+               } else {
+                   notificationPermission = false
+               }
+               let dictPara: [String: Any] = ["notificationPermission": notificationPermission,
+                                              "locationPermission": locationSharingEnable]
+               let body =  ["attributes" : ["stock": dictPara]]
+               BoardActive.client.updateUserData(body: body) { (response, error) in
+                 print(response as Any)
+               }
+           }
+       }
 }

@@ -1,5 +1,5 @@
 PODS:
-  - BAKit-iOS (2.0.7)
+  - BAKit-iOS (2.0.9)
   - Crashlytics (3.13.4):
     - Fabric (~> 1.10.2)
   - Fabric (1.10.2)
@@ -710,7 +710,7 @@ PODS:
   - Quick (2.1.0)
 
 DEPENDENCIES:
-  - BAKit-iOS
+  - BAKit-iOS (from `../`)
   - Crashlytics (~> 3.13.4)
   - Fabric (~> 1.10.2)
   - Firebase/Core (~> 5.0)
@@ -721,7 +721,6 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - BAKit-iOS
     - Crashlytics
     - Fabric
     - Firebase
@@ -743,8 +742,12 @@ SPEC REPOS:
     - Protobuf
     - Quick
 
+EXTERNAL SOURCES:
+  BAKit-iOS:
+    :path: "../"
+
 SPEC CHECKSUMS:
-  BAKit-iOS: 891c3490168b7bd161f5f3a5e3e76adbe8d55a07
+  BAKit-iOS: f664d0943700bcc89f12ec3574ea788a9c51211e
   Crashlytics: 2dfd686bcb918dc10ee0e76f7f853fe42c7bd552
   Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
   Firebase: 0c8cf33f266410c61ab3e2265cfa412200351d9c
@@ -766,6 +769,6 @@ SPEC CHECKSUMS:
   Protobuf: 1097ca58584c8d9be81bfbf2c5ff5975648dd87a
   Quick: 4be43f6634acfa727dd106bdf3929ce125ffa79d
 
-PODFILE CHECKSUM: 9c99dfbe87029b63ecba719421c5cf8c3263d90d
+PODFILE CHECKSUM: d2527dfb2cecca99c32af3281e186bf3021ac173
 
 COCOAPODS: 1.9.3
