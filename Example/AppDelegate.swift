@@ -45,7 +45,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedStringKey.font: UIFont(name: "Montserrat-Regular", size: 18.0)!],for: .normal)
         os_log("\n[AppDelegate] didFinishLaunchingWithOptions :: BADGE NUMBER :: %s \n", application.applicationIconBadgeNumber.description)
-        application.applicationIconBadgeNumber = 0
         if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
             isNotificationStatusActive = true
             //You have a location when app is in killed/ not running state
@@ -74,6 +73,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
     
     
     func applicationDidBecomeActive(_ application: UIApplication) {
+        application.applicationIconBadgeNumber = 0
         if (isApplicationInBackground) {
             NotificationCenter.default.post(name: Notification.Name("Update user permission states"), object: nil)
         }
