@@ -362,6 +362,8 @@ Add the following to monitor for significant location updates whilst the app is 
             NotificationCenter.default.post(name: Notification.Name("Update user permission states"), object: nil)
         }
         isAppActive = true
+        application.applicationIconBadgeNumber = 0
+
     }
 
     extension AppDelegate: CLLocationManagerDelegate {
