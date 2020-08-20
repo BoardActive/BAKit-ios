@@ -73,6 +73,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
     
     
     func applicationDidBecomeActive(_ application: UIApplication) {
+        application.applicationIconBadgeNumber = 0
         if (isApplicationInBackground) {
             NotificationCenter.default.post(name: Notification.Name("Update user permission states"), object: nil)
         }

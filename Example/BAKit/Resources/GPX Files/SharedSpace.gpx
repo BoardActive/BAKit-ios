@@ -12,7 +12,10 @@
     <!--url>https://www.google.co.uk/maps/dir/SharedSpace Cobb, 2430 Herodian Way, Smyrna, GA 30080/Olive Garden Italian Restaurant, Cobb Parkway Southeast, Smyrna, GA/SharedSpace Cobb, Herodian Way, Smyrna, GA/Del Taco, Cobb Parkway Southeast, Smyrna, GA/SharedSpace Cobb, Herodian Way, Smyrna, GA/@33.8922046,-84.477252,18z/data=!3m1!4b1!4m32!4m31!1m5!1m1!1s0x88f5105383ca446b:0x64680fe263c380fd!2m2!1d-84.4746104!2d33.8929836!1m5!1m1!1s0x88f510544b7bbaa1:0xae868a3f9dedf8a0!2m2!1d-84.4764475!2d33.8920901!1m5!1m1!1s0x88f5105383ca446b:0x64680fe263c380fd!2m2!1d-84.4746104!2d33.8929836!1m5!1m1!1s0x88f51054111d61e7:0xc43c273d77ee38da!2m2!1d-84.4758806!2d33.8913171!1m5!1m1!1s0x88f5105383ca446b:0x64680fe263c380fd!2m2!1d-84.4746104!2d33.8929836!3e0?hl=en</url-->
     <time>2019-04-30T14:04:10Z</time>
   </metadata>
-  <wpt lat="23.041984408560765" lon="72.55855381278022">
+<!--  <wpt lat="23.041984408560765" lon="72.55855381278022">
     <name>WP001</name>
+  </wpt>-->
+  <wpt lat="33.893858623030006" lon="-84.4698489193815">
+    <name>WP187</name>
   </wpt>
 </gpx>
