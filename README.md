@@ -346,7 +346,7 @@ Add the following to monitor for significant location updates whilst the app is 
     if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
             let locationManager = CLLocationManager()
             if CLLocationManager.locationServicesEnabled() {
-                locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+                locationManager.desiredAccuracy = kCLLocationAccuracyBest
                 locationManager.delegate = self
                 locationManager.pausesLocationUpdatesAutomatically = false
                 locationManager.allowsBackgroundLocationUpdates = true
