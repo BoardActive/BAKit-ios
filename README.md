@@ -358,11 +358,12 @@ Add the following to monitor for significant location updates whilst the app is 
     }
     
     func applicationDidBecomeActive(_ application: UIApplication) {
+            application.applicationIconBadgeNumber = 0
+
         if (isApplicationInBackground) {
             NotificationCenter.default.post(name: Notification.Name("Update user permission states"), object: nil)
         }
         isAppActive = true
-        application.applicationIconBadgeNumber = 0
 
     }
 
