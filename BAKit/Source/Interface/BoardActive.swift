@@ -9,6 +9,7 @@ import CoreLocation
 import Foundation
 import os.log
 import UIKit
+import CoreMotion
 
 public enum NetworkError: Error {
     case BadJSON
@@ -49,7 +50,8 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
     private let locationManager = CLLocationManager()
     public var currentLocation: CLLocation?
     public var distanceBetweenLocations: CLLocationDistance?
-
+    private let activityManager = CMMotionActivityManager()
+    
     private override init() {}
 
     /**
@@ -81,6 +83,16 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
         BoardActive.client.locationManager.startMonitoringSignificantLocationChanges()
         BoardActive.client.locationManager.pausesLocationUpdatesAutomatically = false
         BoardActive.client.locationManager.allowsBackgroundLocationUpdates=true
+        
+        activityManager.startActivityUpdates(to: OperationQueue.main) { (handler) in
+            if (handler?.stationary ?? false) {
+                BoardActive.client.stopUpdatingLocation()
+                
+            } else {
+                BoardActive.client.locationManager.startUpdatingLocation()
+            }
+            print(handler)
+        }
     }
     
       /**
@@ -129,6 +141,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
         }
         
         BoardActive.client.currentLocation = location
+        BoardActive.client.stopUpdatingLocation()
     }
     
     public func getAttributes(completionHandler: @escaping([[String: Any]]?, Error?) -> Void) {

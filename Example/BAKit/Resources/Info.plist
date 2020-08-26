@@ -45,6 +45,8 @@
 	<string>Allow location monitoring for full functionality.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Allow location monitoring for full functionality.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Allow device to access motion.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Montserrat-SemiBold.ttf</string>
