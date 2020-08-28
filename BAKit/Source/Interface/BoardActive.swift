@@ -82,16 +82,25 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
         BoardActive.client.locationManager.startUpdatingLocation()
         BoardActive.client.locationManager.startMonitoringSignificantLocationChanges()
         BoardActive.client.locationManager.pausesLocationUpdatesAutomatically = false
-        BoardActive.client.locationManager.allowsBackgroundLocationUpdates=true
+        BoardActive.client.locationManager.allowsBackgroundLocationUpdates = true
         
-        activityManager.startActivityUpdates(to: OperationQueue.main) { (handler) in
-            if (handler?.stationary ?? false) {
-                BoardActive.client.stopUpdatingLocation()
-                
-            } else {
-                BoardActive.client.locationManager.startUpdatingLocation()
+        if (userDefaults?.value(forKey: String.ConfigKeys.IsMotionDetectionEnable) == nil) {
+            let alert = UIAlertController(title: "", message: "Motion detector reduce your battery usage, do you want to enable motion detector?", preferredStyle: .alert)
+            let yesAction = UIAlertAction(title: "Yes", style: .default) { (action) in
+                self.userDefaults?.set(true, forKey: String.ConfigKeys.IsMotionDetectionEnable)
+                self.startMotionDetector()
             }
-            print(handler)
+            let noAction = UIAlertAction(title: "No", style: .cancel) {(action) in
+                self.userDefaults?.set(false, forKey: String.ConfigKeys.IsMotionDetectionEnable)
+            }
+            
+            alert.addAction(noAction)
+            alert.addAction(yesAction)
+            
+            UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
+            
+        } else if let isEnable = userDefaults?.value(forKey: String.ConfigKeys.IsMotionDetectionEnable) as? Bool, isEnable {
+            startMotionDetector()
         }
     }
     
@@ -102,6 +111,19 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
             BoardActive.client.locationManager.stopUpdatingLocation()
             BoardActive.client.locationManager.startMonitoringSignificantLocationChanges()
       }
+    
+    
+    func startMotionDetector() {
+        activityManager.startActivityUpdates(to: OperationQueue.main) { (handler) in
+              if (handler?.stationary ?? false) {
+                  BoardActive.client.stopUpdatingLocation()
+                  
+              } else {
+                  BoardActive.client.locationManager.startUpdatingLocation()
+              }
+                print(handler as Any)
+          }
+    }
 
     //MARK: - Core Location
     
@@ -141,7 +163,10 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
         }
         
         BoardActive.client.currentLocation = location
-        BoardActive.client.stopUpdatingLocation()
+        
+        if let isEnable = userDefaults?.value(forKey: String.ConfigKeys.IsMotionDetectionEnable) as? Bool, isEnable {
+            BoardActive.client.stopUpdatingLocation()
+        }
     }
     
     public func getAttributes(completionHandler: @escaping([[String: Any]]?, Error?) -> Void) {

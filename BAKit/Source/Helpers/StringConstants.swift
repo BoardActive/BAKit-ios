@@ -23,6 +23,7 @@ public extension String {
         public static let ID = "id"
         public static let DeviceToken = "deviceToken"
         public static let DeviceRegistered = "deviceRegistered"
+        public static let IsMotionDetectionEnable = "isMotionDetectionEnable"
     }
 
     enum HeaderKeys {
