@@ -116,10 +116,10 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
     func startMotionDetector() {
         activityManager.startActivityUpdates(to: OperationQueue.main) { (handler) in
               if (handler?.stationary ?? false) {
-                  BoardActive.client.stopUpdatingLocation()
+                BoardActive.client.locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
                   
               } else {
-                  BoardActive.client.locationManager.startUpdatingLocation()
+                BoardActive.client.locationManager.desiredAccuracy = kCLLocationAccuracyBest
               }
                 print(handler as Any)
           }
@@ -132,6 +132,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
             os_log("\n[BoardActive] didUpdateLocations :: Error: Last location of locations = nil.\n")
             return
         }
+        print("location detected: \(BoardActive.client.locationManager.desiredAccuracy)")
         
         if CLLocationManager.locationServicesEnabled() {
             switch CLLocationManager.authorizationStatus() {
@@ -165,7 +166,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
         BoardActive.client.currentLocation = location
         
         if let isEnable = userDefaults?.value(forKey: String.ConfigKeys.IsMotionDetectionEnable) as? Bool, isEnable {
-            BoardActive.client.stopUpdatingLocation()
+            BoardActive.client.locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
         }
     }
     
