@@ -287,7 +287,7 @@ class HomeViewController: UIViewController, NotificationDelegate, UITableViewDel
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if (indexPath.row == 0) {return}
         if (indexPath.row == 1) {return}
-        let index = indexPath.row - 1
+        let index = indexPath.row - 2
         models?[index].setValue(true, forKeyPath: "tap")
         StorageObject.container.notification = models?[index] as? NotificationModel
         

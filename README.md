@@ -346,7 +346,7 @@ Add the following to monitor for significant location updates whilst the app is 
     if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
             let locationManager = CLLocationManager()
             if CLLocationManager.locationServicesEnabled() {
-                locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+                locationManager.desiredAccuracy = kCLLocationAccuracyBest
                 locationManager.delegate = self
                 locationManager.pausesLocationUpdatesAutomatically = false
                 locationManager.allowsBackgroundLocationUpdates = true
@@ -358,10 +358,13 @@ Add the following to monitor for significant location updates whilst the app is 
     }
     
     func applicationDidBecomeActive(_ application: UIApplication) {
+            application.applicationIconBadgeNumber = 0
+
         if (isApplicationInBackground) {
             NotificationCenter.default.post(name: Notification.Name("Update user permission states"), object: nil)
         }
         isAppActive = true
+
     }
 
     extension AppDelegate: CLLocationManagerDelegate {
@@ -385,6 +388,6 @@ There is an example app included in the repo's code under ["Example"](https://gi
 
 Our team wants to help. Please contact us
 * Call us: [(678) 383-2200](tel:+6494461709)
-* Email Us [support@boardactive.com](mailto:info@boardactive.com)
-* Online Support [Web Site](https://www.boardactive.com/)
+* Email Us [support@boardactive.com](mailto:support@boardactive.com)
+* Online Support [Web Site](https://www.boardactive.com/) 
 

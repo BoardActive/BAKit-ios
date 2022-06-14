@@ -39,14 +39,19 @@
 	<string>9</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSExceptionDomains</key>
+		<dict/>
+	</dict>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Allow location monitoring for full functionality.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Allow location monitoring for full functionality.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Allow location monitoring for full functionality.</string>
-	<key>NSMotionUsageDescription</key>
-	<string>Allow device to access motion.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Montserrat-SemiBold.ttf</string>
@@ -54,7 +59,9 @@
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>fetch</string>
 		<string>location</string>
+		<string>processing</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>

@@ -213,6 +213,7 @@ public class CoreDataStack: NSObject {
         let baKitApp = NSEntityDescription.insertNewObject(forEntityName: "BAKitApp", into: context) as! BAKitApp
         baKitApp.id = app.id
         baKitApp.name = app.name
+        baKitApp.isAppEnable = true
         return baKitApp
     }
         

@@ -23,7 +23,8 @@ protocol NotificationDelegate: NSObject {
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate  {
     var window: UIWindow?
-    
+    var locationManager: CLLocationManager?
+
     public weak var notificationDelegate: NotificationDelegate?
     private let categoryIdentifier = "PreviewNotification"
     private let authOptions = UNAuthorizationOptions(arrayLiteral: [.alert, .badge, .sound])
@@ -45,6 +46,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedStringKey.font: UIFont(name: "Montserrat-Regular", size: 18.0)!],for: .normal)
         os_log("\n[AppDelegate] didFinishLaunchingWithOptions :: BADGE NUMBER :: %s \n", application.applicationIconBadgeNumber.description)
+        locationManager = CLLocationManager()
+        self.locationManager?.delegate = self
+
         if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
             isNotificationStatusActive = true
             //You have a location when app is in killed/ not running state
@@ -56,6 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
                 locationManager.allowsBackgroundLocationUpdates = true
                 locationManager.startMonitoringSignificantLocationChanges()
         }
+
         NotificationCenter.default.addObserver(BoardActive.client, selector: #selector(BoardActive.client.updatePermissionStates), name: Notification.Name("Update user permission states"), object: nil)
         return true
     }
@@ -123,12 +128,18 @@ extension AppDelegate {
             }
         }
         
+        let saveGeofenceLocationOperation = BlockOperation.init {
+            BoardActive.client.storeAppLocations()
+        }
+
         monitorLocationOperation.addDependency(requestNotificationsOperation)
         requestNotificationsOperation.addDependency(registerDeviceOperation)
+        monitorLocationOperation.addDependency(saveGeofenceLocationOperation)
         
         operationQueue.addOperation(registerDeviceOperation)
         operationQueue.addOperation(requestNotificationsOperation)
         operationQueue.addOperation(monitorLocationOperation)
+        operationQueue.addOperation(saveGeofenceLocationOperation)
     }
     
      
@@ -157,7 +168,7 @@ extension AppDelegate: MessagingDelegate {
      * Uploading the FCM token to your application server, so targeted notifications can be sent.
      * Subscribing to any topics.
      */
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         os_log("\n[AppDelegate] didReceiveRegistrationToken :: Firebase registration token: %s \n", fcmToken.debugDescription)
         BoardActive.client.userDefaults?.set(fcmToken, forKey: "deviceToken")
         BoardActive.client.userDefaults?.synchronize()
@@ -284,5 +295,14 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                 break
             }
         }
+    }
+      
+    // called when user Enters a monitored region
+    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
+      print("enter region")
+      if region is CLCircularRegion {
+          print("geofence enter region")
+          BoardActive.client.stopMonitoring(region: region)
+      }
     }
 }
