@@ -277,8 +277,8 @@ class HomeViewController: UIViewController, NotificationDelegate, UITableViewDel
             cell.detailTextLabel?.font = UIFont(name:"Montserrat-Regular", size:14)
             
             if let modelObject = models?[indexPath.row - 2] as? NotificationModel {
-                cell.textLabel?.text = modelObject.title!
-                cell.detailTextLabel?.text = modelObject.date!
+                cell.textLabel?.text = modelObject.title ?? ""
+                cell.detailTextLabel?.text = modelObject.date ?? ""
             }
             return cell
         }

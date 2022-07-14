@@ -52,7 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
         if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
             isNotificationStatusActive = true
             //You have a location when app is in killed/ not running state
-            let locationManager = CLLocationManager()
+                let locationManager = CLLocationManager()
                 locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
                 locationManager.distanceFilter = 10
                 locationManager.delegate = self
@@ -142,7 +142,6 @@ extension AppDelegate {
         operationQueue.addOperation(saveGeofenceLocationOperation)
     }
     
-     
     public func requestNotifications() {
         UNUserNotificationCenter.current().requestAuthorization(options: authOptions) { granted, error in
             if BoardActive.client.userDefaults?.object(forKey: "dateNotificationRequested") == nil {
