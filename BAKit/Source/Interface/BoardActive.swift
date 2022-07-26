@@ -61,8 +61,8 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
     private let locationManager = CLLocationManager()
     private let geofenceNotifyTimeLimit: Double = 86400
     
-    public var previousUserLocation: CLLocation?
-    public var distanceBetweenLocations: CLLocationDistance?
+//    public var previousUserLocation: CLLocation?
+//    public var distanceBetweenLocations: CLLocationDistance?
 
     private override init() {}
 
@@ -113,7 +113,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
             return
         }
         print(locations)
-        if let locationList = userDefaults?.value(forKey: String.ConfigKeys.userLocations) as? [[String: Double]] {
+       /* if let locationList = userDefaults?.value(forKey: String.ConfigKeys.userLocations) as? [[String: Double]] {
             BoardActive.client.previousUserLocation = CLLocation(latitude: locationList.last?[String.NetworkCallRelated.Latitude] ?? 0.0, longitude: locationList.last?[String.NetworkCallRelated.Longitude] ?? 0.0)
         }
         
@@ -124,7 +124,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
         } else if let previousLocation = BoardActive.client.previousUserLocation, location.distance(from: previousLocation) > recordLocationAfterMeters {
             BoardActive.client.previousUserLocation = location
             saveLocationLocally(location: location)
-        }
+        } */
         
 //        if CLLocationManager.locationServicesEnabled() {
 //            switch CLLocationManager.authorizationStatus() {
@@ -240,12 +240,12 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
      Functions as an as needed means of procuring the user's current location.
      - Returns: `CLLocation?` An optional `CLLocation` obtained by `CLLocationManager's` `requestLocation()` function.
      */
-    public func getCurrentLocations() -> Dictionary<String, String>? {
+  /*  public func getCurrentLocations() -> Dictionary<String, String>? {
         if let latitude = previousUserLocation?.coordinate.latitude, let longitude = previousUserLocation?.coordinate.longitude {
             return [String.NetworkCallRelated.Latitude: "\(latitude)", String.NetworkCallRelated.Longitude: "\(longitude)"]
         }
         return nil
-    }
+    } */
 
     /**
      Calls `stopUpdatingLocation` on BoardActive's private CLLocationManager property.

@@ -124,7 +124,7 @@ class LoginViewController: UIViewController {
                         }
                         return
                     }
-                    
+                    StorageObject.container.apps.removeAll()
                     if let parsedJSON = parsedJSON {
                         let payload: LoginPayload = LoginPayload.init(fromDictionary: parsedJSON)
                         CoreDataStack.sharedInstance.deleteStoredData(entity: "BAKitApp")
