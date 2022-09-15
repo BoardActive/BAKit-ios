@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		13C0073735670A090B8E028F /* Pods_AdDrop.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 549B9F891063EB47D529BFA0 /* Pods_AdDrop.framework */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
+		704CE42B2891675D00A74069 /* Radix.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 704CE42A2891675D00A74069 /* Radix.gpx */; };
 		70C52EE628758B0900321A5B /* Ujjain.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 70C52EE528758B0900321A5B /* Ujjain.gpx */; };
 		7EA8624E48BEA767C3BDC430 /* Pods_AdDrop_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B16F744C5154AAEC24C1BF77 /* Pods_AdDrop_Tests.framework */; };
 		9604133822EF830100FBF8AF /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9604133722EF830100FBF8AF /* Montserrat-Regular.ttf */; };
@@ -147,6 +148,7 @@
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		674BA48DC6AEDD6E6F832D87 /* BAKit.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = BAKit.podspec; path = ../BAKit.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		684BC51028B67D0360F8A894 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		704CE42A2891675D00A74069 /* Radix.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Radix.gpx; sourceTree = "<group>"; };
 		70C52EE528758B0900321A5B /* Ujjain.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Ujjain.gpx; sourceTree = "<group>"; };
 		9604133722EF830100FBF8AF /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 		9604133A22EF841000FBF8AF /* Montserrat-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -280,6 +282,7 @@
 				96940A9622FB056800D2303C /* BAKit.xcdatamodeld */,
 				EEA03A7E035B199019AB8F60 /* AppDelegate.swift */,
 				70C52EE528758B0900321A5B /* Ujjain.gpx */,
+				704CE42A2891675D00A74069 /* Radix.gpx */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACD21AFB9204008FA782 /* Example for BAKit */,
 				607FACE81AFB9204008FA782 /* Tests */,
@@ -660,6 +663,7 @@
 			files = (
 				9604133822EF830100FBF8AF /* Montserrat-Regular.ttf in Resources */,
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
+				704CE42B2891675D00A74069 /* Radix.gpx in Resources */,
 				B5A571DE24782C67003C09BD /* ButtonCell.xib in Resources */,
 				96697B71227E51B200794455 /* GoogleService-Info.plist in Resources */,
 				B5A571DC24782C67003C09BD /* DateCell.xib in Resources */,

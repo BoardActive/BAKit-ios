@@ -60,7 +60,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
                 locationManager.allowsBackgroundLocationUpdates = true
                 locationManager.startMonitoringSignificantLocationChanges()
         }
-
         NotificationCenter.default.addObserver(BoardActive.client, selector: #selector(BoardActive.client.updatePermissionStates), name: Notification.Name("Update user permission states"), object: nil)
         return true
     }
@@ -241,10 +240,8 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
            }
             
         } else if isAppActive && !isNotificationStatusActive {
-            
             if (isReceviedEventUpdated) {
                 self.notificationDelegate?.appReceivedRemoteNotificationInForeground(notification: userInfo)
-
             } else {
                 self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
             }
@@ -266,6 +263,14 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     public func handleNotification(application: UIApplication, userInfo: [AnyHashable: Any]) {
         let tempUserInfo = userInfo as! [String: Any]
         print("tempuserinfo: \(tempUserInfo)")
+        if tempUserInfo["type"] as? String == "app_status" && tempUserInfo["placeId"] == nil {
+            let app_status = tempUserInfo["action"] as? String
+            if app_status == "Disable" {
+                UserDefaults.standard.set(false, forKey: "app_status")
+            } else if app_status == "Enable" {
+                UserDefaults.standard.set(true, forKey: "app_status")
+            }
+        }
         isReceviedEventUpdated = true
         StorageObject.container.notification = CoreDataStack.sharedInstance.createNotificationModel(fromDictionary: tempUserInfo)
         

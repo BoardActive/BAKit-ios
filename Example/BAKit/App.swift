@@ -18,6 +18,7 @@ public struct App {
 	public var name : String!
 	var playStoreUrl : AnyObject!
 	var users : [User]!
+    public var isActive : Bool!
 
 
 	/**
@@ -48,6 +49,7 @@ public struct App {
 				users.append(value)
 			}
 		}
+        isActive = dictionary["isActive"] as? Bool
 	}
 
 	/**

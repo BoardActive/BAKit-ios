@@ -211,11 +211,12 @@ public class CoreDataStack: NSObject {
     }
     
     public func createBAKitApp(fromApp app: App) -> BAKitApp {
+        print(app)
         let context = CoreDataStack.sharedInstance.persistentContainer.viewContext
         let baKitApp = NSEntityDescription.insertNewObject(forEntityName: "BAKitApp", into: context) as! BAKitApp
         baKitApp.id = app.id
         baKitApp.name = app.name
-        baKitApp.isAppEnable = true
+        baKitApp.isAppEnable = app.isActive
         return baKitApp
     }
         
