@@ -39,6 +39,9 @@ class LoginViewController: UIViewController {
         activitiController.layer.cornerRadius = 10
         view.addSubview(activitiController)
         
+        emailTextField.text = "taylor@boardactive.com"//"tpowell+bakit@boardactive.com"//"indrajeet.senger@radixweb.com"//
+        passwordTextField.text = "000000"//"Axiom!123"//"Radixweb8"//
+        
         if BoardActive.client.userDefaults!.bool(forKey: String.ConfigKeys.DeviceRegistered), let anEmail = BoardActive.client.userDefaults!.string(forKey: String.ConfigKeys.Email), let aPassword = BoardActive.client.userDefaults!.string(forKey: String.ConfigKeys.Password)  {
             self.emailTextField.text = anEmail
             self.passwordTextField.text = aPassword
@@ -119,32 +122,15 @@ class LoginViewController: UIViewController {
                             self.showCredentialsErrorAlert(error: err!.localizedDescription)
                             self.activitiController.stopAnimating()
                         }
-                        
-                        
                         return
                     }
-                    
+                    StorageObject.container.apps.removeAll()
                     if let parsedJSON = parsedJSON {
                         let payload: LoginPayload = LoginPayload.init(fromDictionary: parsedJSON)
                         CoreDataStack.sharedInstance.deleteStoredData(entity: "BAKitApp")
                         for app in payload.apps {
-//                            let apps = CoreDataStack.sharedInstance.fetchAppsFromDatabase()
                             let newApp = CoreDataStack.sharedInstance.createBAKitApp(fromApp: app)
-//                            let appid =  Int(truncatingIfNeeded: app.id)
-//                            let newAppId =  Int(truncatingIfNeeded: newApp.id)
-                             StorageObject.container.apps.append(newApp)
-//                            if  apps!.count > 0 {
-//                                if appid != newAppId {
-//                                    StorageObject.container.apps.append(newApp)
-//                                } else {
-//                                    CoreDataStack.sharedInstance.mainContext.delete(newApp)
-//                                }
-//                            }
-//                            else
-//                            {
-//                                 StorageObject.container.apps.append(newApp)
-//                            }
-                            
+                            StorageObject.container.apps.append(newApp)
                         }
                         
                         if payload.apps.count < 1 {
@@ -215,7 +201,7 @@ class LoginViewController: UIViewController {
     var count = 0
     
     @IBAction func tapHandler(_ sender: UITapGestureRecognizer) {
-    if count < 6 {
+        if count < 6 {
             count += 1
         } else {
             count = 0

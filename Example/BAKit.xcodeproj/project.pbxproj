@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		13C0073735670A090B8E028F /* Pods_AdDrop.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 549B9F891063EB47D529BFA0 /* Pods_AdDrop.framework */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
+		704CE42B2891675D00A74069 /* Radix.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 704CE42A2891675D00A74069 /* Radix.gpx */; };
+		70C52EE628758B0900321A5B /* Ujjain.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 70C52EE528758B0900321A5B /* Ujjain.gpx */; };
 		7EA8624E48BEA767C3BDC430 /* Pods_AdDrop_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B16F744C5154AAEC24C1BF77 /* Pods_AdDrop_Tests.framework */; };
 		9604133822EF830100FBF8AF /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9604133722EF830100FBF8AF /* Montserrat-Regular.ttf */; };
 		9604133B22EF841000FBF8AF /* Montserrat-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9604133A22EF841000FBF8AF /* Montserrat-SemiBold.ttf */; };
@@ -146,6 +148,8 @@
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		674BA48DC6AEDD6E6F832D87 /* BAKit.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = BAKit.podspec; path = ../BAKit.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		684BC51028B67D0360F8A894 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		704CE42A2891675D00A74069 /* Radix.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Radix.gpx; sourceTree = "<group>"; };
+		70C52EE528758B0900321A5B /* Ujjain.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Ujjain.gpx; sourceTree = "<group>"; };
 		9604133722EF830100FBF8AF /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 		9604133A22EF841000FBF8AF /* Montserrat-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-SemiBold.ttf"; sourceTree = "<group>"; };
 		9617529922E9F6F80001C2C3 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -217,6 +221,12 @@
 		EEA03A7E035B199019AB8F60 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EEA03E92F7317CD0DF20CE77 /* AdDrop.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = AdDrop.entitlements; sourceTree = SOURCE_ROOT; };
 		EF4155C61E4733FF09DCA066 /* Pods-AdDrop.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AdDrop.release.xcconfig"; path = "Target Support Files/Pods-AdDrop/Pods-AdDrop.release.xcconfig"; sourceTree = "<group>"; };
+		F109DB9C28522B74002642F3 /* Railway_Station.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Railway_Station.gpx; sourceTree = "<group>"; };
+		F10F5D0E2848CDBB00BD054F /* StatueOfUnity.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = StatueOfUnity.gpx; sourceTree = "<group>"; };
+		F157A2AC28530A6500F9AF0D /* Vadodara.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Vadodara.gpx; sourceTree = "<group>"; };
+		F157A2AE28530B1200F9AF0D /* Anand.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Anand.gpx; sourceTree = "<group>"; };
+		F157A2B028530BD600F9AF0D /* Ujjain.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Ujjain.gpx; sourceTree = "<group>"; };
+		F15833F9284762D100AE89EE /* GeofenceDummyLocation.gpx */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = GeofenceDummyLocation.gpx; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -271,6 +281,8 @@
 			children = (
 				96940A9622FB056800D2303C /* BAKit.xcdatamodeld */,
 				EEA03A7E035B199019AB8F60 /* AppDelegate.swift */,
+				70C52EE528758B0900321A5B /* Ujjain.gpx */,
+				704CE42A2891675D00A74069 /* Radix.gpx */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACD21AFB9204008FA782 /* Example for BAKit */,
 				607FACE81AFB9204008FA782 /* Tests */,
@@ -364,6 +376,12 @@
 				964AB5B5227EEC190000F938 /* mapstogpx20190406_015905.gpx */,
 				96B06CA422F3885600BAC58B /* Apartment_SharedSpace_Stadium_Battery.gpx */,
 				964AB5B6227EEC190000F938 /* SharedSpace.gpx */,
+				F15833F9284762D100AE89EE /* GeofenceDummyLocation.gpx */,
+				F10F5D0E2848CDBB00BD054F /* StatueOfUnity.gpx */,
+				F109DB9C28522B74002642F3 /* Railway_Station.gpx */,
+				F157A2AC28530A6500F9AF0D /* Vadodara.gpx */,
+				F157A2AE28530B1200F9AF0D /* Anand.gpx */,
+				F157A2B028530BD600F9AF0D /* Ujjain.gpx */,
 			);
 			name = "GPX Files";
 			path = "Resources/GPX Files";
@@ -574,13 +592,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1030;
-				LastUpgradeCheck = 1130;
+				LastUpgradeCheck = 1320;
 				ORGANIZATIONNAME = BoardActive;
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
 						LastSwiftMigration = 0900;
-						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -646,6 +663,7 @@
 			files = (
 				9604133822EF830100FBF8AF /* Montserrat-Regular.ttf in Resources */,
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
+				704CE42B2891675D00A74069 /* Radix.gpx in Resources */,
 				B5A571DE24782C67003C09BD /* ButtonCell.xib in Resources */,
 				96697B71227E51B200794455 /* GoogleService-Info.plist in Resources */,
 				B5A571DC24782C67003C09BD /* DateCell.xib in Resources */,
@@ -654,6 +672,7 @@
 				B5A571E124782C67003C09BD /* RadioButtonCell.xib in Resources */,
 				961ADEAE227125A00014AB18 /* NotificationBoard.storyboard in Resources */,
 				9604133B22EF841000FBF8AF /* Montserrat-SemiBold.ttf in Resources */,
+				70C52EE628758B0900321A5B /* Ujjain.gpx in Resources */,
 				968E17EC2266228C00062C43 /* Assets.xcassets in Resources */,
 				964AB5B8227EEC190000F938 /* SharedSpace.gpx in Resources */,
 				964AB5B7227EEC190000F938 /* mapstogpx20190406_015905.gpx in Resources */,
@@ -765,7 +784,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/Fabric/run\"\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n";
 		};
 		FD4B12556DD2B0FCF04C5110 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -944,6 +963,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -969,7 +989,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1003,6 +1023,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1021,7 +1042,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MODULE_NAME = "";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
@@ -1039,8 +1060,9 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = AdDrop.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development: Dhaval Dave (KPBR929YQ4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development: Dhaval Dave (KPBR929YQ4)";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = DLP7NL6GNK;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1052,7 +1074,7 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/BAKit/BAKit.framework/Headers\"",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/BAKit/Resources/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1060,7 +1082,7 @@
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = com.boardactive.addrop;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = BAKit_SDK_Dev_PP;
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1075,8 +1097,9 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = AdDrop.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development: Dhaval Dave (KPBR929YQ4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development: Dhaval Dave (KPBR929YQ4)";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = DLP7NL6GNK;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1088,7 +1111,7 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/BAKit/BAKit.framework/Headers\"",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/BAKit/Resources/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1096,7 +1119,7 @@
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = com.boardactive.addrop;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = BAKit_SDK_Dev_PP;
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1172,14 +1195,14 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = "Content Extension/Content Extension.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development: Dhaval Dave (KPBR929YQ4)";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = DLP7NL6GNK;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "Content Extension/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1189,6 +1212,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.boardactive.addrop.Content-Extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = BAKit_SDK_Dev_Content_Ex_PP;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1207,13 +1231,13 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = "Content Extension/Content Extension.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development: Dhaval Dave (KPBR929YQ4)";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = DLP7NL6GNK;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "Content Extension/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1222,6 +1246,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.boardactive.addrop.Content-Extension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = BAKit_SDK_Dev_Content_Ex_PP;
 				SKIP_INSTALL = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -1240,14 +1265,14 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = NotificationPersistenceService/NotificationPersistenceService.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development: Dhaval Dave (KPBR929YQ4)";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = DLP7NL6GNK;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = NotificationPersistenceService/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1257,6 +1282,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.boardactive.addrop.NotificationPersistenceService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = BAKit_SDK_Dev_Notifications_PP;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1275,13 +1301,13 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = NotificationPersistenceService/NotificationPersistenceService.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development: Dhaval Dave (KPBR929YQ4)";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = DLP7NL6GNK;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = NotificationPersistenceService/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1290,6 +1316,7 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.boardactive.addrop.NotificationPersistenceService;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = BAKit_SDK_Dev_Notifications_PP;
 				SKIP_INSTALL = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";

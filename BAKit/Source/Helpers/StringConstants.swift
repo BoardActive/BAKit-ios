@@ -23,6 +23,8 @@ public extension String {
         public static let ID = "id"
         public static let DeviceToken = "deviceToken"
         public static let DeviceRegistered = "deviceRegistered"
+        public static let geoFenceLocations = "geoFenceLocations"
+        public static let userLocations = "userLocations"
     }
 
     enum HeaderKeys {
@@ -51,7 +53,8 @@ public extension String {
         static let ApplicationJSON = "application/json"
         static let GzipDeflate = "gzip, deflate"
         static let KeepAlive = "keep-alive"
-        static let DevHostKey = "springer-api.boardactive.com"
+//        static let DevHostKey = "springer-api.boardactive.com"
+        static let DevHostKey = "boardactiveapi.dev.radixweb.net"
         static let ProdHostKey = "api.boardactive.com"
         static let iOS = "iOS"
         static let FCMToken = String.ConfigKeys.DeviceToken

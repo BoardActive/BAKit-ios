@@ -99,12 +99,14 @@ public class CoreDataStack: NSObject {
         if let messageData = dictionary["messageData"] as? [String:Any] {
             notificationModel.messageData = createMessageData(fromDictionary: messageData)
         } else {
-            do {
-                let messageDataData = dictionary["messageData"] as! String
-                let messageData = try JSONSerialization.jsonObject(with: messageDataData.data(using: .utf8)!, options: []) as! [String:Any]
-                notificationModel.messageData = createMessageData(fromDictionary: messageData)
-            } catch {
-                fatalError()
+            let messageDataData = dictionary["messageData"] as? String ?? ""
+            if messageDataData.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 {
+                do {
+                    let messageData = try JSONSerialization.jsonObject(with: messageDataData.data(using: .utf8)!, options: []) as! [String:Any]
+                    notificationModel.messageData = createMessageData(fromDictionary: messageData)
+                } catch {
+                    fatalError()
+                }
             }
         }
         notificationModel.body = dictionary["body"] as? String
@@ -147,9 +149,9 @@ public class CoreDataStack: NSObject {
     public func createAps(fromDictionary dictionary: [String: Any]) -> Aps {
         let context = CoreDataStack.sharedInstance.persistentContainer.viewContext
         let aps = NSEntityDescription.insertNewObject(forEntityName: "Aps", into: context) as! Aps
-        aps.badge = dictionary["badge"] as! Int64
-        aps.contentavailable = dictionary["content-available"] as! Int64
-        aps.mutablecontent = dictionary["mutable-content"] as! Int64
+        aps.badge = dictionary["badge"] as? Int64 ?? 0
+        aps.contentavailable = dictionary["content-available"] as? Int64 ?? 0
+        aps.mutablecontent = dictionary["mutable-content"] as? Int64 ?? 0
         aps.category = dictionary["category"] as? String
         aps.sound = dictionary["sound"] as? String
         if let alert = dictionary["alert"] as? [String:Any] {
@@ -209,10 +211,12 @@ public class CoreDataStack: NSObject {
     }
     
     public func createBAKitApp(fromApp app: App) -> BAKitApp {
+        print(app)
         let context = CoreDataStack.sharedInstance.persistentContainer.viewContext
         let baKitApp = NSEntityDescription.insertNewObject(forEntityName: "BAKitApp", into: context) as! BAKitApp
         baKitApp.id = app.id
         baKitApp.name = app.name
+        baKitApp.isAppEnable = app.isActive
         return baKitApp
     }
         

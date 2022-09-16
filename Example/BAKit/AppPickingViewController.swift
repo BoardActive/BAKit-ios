@@ -106,7 +106,10 @@ class AppPickingViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedApp = StorageObject.container.apps[indexPath.row] as? BAKitApp
-        if let appId = selectedApp?.id, let appKey = BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppKey) {
+        if let appId = selectedApp?.id, let appIsEnable = selectedApp?.isAppEnable, let appKey = BoardActive.client.userDefaults?.string(forKey: String.ConfigKeys.AppKey) {
+            BoardActive.client.removeGeofenceLocations()
+            BoardActive.client.removeSaveUserLocations()
+            BoardActive.client.isAppEnable = appIsEnable
             BoardActive.client.setupEnvironment(appID: "\(appId)", appKey: appKey)
         }
                 

@@ -7,11 +7,9 @@ use_frameworks!
 target 'AdDrop' do
   pod 'BAKit-iOS', :path => '../'
  
-  pod 'Firebase/Core', '~> 5.0'
+  pod 'Firebase/Core'
   pod 'Firebase/Messaging'
-
-  pod 'Fabric', '~> 1.10.2'
-  pod 'Crashlytics', '~> 3.13.4'
+  pod 'Firebase/Crashlytics'
   
   pod 'MaterialComponents'
   
