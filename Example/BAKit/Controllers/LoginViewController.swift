@@ -39,9 +39,6 @@ class LoginViewController: UIViewController {
         activitiController.layer.cornerRadius = 10
         view.addSubview(activitiController)
         
-        emailTextField.text = "taylor@boardactive.com"//"tpowell+bakit@boardactive.com"//"indrajeet.senger@radixweb.com"//
-        passwordTextField.text = "000000"//"Axiom!123"//"Radixweb8"//
-        
         if BoardActive.client.userDefaults!.bool(forKey: String.ConfigKeys.DeviceRegistered), let anEmail = BoardActive.client.userDefaults!.string(forKey: String.ConfigKeys.Email), let aPassword = BoardActive.client.userDefaults!.string(forKey: String.ConfigKeys.Password)  {
             self.emailTextField.text = anEmail
             self.passwordTextField.text = aPassword

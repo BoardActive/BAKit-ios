@@ -1063,7 +1063,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development: Dhaval Dave (KPBR929YQ4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development: Dhaval Dave (KPBR929YQ4)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = DLP7NL6GNK;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1079,6 +1079,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 2.0.2;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = com.boardactive.addrop;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1100,7 +1101,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development: Dhaval Dave (KPBR929YQ4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development: Dhaval Dave (KPBR929YQ4)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = DLP7NL6GNK;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1116,6 +1117,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 2.0.2;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = com.boardactive.addrop;
 				PRODUCT_NAME = "$(TARGET_NAME)";
