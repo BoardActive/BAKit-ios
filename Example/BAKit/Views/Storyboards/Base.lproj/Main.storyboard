@@ -476,10 +476,10 @@
             <size key="intrinsicContentSize" width="512" height="512"/>
         </designable>
         <designable name="xG3-DS-Ga2">
-            <size key="intrinsicContentSize" width="108" height="34"/>
+            <size key="intrinsicContentSize" width="115" height="34"/>
         </designable>
         <designable name="xwo-xf-3oY">
-            <size key="intrinsicContentSize" width="72.5" height="34"/>
+            <size key="intrinsicContentSize" width="79.5" height="34"/>
         </designable>
     </designables>
     <resources>

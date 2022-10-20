@@ -89,7 +89,7 @@ public class CoreDataStack: NSObject {
             notificationModel.aps = createAps(fromDictionary: aps)
         } else {
             do {
-                let apsData = dictionary["aps"] as! String
+                let apsData = dictionary["aps"] as? String ?? ""
                 let aps = try JSONSerialization.jsonObject(with: apsData.data(using: .utf8)!, options: []) as! [String:Any]
                 notificationModel.aps = createAps(fromDictionary: aps)
             } catch {

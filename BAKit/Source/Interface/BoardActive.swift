@@ -53,13 +53,16 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
     public static let client = BoardActive()
     public var userDefaults = UserDefaults(suiteName: "BAKit")
     public var isDevEnv = true
-    public var geofenceRadius = 1000
-    public var recordLocationAfterMeters: Double = 15
+    public var geofenceRadius = 100
+    public var recordLocationAfterMeters: Double = 1000
     
     public var isAppEnable = true
     
     private let locationManager = CLLocationManager()
     private let geofenceNotifyTimeLimit: Double = 86400
+    
+    public var currentLocation = CLLocation()
+    private var isGeoLocationCalled = false
     
 //    public var previousUserLocation: CLLocation?
 //    public var distanceBetweenLocations: CLLocationDistance?
@@ -87,14 +90,15 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
      If error occurs, block will execute with status other than `INTULocationStatusSuccess` and subscription will be kept alive.
      */
     public func monitorLocation() {
-        BoardActive.client.locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        BoardActive.client.locationManager.distanceFilter = 10
+        BoardActive.client.locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+        BoardActive.client.locationManager.distanceFilter = kCLDistanceFilterNone
         BoardActive.client.locationManager.delegate = self
         BoardActive.client.locationManager.requestAlwaysAuthorization()
         BoardActive.client.locationManager.startUpdatingLocation()
-//        BoardActive.client.locationManager.startMonitoringSignificantLocationChanges()
+        BoardActive.client.locationManager.startMonitoringSignificantLocationChanges()
         BoardActive.client.locationManager.pausesLocationUpdatesAutomatically = false
         BoardActive.client.locationManager.allowsBackgroundLocationUpdates=true
+        BoardActive.client.locationManager.activityType = .otherNavigation
     }
     
       /**
@@ -112,7 +116,32 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
             os_log("\n[BoardActive] didUpdateLocations :: Error: Last location of locations = nil.\n")
             return
         }
-        print(locations)
+        BoardActive.client.currentLocation = location
+        
+        if UserDefaults.standard.value(forKey: String.ConfigKeys.traveledDistance) == nil {
+            UserDefaults.standard.set([location.coordinate.latitude, location.coordinate.longitude], forKey: String.ConfigKeys.traveledDistance)
+        } else {
+            let previous = UserDefaults.standard.value(forKey: String.ConfigKeys.traveledDistance) as! NSArray
+            let previousLocation = CLLocation(latitude: previous[0] as! CLLocationDegrees, longitude: previous[1] as! CLLocationDegrees)
+            let distanceInMeters = previousLocation.distance(from: location)
+            if distanceInMeters >= recordLocationAfterMeters {
+                UserDefaults.standard.set([location.coordinate.latitude, location.coordinate.longitude], forKey: String.ConfigKeys.traveledDistance)
+                UserDefaults(suiteName: "BAKit")?.set(nil, forKey: String.ConfigKeys.geoFenceLocations)
+                BoardActive.client.storeAppLocations()
+            }
+        }
+        let flag: Bool = BoardActive.client.userDefaults?.value(forKey: String.ConfigKeys.silentPushReceived) as? Bool ?? false
+        if flag {
+            BoardActive.client.userDefaults?.set(false, forKey: String.ConfigKeys.silentPushReceived)
+            UserDefaults(suiteName: "BAKit")?.set(nil, forKey: String.ConfigKeys.geoFenceLocations)
+            BoardActive.client.storeAppLocations()
+        }
+        
+        if !isGeoLocationCalled {
+            self.isGeoLocationCalled = true
+            BoardActive.client.storeAppLocations()
+        }
+
        /* if let locationList = userDefaults?.value(forKey: String.ConfigKeys.userLocations) as? [[String: Double]] {
             BoardActive.client.previousUserLocation = CLLocation(latitude: locationList.last?[String.NetworkCallRelated.Latitude] ?? 0.0, longitude: locationList.last?[String.NetworkCallRelated.Longitude] ?? 0.0)
         }
@@ -432,14 +461,23 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
         A method to get the list of geofence location.
      */
     public func downloadGeofenceLocation(completionHandler: @escaping ([String: Any]?, Error?) -> Void) {
-        let path = "\(EndPoints.GeoFenceLocation)?limit=10"
-        callServer(path: path, httpMethod: String.HTTPMethod.GET, body: [:]) { parsedJSON, err in
-            guard err == nil else {
-                completionHandler(nil, err)
-                return
+        if BoardActive.client.currentLocation.coordinate.latitude != 0 && BoardActive.client.currentLocation.coordinate.longitude != 0 {
+            print("BoardActive.client.currentLocation: \(BoardActive.client.currentLocation.coordinate.latitude), \(BoardActive.client.currentLocation.coordinate.longitude)")
+            //        let path = "\(EndPoints.GeoFenceLocation)?limit=10"
+            let path = "\(EndPoints.GeoFenceLocation)"
+            let body: [String: Any] = [
+                String.NetworkCallRelated.Latitude: "\(BoardActive.client.currentLocation.coordinate.latitude)",
+                String.NetworkCallRelated.Longitude: "\(BoardActive.client.currentLocation.coordinate.longitude)",
+                String.NetworkCallRelated.Radius: recordLocationAfterMeters*2,
+            ]
+            callServer(path: path, httpMethod: String.HTTPMethod.POST, body: body as Dictionary<String, AnyObject>, verifyAppEnable: false) { parsedJSON, err in
+                guard err == nil else {
+                    completionHandler(nil, err)
+                    return
+                }
+                completionHandler(parsedJSON, nil)
+                print(parsedJSON)
             }
-            completionHandler(parsedJSON, nil)
-            print(parsedJSON)
         }
     }
 
@@ -479,7 +517,7 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
         request.allHTTPHeaderFields = headers
         request.httpMethod = httpMethod
 
-        if (path == EndPoints.Me || path.contains(EndPoints.GeoFenceLocation)) && httpMethod == String.HTTPMethod.GET {
+        if path == EndPoints.Me && httpMethod == String.HTTPMethod.GET {
             request.httpBody = nil
         } else {
             request.httpBody = bodyData as Data
@@ -606,6 +644,10 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
         userDefaults?.set(nil, forKey: String.ConfigKeys.userLocations)
     }
     
+    public func removeTraveledDistance() {
+        userDefaults?.set(nil, forKey: String.ConfigKeys.traveledDistance)
+    }
+    
     /**
      Function save device location locally.
      */
@@ -633,12 +675,19 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
 extension BoardActive {
     public func storeAppLocations() {
         if (userDefaults?.value(forKey: String.ConfigKeys.geoFenceLocations) == nil) {
-            downloadGeofenceLocation { response, error in
+            downloadGeofenceLocation { [self] response, error in
                 if let arrLocations = response?["data"] as? [[String : Any]], error == nil {
                     var locationList: [[String: Any]] = []
+//                    for location in arrLocations {
+//                        let geoFenceLocation = ["longitude":(location["coordinates"] as? [[String: Any]])?.first?["longitude"] ?? "", "latitude":(location["coordinates"] as? [[String: Any]])?.first?["latitude"] ?? "", "locationId": location["id"]!, "radius": location["radius"] as? Int ?? 100, "lastNotificationDate":""] as [String: Any]
+//                        locationList.append(geoFenceLocation)
+//                    }
                     for location in arrLocations {
-                        let geoFenceLocation = ["longitude":(location["coordinates"] as? [[String: Any]])?.first?["longitude"] ?? "", "latitude":(location["coordinates"] as? [[String: Any]])?.first?["latitude"] ?? "", "locationId": location["id"]!, "radius": location["radius"] as? Int ?? 100, "lastNotificationDate":""] as [String: Any]
-                        locationList.append(geoFenceLocation)
+                        let coordinatesArr: [[String: Any]] = location["coordinates"] as? [[String: Any]] ?? []
+                        for coord in coordinatesArr {
+                            let geoFenceLocation = ["longitude":coord["longitude"] ?? "", "latitude":coord["latitude"] ?? "", "locationId": location["id"]!, "radius": location["radius"] as? Int ?? 100, "lastNotificationDate":"", "placeName":location["placeName"] ?? ""] as [String: Any]
+                            locationList.append(geoFenceLocation)
+                        }
                     }
                     self.userDefaults?.set(locationList, forKey: String.ConfigKeys.geoFenceLocations)
                     self.setupRegion()
@@ -685,6 +734,7 @@ extension BoardActive {
 
         region.notifyOnEntry = true
         region.notifyOnExit = false
+        locationManager.requestAlwaysAuthorization()
         locationManager.startMonitoring(for: region)
     }
     

@@ -58,6 +58,9 @@ class NotificationCollectionViewController: UICollectionViewController {
     
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if let urlString = StorageObject.container.notification?.imageUrl, !urlString.isEmpty {
+            return 2
+        }
         return 6
     }
     
@@ -78,7 +81,7 @@ class NotificationCollectionViewController: UICollectionViewController {
         
         if indexPath.row == 1 {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: titleLabelReuseIdentifier, for: indexPath) as! TitleCollectionViewCell
-            guard let title = StorageObject.container.notification?.messageData?.title, let body = StorageObject.container.notification?.body else {
+            guard let title = StorageObject.container.notification?.title, let body = StorageObject.container.notification?.body else {
                 cell.height = 0
                 cell.width = 0
                 cell.isHidden = true
@@ -129,6 +132,7 @@ class NotificationCollectionViewController: UICollectionViewController {
                 cell.emailButton.width = 0
                 cell.emailButton.height = 0
                 cell.emailButton.isHidden = true
+                cell.contactLbl.isHidden = true
             }
             
             if (StorageObject.container.notification?.messageData?.storeAddress) != nil {
@@ -191,6 +195,7 @@ class NotificationCollectionViewController: UICollectionViewController {
                 cell.youTubeButton.width = 0
                 cell.youTubeButton.height = 0
                 cell.youTubeButton.isHidden = true
+                cell.findUsLbl.isHidden = true
             }
             cell.layoutIfNeeded()
             return cell
@@ -303,7 +308,10 @@ class NotificationCollectionViewController: UICollectionViewController {
 extension NotificationCollectionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if indexPath.row == 0 {
-            return CGSize(width: 370, height: 194)
+            if let urlString = StorageObject.container.notification?.imageUrl, !urlString.isEmpty {
+                return CGSize(width: 370, height: 194)
+            }
+            return CGSize.zero
         }
         if indexPath.row == 1 {
             return CGSize(width: 370, height: 120.5)

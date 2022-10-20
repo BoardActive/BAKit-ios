@@ -21,9 +21,9 @@ protocol NotificationDelegate: NSObject {
 }
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate  {
+class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
-    var locationManager: CLLocationManager?
+    var locationManager: CLLocationManager? //add
 
     public weak var notificationDelegate: NotificationDelegate?
     private let categoryIdentifier = "PreviewNotification"
@@ -46,35 +46,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         UIBarButtonItem.appearance().setTitleTextAttributes([NSAttributedStringKey.font: UIFont(name: "Montserrat-Regular", size: 18.0)!],for: .normal)
         os_log("\n[AppDelegate] didFinishLaunchingWithOptions :: BADGE NUMBER :: %s \n", application.applicationIconBadgeNumber.description)
-        locationManager = CLLocationManager()
-        self.locationManager?.delegate = self
-
+        locationManager = CLLocationManager()//add
+        self.locationManager?.delegate = self//add
+        
         if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
             isNotificationStatusActive = true
             //You have a location when app is in killed/ not running state
-                let locationManager = CLLocationManager()
-                locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
-                locationManager.distanceFilter = 10
-                locationManager.delegate = self
-                locationManager.pausesLocationUpdatesAutomatically = false
-                locationManager.allowsBackgroundLocationUpdates = true
-                locationManager.startMonitoringSignificantLocationChanges()
+                locationManager?.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+                locationManager?.distanceFilter = kCLDistanceFilterNone
+                locationManager?.pausesLocationUpdatesAutomatically = false
+                locationManager?.allowsBackgroundLocationUpdates = true
+                locationManager?.startMonitoringSignificantLocationChanges()
+                locationManager?.activityType = .otherNavigation
+//              locationManager?.requestAlwaysAuthorization()
+                locationManager?.startUpdatingLocation()
         }
         NotificationCenter.default.addObserver(BoardActive.client, selector: #selector(BoardActive.client.updatePermissionStates), name: Notification.Name("Update user permission states"), object: nil)
         return true
     }
-    
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let _: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-         BoardActive.client.postLocation(location: manager.location!)
-    }
-    
+
     func applicationDidEnterBackground(_ application: UIApplication) {
         isApplicationInBackground = true
         isAppActive = false
     }
-    
     
     func applicationDidBecomeActive(_ application: UIApplication) {
         application.applicationIconBadgeNumber = 0
@@ -86,10 +80,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate,CLLocationManagerDelegate 
     
     func applicationWillTerminate(_ application: UIApplication) {
         print("app terminate")
-        CoreDataStack.sharedInstance.saveContext()
+        CoreDataStack.sharedInstance.saveContext()//add
     }
     
-    private func registerCustomCategory() {
+    private func registerCustomCategory() {//add
         var previewNotificationCategory: UNNotificationCategory
         if #available(iOS 11.0, *) {
             previewNotificationCategory = UNNotificationCategory(identifier: categoryIdentifier, actions: [], intentIdentifiers: [], hiddenPreviewsBodyPlaceholder: "", options: [])
@@ -127,18 +121,18 @@ extension AppDelegate {
             }
         }
         
-        let saveGeofenceLocationOperation = BlockOperation.init {
+        let saveGeofenceLocationOperation = BlockOperation.init {//add
             BoardActive.client.storeAppLocations()
         }
 
         monitorLocationOperation.addDependency(requestNotificationsOperation)
         requestNotificationsOperation.addDependency(registerDeviceOperation)
-        monitorLocationOperation.addDependency(saveGeofenceLocationOperation)
+        monitorLocationOperation.addDependency(saveGeofenceLocationOperation)//add
         
         operationQueue.addOperation(registerDeviceOperation)
         operationQueue.addOperation(requestNotificationsOperation)
         operationQueue.addOperation(monitorLocationOperation)
-        operationQueue.addOperation(saveGeofenceLocationOperation)
+        operationQueue.addOperation(saveGeofenceLocationOperation)//add
     }
     
     public func requestNotifications() {
@@ -179,7 +173,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let deviceTokenString = deviceToken.reduce("", { $0 + String(format: "%02X", $1) })
         os_log("\n[AppDelegate] didRegisterForRemoteNotificationsWithDeviceToken :: \nAPNs TOKEN: %s \n", deviceTokenString)
-                
+        
         self.registerCustomCategory()
     }
     
@@ -193,6 +187,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
      (Source: https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1623013-application)
      */
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        if application.applicationState != .active && ( userInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.Place_update || userInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.Campaign_launch) {
+            BoardActive.client.userDefaults?.set(true, forKey: String.ConfigKeys.silentPushReceived)
+        }
         handleNotification(application: application, userInfo: userInfo)
         completionHandler(UIBackgroundFetchResult.newData)
     }
@@ -214,10 +211,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     
     
     /**
-        This delegate method will call when user opens the notifiation from the notification center.
+     This delegate method will call when user opens the notifiation from the notification center.
      */
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        
         guard (response.actionIdentifier == UNNotificationDefaultActionIdentifier) || (response.actionIdentifier == UNNotificationDismissActionIdentifier) else {
             return
         }
@@ -229,15 +225,15 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         }
         
         if isApplicationInBackground && !isNotificationStatusActive {
-           isNotificationStatusActive = false
-           isApplicationInBackground = false
-           if let _ = notificationModel.aps, let _ = notificationModel.messageId, let _ = notificationModel.gcmmessageId, let _ = notificationModel.notificationId {
-            if (isReceviedEventUpdated) {
-                self.notificationDelegate?.appReceivedRemoteNotificationInForeground(notification: userInfo)
-            } else {
-                self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
+            isNotificationStatusActive = false
+            isApplicationInBackground = false
+            if let _ = notificationModel.aps, let _ = notificationModel.messageId, let _ = notificationModel.gcmmessageId, let _ = notificationModel.notificationId {
+                if (isReceviedEventUpdated) {
+                    self.notificationDelegate?.appReceivedRemoteNotificationInForeground(notification: userInfo)
+                } else {
+                    self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
+                }
             }
-           }
             
         } else if isAppActive && !isNotificationStatusActive {
             if (isReceviedEventUpdated) {
@@ -251,7 +247,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             isApplicationInBackground = false
             NotificationCenter.default.post(name: Notification.Name("display"), object: nil)
         }
-               
+
         completionHandler()
     }
     
@@ -261,22 +257,26 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
      - Parameter userInfo: A dictionary that contains information related to the remote notification, potentially including a badge number for the app icon, an alert sound, an alert message to display to the user, a notification identifier, and custom data. The provider originates it as a JSON-defined dictionary that iOS converts to an `NSDictionary` object; the dictionary may contain only property-list objects plus `NSNull`. For more information about the contents of the remote notification dictionary, see Generating a Remote Notification.
      */
     public func handleNotification(application: UIApplication, userInfo: [AnyHashable: Any]) {
+        UserDefaults.standard.removeObject(forKey: "geoFenceLocation_refreshed")
         let tempUserInfo = userInfo as! [String: Any]
         print("tempuserinfo: \(tempUserInfo)")
-        if tempUserInfo["type"] as? String == "app_status" && tempUserInfo["placeId"] == nil {
-            let app_status = tempUserInfo["action"] as? String
-            if app_status == "Disable" {
-                UserDefaults.standard.set(false, forKey: "app_status")
-            } else if app_status == "Enable" {
-                UserDefaults.standard.set(true, forKey: "app_status")
+        if tempUserInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.App_status && tempUserInfo[String.NotificationKeys.PlaceId] == nil {//add
+            let app_status = tempUserInfo[String.NotificationKeys.Action] as? String
+            if app_status == String.NotificationKeys.Disable {
+                UserDefaults.standard.set(false, forKey: String.NotificationKeys.App_status)
+            } else if app_status == String.NotificationKeys.Enable {
+                UserDefaults.standard.set(true, forKey: String.NotificationKeys.App_status)
             }
+        } else if tempUserInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.Place_update || tempUserInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.Campaign_launch{
+            UserDefaults(suiteName: "BAKit")?.set(nil, forKey: String.ConfigKeys.geoFenceLocations)
+            BoardActive.client.storeAppLocations()
         }
         isReceviedEventUpdated = true
         StorageObject.container.notification = CoreDataStack.sharedInstance.createNotificationModel(fromDictionary: tempUserInfo)
         
         //if let _ = (window?.rootViewController as? UINavigationController)?.viewControllers.last as? HomeViewController{
-            NotificationCenter.default.post(name: NSNotification.Name("Refresh HomeViewController Tableview"), object: nil, userInfo: userInfo)
-       // }
+        NotificationCenter.default.post(name: NSNotification.Name("Refresh HomeViewController Tableview"), object: nil, userInfo: userInfo)
+        // }
         guard let notificationModel = StorageObject.container.notification else {
             return
         }
@@ -300,13 +300,52 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             }
         }
     }
-      
+}
+
+extension AppDelegate: CLLocationManagerDelegate {
+
     // called when user Enters a monitored region
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
-      print("enter region")
-      if region is CLCircularRegion {
-          print("geofence enter region")
+        if region is CLCircularRegion {
+          print("entered in region")
           BoardActive.client.stopMonitoring(region: region)
       }
     }
+    
+    func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
+        print("Started monitoring \(manager.monitoredRegions.count) regions")
+    }
+    
+    public func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
+        print("Error in monitoring: \(error.localizedDescription)")
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else {
+            os_log("\n[BoardActive] didUpdateLocations :: Error: Last location of locations = nil.\n")
+            return
+        }
+        BoardActive.client.currentLocation = location
+        
+        let flag: Bool = BoardActive.client.userDefaults?.value(forKey: String.ConfigKeys.silentPushReceived) as? Bool ?? false
+        if flag {
+            BoardActive.client.userDefaults?.set(false, forKey: String.ConfigKeys.silentPushReceived)
+            UserDefaults(suiteName: "BAKit")?.set(nil, forKey: String.ConfigKeys.geoFenceLocations)
+            BoardActive.client.storeAppLocations()
+        }
+        
+        if UserDefaults.standard.value(forKey: String.ConfigKeys.traveledDistance) == nil {
+            UserDefaults.standard.set([location.coordinate.latitude, location.coordinate.longitude], forKey: String.ConfigKeys.traveledDistance)
+        } else {
+            let previous = UserDefaults.standard.value(forKey: String.ConfigKeys.traveledDistance) as! NSArray
+            let previousLocation = CLLocation(latitude: previous[0] as! CLLocationDegrees, longitude: previous[1] as! CLLocationDegrees)
+            let distanceInMeters = previousLocation.distance(from: location)
+            if distanceInMeters >= BoardActive.client.recordLocationAfterMeters {
+                UserDefaults.standard.set([location.coordinate.latitude, location.coordinate.longitude], forKey: String.ConfigKeys.traveledDistance)
+                UserDefaults(suiteName: "BAKit")?.set(nil, forKey: String.ConfigKeys.geoFenceLocations)
+                BoardActive.client.storeAppLocations()
+            }
+        }
+    }
+    
 }

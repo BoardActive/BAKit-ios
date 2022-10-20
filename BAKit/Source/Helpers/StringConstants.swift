@@ -25,6 +25,8 @@ public extension String {
         public static let DeviceRegistered = "deviceRegistered"
         public static let geoFenceLocations = "geoFenceLocations"
         public static let userLocations = "userLocations"
+        public static let traveledDistance = "traveledDistance"
+        public static let silentPushReceived = "silentPushReceived"
     }
 
     enum HeaderKeys {
@@ -73,6 +75,7 @@ public extension String {
         static let Latitude = "latitude"
         static let Longitude = "longitude"
         static let DeviceTime = "deviceTime"
+        static let Radius = "radius"
     }
 
     // MARK: - Event logging related
@@ -92,10 +95,18 @@ public extension String {
     // MARK: - Notification Keys
 
     enum NotificationKeys {
-        static let InfoUpdateNotification = "infoUpdateNotification"
-        static let UserSelectedNotificationId = "com.apple.UNNotificationDefaultActionIdentifier"
-        static let IncrementAppBadge = "IncrementAppBadge"
-        static let DecrementAppBadge = "DecrementAppBadge"
+        public static let InfoUpdateNotification = "infoUpdateNotification"
+        public static let UserSelectedNotificationId = "com.apple.UNNotificationDefaultActionIdentifier"
+        public static let IncrementAppBadge = "IncrementAppBadge"
+        public static let DecrementAppBadge = "DecrementAppBadge"
+        public static let App_status = "app_status"
+        public static let Place_update = "place_update"
+        public static let Campaign_launch = "Campaign_launch"
+        public static let Disable = "Disable"
+        public static let Enable = "Enable"
+        public static let Action = "action"
+        public static let Typee = "type"
+        public static let PlaceId = "placeId"
     }
 
     // MARK: - Config Keys

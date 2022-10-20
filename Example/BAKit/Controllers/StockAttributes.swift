@@ -90,7 +90,7 @@ class StockAttributes: UIViewController {
         let btnBack = UIButton(frame: CGRect(x: 0.0, y: 0.0, width: 32.0, height: 32.0))
         btnBack.setImage(UIImage(named:"back"), for: .normal)
         btnBack.tintColor = .white
-        btnBack.addTarget(self, action: Selector(("btnBack")), for: .touchUpInside)
+        btnBack.addTarget(self, action: #selector(self.btnBack), for: .touchUpInside)
         let baritemBack = UIBarButtonItem(customView: btnBack)
         self.navigationItem.leftBarButtonItems?.removeAll()
         self.navigationItem.leftBarButtonItems = [baritemBack]

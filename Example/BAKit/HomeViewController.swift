@@ -21,7 +21,8 @@ class HomeViewController: UIViewController, NotificationDelegate, UITableViewDel
     private var models: [NSManagedObject]?
     private var isDidLoadCalled: Bool = false
     var indicatorView = UIActivityIndicatorView()
-
+    var appDelegate = UIApplication.shared.delegate as? AppDelegate
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         indicatorView.frame = CGRect(x: (self.view.frame.width/2) - 40, y: (self.view.frame.height/2) - 40, width: 80, height: 80)

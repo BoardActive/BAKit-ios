@@ -9,6 +9,7 @@
 import UIKit
 
 class ContactUsCollectionViewCell: UICollectionViewCell {
+    @IBOutlet weak var contactLbl: UILabel!
     @IBOutlet weak var homepageButton: UIButton!
     @IBOutlet weak var emailButton: UIButton!
     @IBOutlet weak var directionsButton: UIButton!

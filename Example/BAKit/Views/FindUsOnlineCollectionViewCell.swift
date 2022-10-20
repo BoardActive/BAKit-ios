@@ -13,5 +13,5 @@ class FindUsOnlineCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var twitterButton: UIButton!
     @IBOutlet weak var linkedInButton: UIButton!
     @IBOutlet weak var youTubeButton: UIButton!
-    
+    @IBOutlet weak var findUsLbl: UILabel!
 }
