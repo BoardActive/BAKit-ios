@@ -678,6 +678,7 @@ extension BoardActive {
             downloadGeofenceLocation { [self] response, error in
                 if let arrLocations = response?["data"] as? [[String : Any]], error == nil {
                     var locationList: [[String: Any]] = []
+                    /*
 //                    for location in arrLocations {
 //                        let geoFenceLocation = ["longitude":(location["coordinates"] as? [[String: Any]])?.first?["longitude"] ?? "", "latitude":(location["coordinates"] as? [[String: Any]])?.first?["latitude"] ?? "", "locationId": location["id"]!, "radius": location["radius"] as? Int ?? 100, "lastNotificationDate":""] as [String: Any]
 //                        locationList.append(geoFenceLocation)
@@ -688,7 +689,34 @@ extension BoardActive {
                             let geoFenceLocation = ["longitude":coord["longitude"] ?? "", "latitude":coord["latitude"] ?? "", "locationId": location["id"]!, "radius": location["radius"] as? Int ?? 100, "lastNotificationDate":"", "placeName":location["placeName"] ?? ""] as [String: Any]
                             locationList.append(geoFenceLocation)
                         }
+                    } */
+                    self.removeGeofenceLocations()
+                    for location in arrLocations {
+                        let coordinatesArr: [[String: Any]] = location["coordinates"] as? [[String: Any]] ?? []
+                        if coordinatesArr.count > 1 {
+                            var polygon = [CGPoint]()
+                            for coord in coordinatesArr {
+                                let lat = coord["latitude"] is String ? (coord["latitude"] as! NSString).doubleValue : Double(truncating: coord["latitude"] as! NSNumber)
+                                let long = coord["longitude"] is String ? (coord["longitude"] as! NSString).doubleValue : Double(truncating: coord["longitude"] as! NSNumber)
+                                let point = CGPoint(x: lat, y: long)
+                                polygon.append(point)
+                            }
+                            let center = polygonCenterOfMass(polygon: polygon)
+                            var disArr = [CGFloat]()
+                            for coord in coordinatesArr {
+                                let lat = coord["latitude"] is String ? (coord["latitude"] as! NSString).doubleValue : Double(truncating: coord["latitude"] as! NSNumber)
+                                let long = coord["longitude"] is String ? (coord["longitude"] as! NSString).doubleValue : Double(truncating: coord["longitude"] as! NSNumber)
+                                disArr.append(CLLocation(latitude: lat, longitude: long).distance(from: CLLocation(latitude: center.x, longitude: center.y)))
+                            }
+                            let geoFenceLocation = ["latitude":"\(center.x)", "longitude":"\(center.y)", "locationId": location["id"]!, "radius": disArr.max() ?? 100, "lastNotificationDate":"", "placeName":location["placeName"] ?? ""] as [String: Any]
+                            locationList.append(geoFenceLocation)
+                        } else {
+                            let coord = coordinatesArr.first
+                            let geoFenceLocation = ["longitude":coord?["longitude"] ?? "", "latitude":coord?["latitude"] ?? "", "locationId": location["id"]!, "radius": location["radius"] as? Int ?? 100, "lastNotificationDate":"", "placeName":location["placeName"] ?? ""] as [String: Any]
+                            locationList.append(geoFenceLocation)
+                        }
                     }
+                    print("\n------------\nlocationList\n-----------\n\(locationList)\n------------\n")
                     self.userDefaults?.set(locationList, forKey: String.ConfigKeys.geoFenceLocations)
                     self.setupRegion()
                 } else {
@@ -699,6 +727,37 @@ extension BoardActive {
         } else {
             setupRegion()
         }
+    }
+    
+    func signedPolygonArea(polygon: [CGPoint]) -> CGFloat {
+        let nr = polygon.count
+        var area: CGFloat = 0
+        for i in 0 ..< nr {
+            let j = (i + 1) % nr
+            area = area + polygon[i].x * polygon[j].y
+            area = area - polygon[i].y * polygon[j].x
+        }
+        area = area/2.0
+        return area
+    }
+
+    func polygonCenterOfMass(polygon: [CGPoint]) -> CGPoint {
+        let nr = polygon.count
+        var centerX: CGFloat = 0
+        var centerY: CGFloat = 0
+        var area = signedPolygonArea(polygon: polygon)
+        for i in 0 ..< nr {
+            let j = (i + 1) % nr
+            let factor1 = polygon[i].x * polygon[j].y - polygon[j].x * polygon[i].y
+            centerX = centerX + (polygon[i].x + polygon[j].x) * factor1
+            centerY = centerY + (polygon[i].y + polygon[j].y) * factor1
+        }
+        area = area * 6.0
+        let factor2 = 1.0/area
+        centerX = centerX * factor2
+        centerY = centerY * factor2
+        let center = CGPoint.init(x: centerX, y: centerY)
+        return center
     }
     
     private func setupRegion() {

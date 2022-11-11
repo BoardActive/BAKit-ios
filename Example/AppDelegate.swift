@@ -257,7 +257,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
      - Parameter userInfo: A dictionary that contains information related to the remote notification, potentially including a badge number for the app icon, an alert sound, an alert message to display to the user, a notification identifier, and custom data. The provider originates it as a JSON-defined dictionary that iOS converts to an `NSDictionary` object; the dictionary may contain only property-list objects plus `NSNull`. For more information about the contents of the remote notification dictionary, see Generating a Remote Notification.
      */
     public func handleNotification(application: UIApplication, userInfo: [AnyHashable: Any]) {
-        UserDefaults.standard.removeObject(forKey: "geoFenceLocation_refreshed")
         let tempUserInfo = userInfo as! [String: Any]
         print("tempuserinfo: \(tempUserInfo)")
         if tempUserInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.App_status && tempUserInfo[String.NotificationKeys.PlaceId] == nil {//add
@@ -304,7 +303,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 
 extension AppDelegate: CLLocationManagerDelegate {
 
-    // called when user Enters a monitored region
+    // calls when user Enters a monitored region
     func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
         if region is CLCircularRegion {
           print("entered in region")
