@@ -209,7 +209,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         completionHandler(UNNotificationPresentationOptions.init(arrayLiteral: [.badge, .sound, .alert]))
     }
     
-    
     /**
      This delegate method will call when user opens the notifiation from the notification center.
      */
