@@ -115,6 +115,7 @@ public struct Stock {
         if twitterUrl != nil {
             dictionary["twitterUrl"] = twitterUrl
         }
+        dictionary["dateLastOpenedApp"] = Date().iso8601
         return dictionary
     }
 }
