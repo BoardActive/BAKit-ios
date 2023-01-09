@@ -9,9 +9,6 @@
 /* Begin PBXBuildFile section */
 		13C0073735670A090B8E028F /* Pods_AdDrop.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 549B9F891063EB47D529BFA0 /* Pods_AdDrop.framework */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
-		705484B02966CCC500C1F437 /* KD.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 705484AF2966CCC500C1F437 /* KD.gpx */; };
-		705484B22966DB9600C1F437 /* Radix.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 705484B12966DB9600C1F437 /* Radix.gpx */; };
-		705484B42966E19C00C1F437 /* KD2.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 705484B32966E19C00C1F437 /* KD2.gpx */; };
 		7EA8624E48BEA767C3BDC430 /* Pods_AdDrop_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B16F744C5154AAEC24C1BF77 /* Pods_AdDrop_Tests.framework */; };
 		9604133822EF830100FBF8AF /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9604133722EF830100FBF8AF /* Montserrat-Regular.ttf */; };
 		9604133B22EF841000FBF8AF /* Montserrat-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9604133A22EF841000FBF8AF /* Montserrat-SemiBold.ttf */; };
@@ -149,9 +146,6 @@
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		674BA48DC6AEDD6E6F832D87 /* BAKit.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = BAKit.podspec; path = ../BAKit.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		684BC51028B67D0360F8A894 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		705484AF2966CCC500C1F437 /* KD.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = KD.gpx; sourceTree = "<group>"; };
-		705484B12966DB9600C1F437 /* Radix.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Radix.gpx; sourceTree = "<group>"; };
-		705484B32966E19C00C1F437 /* KD2.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = KD2.gpx; sourceTree = "<group>"; };
 		9604133722EF830100FBF8AF /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 		9604133A22EF841000FBF8AF /* Montserrat-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-SemiBold.ttf"; sourceTree = "<group>"; };
 		9617529922E9F6F80001C2C3 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -370,9 +364,6 @@
 				964AB5B5227EEC190000F938 /* mapstogpx20190406_015905.gpx */,
 				96B06CA422F3885600BAC58B /* Apartment_SharedSpace_Stadium_Battery.gpx */,
 				964AB5B6227EEC190000F938 /* SharedSpace.gpx */,
-				705484AF2966CCC500C1F437 /* KD.gpx */,
-				705484B32966E19C00C1F437 /* KD2.gpx */,
-				705484B12966DB9600C1F437 /* Radix.gpx */,
 			);
 			name = "GPX Files";
 			path = "Resources/GPX Files";
@@ -654,7 +645,6 @@
 			files = (
 				9604133822EF830100FBF8AF /* Montserrat-Regular.ttf in Resources */,
 				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
-				705484B02966CCC500C1F437 /* KD.gpx in Resources */,
 				B5A571DE24782C67003C09BD /* ButtonCell.xib in Resources */,
 				96697B71227E51B200794455 /* GoogleService-Info.plist in Resources */,
 				B5A571DC24782C67003C09BD /* DateCell.xib in Resources */,
@@ -666,9 +656,7 @@
 				968E17EC2266228C00062C43 /* Assets.xcassets in Resources */,
 				964AB5B8227EEC190000F938 /* SharedSpace.gpx in Resources */,
 				964AB5B7227EEC190000F938 /* mapstogpx20190406_015905.gpx in Resources */,
-				705484B22966DB9600C1F437 /* Radix.gpx in Resources */,
 				96CACC452265F7A90059FCB0 /* Launch Screen.storyboard in Resources */,
-				705484B42966E19C00C1F437 /* KD2.gpx in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

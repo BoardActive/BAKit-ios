@@ -15,6 +15,7 @@ final class NotificationService: UNNotificationServiceExtension {
     private var bestAttemptContent: UNMutableNotificationContent?
 
     override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
+        print("this didreceive called")
         self.contentHandler = contentHandler
         bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
  
@@ -38,7 +39,7 @@ final class NotificationService: UNNotificationServiceExtension {
 
 extension UNNotificationRequest {
     var attachment: UNNotificationAttachment? {
-        guard let attachmentURL = content.userInfo["urlImageString"] as? String, let imageData = try? Data(contentsOf: URL(string: attachmentURL)!) else {
+        guard let attachmentURL = content.userInfo["imageUrl"] as? String, let imageData = try? Data(contentsOf: URL(string: attachmentURL)!) else {
             return nil
         }
         return try? UNNotificationAttachment(data: imageData, options: nil)
