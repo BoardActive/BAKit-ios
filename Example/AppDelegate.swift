@@ -187,7 +187,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
      (Source: https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1623013-application)
      */
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        if application.applicationState != .active && ( userInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.Place_update || userInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.Campaign_launch) {
+        if application.applicationState != .active && (userInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.Update || userInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.Place_update || userInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.Campaign) {
             BoardActive.client.userDefaults?.set(true, forKey: String.ConfigKeys.silentPushReceived)
         }
         handleNotification(application: application, userInfo: userInfo)
@@ -265,7 +265,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             } else if app_status == String.NotificationKeys.Enable {
                 UserDefaults.standard.set(true, forKey: String.NotificationKeys.App_status)
             }
-        } else if tempUserInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.Place_update || tempUserInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.Campaign_launch{
+        } else if tempUserInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.Place_update || tempUserInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.Update || tempUserInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.Campaign  || tempUserInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.Delete {
             UserDefaults(suiteName: "BAKit")?.set(nil, forKey: String.ConfigKeys.geoFenceLocations)
             BoardActive.client.storeAppLocations()
         }
