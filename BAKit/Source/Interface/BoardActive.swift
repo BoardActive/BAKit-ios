@@ -66,6 +66,9 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
     
 //    public var previousUserLocation: CLLocation?
 //    public var distanceBetweenLocations: CLLocationDistance?
+    
+    public let categoryIdentifier = "PreviewNotification"
+    public let downloadActionIdentifier = "download"
 
     private override init() {}
 
@@ -668,6 +671,29 @@ public class BoardActive: NSObject, CLLocationManagerDelegate {
      */
     private func formatLocation(location: CLLocation) -> Dictionary<String, Double>? {
         return [String.NetworkCallRelated.Latitude: location.coordinate.latitude, String.NetworkCallRelated.Longitude: location.coordinate.longitude]
+    }
+    
+    /**
+     Function download and save image in Photo Gallery.
+     */
+    public func downloadAndSaveImageDownloadFromPush(_ vc: UIViewController, _ strUrl: String) {
+        let alert = UIAlertController(title: "Do you want to download the image?", message:"", preferredStyle: UIAlertController.Style.alert)
+        // add an action (button)
+        alert.addAction(UIAlertAction(title: "Yes", style: UIAlertAction.Style.default) { (action) in
+//            let strUrl = (userInfo["imageUrl"] as? String ?? "").trimmingCharacters(in: .whitespaces)
+            if let url = URL(string: strUrl) {
+                let task = URLSession.shared.dataTask(with: url) { data, response, error in
+                    guard let data = data, error == nil else { return }
+                        UIImageWriteToSavedPhotosAlbum(UIImage(data: data)!, nil, nil, nil)
+                }
+                task.resume()
+            } else {
+                print(strUrl + " is invalid")
+            }
+        })
+        alert.addAction(UIAlertAction(title: "No", style: .destructive))
+        // show the alert
+        vc.present(alert, animated: true, completion: nil)
     }
 }
 

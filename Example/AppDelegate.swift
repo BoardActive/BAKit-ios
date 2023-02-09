@@ -26,7 +26,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var locationManager: CLLocationManager? //add
 
     public weak var notificationDelegate: NotificationDelegate?
-    private let categoryIdentifier = "PreviewNotification"
     private let authOptions = UNAuthorizationOptions(arrayLiteral: [.alert, .badge, .sound])
     
     //Flags use to manage notification behaviour in various states
@@ -82,16 +81,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         print("app terminate")
         CoreDataStack.sharedInstance.saveContext()//add
     }
-    
-    private func registerCustomCategory() {//add
-        var previewNotificationCategory: UNNotificationCategory
-        if #available(iOS 11.0, *) {
-            previewNotificationCategory = UNNotificationCategory(identifier: categoryIdentifier, actions: [], intentIdentifiers: [], hiddenPreviewsBodyPlaceholder: "", options: [])
-        } else {
-            previewNotificationCategory = UNNotificationCategory(identifier: categoryIdentifier, actions: [], intentIdentifiers: [])
-        }
-        UNUserNotificationCenter.current().setNotificationCategories([previewNotificationCategory])
-    }
 }
 
 extension AppDelegate {
@@ -141,6 +130,8 @@ extension AppDelegate {
                 BoardActive.client.userDefaults?.set(Date().iso8601, forKey: "dateNotificationRequested")
                 BoardActive.client.userDefaults?.synchronize()
             }
+            UNUserNotificationCenter.current().delegate = self
+            self.configureCategory()
             BoardActive.client.updatePermissionStates()
             guard error == nil, granted else {
                 return
@@ -173,8 +164,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let deviceTokenString = deviceToken.reduce("", { $0 + String(format: "%02X", $1) })
         os_log("\n[AppDelegate] didRegisterForRemoteNotificationsWithDeviceToken :: \nAPNs TOKEN: %s \n", deviceTokenString)
-        
-        self.registerCustomCategory()
     }
     
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
@@ -209,14 +198,19 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         completionHandler(UNNotificationPresentationOptions.init(arrayLiteral: [.badge, .sound, .alert]))
     }
     
+    private func configureCategory() {
+        // Define Actions
+        let downloadButton = UNNotificationAction(identifier: BoardActive.client.downloadActionIdentifier, title: "Download", options: UNNotificationActionOptions.foreground)
+        // Define Category
+        let downloadCategory = UNNotificationCategory(identifier: BoardActive.client.categoryIdentifier, actions: [downloadButton], intentIdentifiers: [], hiddenPreviewsBodyPlaceholder: "", options: .customDismissAction)
+        // Register Category
+        UNUserNotificationCenter.current().setNotificationCategories([downloadCategory])
+    }
+    
     /**
      This delegate method will call when user opens the notifiation from the notification center.
      */
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        guard (response.actionIdentifier == UNNotificationDefaultActionIdentifier) || (response.actionIdentifier == UNNotificationDismissActionIdentifier) else {
-            return
-        }
-        
         let userInfo = response.notification.request.content.userInfo as! [String: Any]
         StorageObject.container.notification = CoreDataStack.sharedInstance.createNotificationModel(fromDictionary: userInfo)
         guard let notificationModel = StorageObject.container.notification else {
@@ -245,6 +239,10 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             isNotificationStatusActive = true
             isApplicationInBackground = false
             NotificationCenter.default.post(name: Notification.Name("display"), object: nil)
+        }
+        if response.actionIdentifier == BoardActive.client.downloadActionIdentifier {
+            let strUrl = (userInfo["imageUrl"] as? String ?? "").trimmingCharacters(in: .whitespaces)
+            BoardActive.client.downloadAndSaveImageDownloadFromPush((self.window?.rootViewController)!, strUrl)
         }
 
         completionHandler()

@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		13C0073735670A090B8E028F /* Pods_AdDrop.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 549B9F891063EB47D529BFA0 /* Pods_AdDrop.framework */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
+		70F59B7A297001DB006AC491 /* mapstogpx20190406_015905.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 70F59B77297001DB006AC491 /* mapstogpx20190406_015905.gpx */; };
+		70F59B7B297001DB006AC491 /* SharedSpace.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 70F59B78297001DB006AC491 /* SharedSpace.gpx */; };
+		70F59B7C297001DB006AC491 /* Apartment_SharedSpace_Stadium_Battery.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 70F59B79297001DB006AC491 /* Apartment_SharedSpace_Stadium_Battery.gpx */; };
 		7EA8624E48BEA767C3BDC430 /* Pods_AdDrop_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B16F744C5154AAEC24C1BF77 /* Pods_AdDrop_Tests.framework */; };
 		9604133822EF830100FBF8AF /* Montserrat-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9604133722EF830100FBF8AF /* Montserrat-Regular.ttf */; };
 		9604133B22EF841000FBF8AF /* Montserrat-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9604133A22EF841000FBF8AF /* Montserrat-SemiBold.ttf */; };
@@ -23,8 +26,6 @@
 		9633AC3F227CF2BB00B2B692 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9633AC37227CF2BB00B2B692 /* LoginViewController.swift */; };
 		9633C5C923032F870081CFF3 /* PromodDateCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9633C5C823032F870081CFF3 /* PromodDateCollectionViewCell.swift */; };
 		964AB5AB227E85960000F938 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964AB5AA227E85960000F938 /* UserDefaults.swift */; };
-		964AB5B7227EEC190000F938 /* mapstogpx20190406_015905.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 964AB5B5227EEC190000F938 /* mapstogpx20190406_015905.gpx */; };
-		964AB5B8227EEC190000F938 /* SharedSpace.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 964AB5B6227EEC190000F938 /* SharedSpace.gpx */; };
 		9653255C230F7671006E2642 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9653255B230F7671006E2642 /* App.swift */; };
 		9653255E230F767B006E2642 /* Company.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9653255D230F767B006E2642 /* Company.swift */; };
 		96532560230F7681006E2642 /* CreatedBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9653255F230F7681006E2642 /* CreatedBy.swift */; };
@@ -48,7 +49,6 @@
 		9689E11322F204E400A1ABFC /* AppPickingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9689E11122F204E400A1ABFC /* AppPickingViewController.swift */; };
 		968E17EC2266228C00062C43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 963F52682265E3C5005B4C1C /* Assets.xcassets */; };
 		96940A9822FB056800D2303C /* BAKit.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 96940A9622FB056800D2303C /* BAKit.xcdatamodeld */; };
-		96B06CA522F3885600BAC58B /* Apartment_SharedSpace_Stadium_Battery.gpx in Resources */ = {isa = PBXBuildFile; fileRef = 96B06CA422F3885600BAC58B /* Apartment_SharedSpace_Stadium_Battery.gpx */; };
 		96BA7FEA22F29C8000AEB5B8 /* LoginPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BA7FE922F29C7F00AEB5B8 /* LoginPayload.swift */; };
 		96BA7FEF22F2A82D00AEB5B8 /* StorageObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BA7FEE22F2A82D00AEB5B8 /* StorageObject.swift */; };
 		96C0C194230322A00096F2B5 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96C0C193230322A00096F2B5 /* ImageCollectionViewCell.swift */; };
@@ -146,6 +146,9 @@
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		674BA48DC6AEDD6E6F832D87 /* BAKit.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = BAKit.podspec; path = ../BAKit.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		684BC51028B67D0360F8A894 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		70F59B77297001DB006AC491 /* mapstogpx20190406_015905.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = mapstogpx20190406_015905.gpx; sourceTree = "<group>"; };
+		70F59B78297001DB006AC491 /* SharedSpace.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = SharedSpace.gpx; sourceTree = "<group>"; };
+		70F59B79297001DB006AC491 /* Apartment_SharedSpace_Stadium_Battery.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Apartment_SharedSpace_Stadium_Battery.gpx; sourceTree = "<group>"; };
 		9604133722EF830100FBF8AF /* Montserrat-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-Regular.ttf"; sourceTree = "<group>"; };
 		9604133A22EF841000FBF8AF /* Montserrat-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Montserrat-SemiBold.ttf"; sourceTree = "<group>"; };
 		9617529922E9F6F80001C2C3 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -158,8 +161,6 @@
 		9633C5C823032F870081CFF3 /* PromodDateCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromodDateCollectionViewCell.swift; sourceTree = "<group>"; };
 		963F52682265E3C5005B4C1C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		964AB5AA227E85960000F938 /* UserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserDefaults.swift; path = Controllers/UserDefaults.swift; sourceTree = "<group>"; };
-		964AB5B5227EEC190000F938 /* mapstogpx20190406_015905.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = mapstogpx20190406_015905.gpx; sourceTree = "<group>"; };
-		964AB5B6227EEC190000F938 /* SharedSpace.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = SharedSpace.gpx; sourceTree = "<group>"; };
 		9653255B230F7671006E2642 /* App.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		9653255D230F767B006E2642 /* Company.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Company.swift; sourceTree = "<group>"; };
 		9653255F230F7681006E2642 /* CreatedBy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreatedBy.swift; sourceTree = "<group>"; };
@@ -178,7 +179,6 @@
 		96697B70227E51B100794455 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Resources/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9689E11122F204E400A1ABFC /* AppPickingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPickingViewController.swift; sourceTree = "<group>"; };
 		96940A9722FB056800D2303C /* BAKit.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BAKit.xcdatamodel; sourceTree = "<group>"; };
-		96B06CA422F3885600BAC58B /* Apartment_SharedSpace_Stadium_Battery.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Apartment_SharedSpace_Stadium_Battery.gpx; sourceTree = "<group>"; };
 		96BA7FE922F29C7F00AEB5B8 /* LoginPayload.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginPayload.swift; path = Models/LoginPayload.swift; sourceTree = "<group>"; };
 		96BA7FEE22F2A82D00AEB5B8 /* StorageObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageObject.swift; sourceTree = "<group>"; };
 		96C0C193230322A00096F2B5 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -361,9 +361,9 @@
 		964AB5B4227EEC190000F938 /* GPX Files */ = {
 			isa = PBXGroup;
 			children = (
-				964AB5B5227EEC190000F938 /* mapstogpx20190406_015905.gpx */,
-				96B06CA422F3885600BAC58B /* Apartment_SharedSpace_Stadium_Battery.gpx */,
-				964AB5B6227EEC190000F938 /* SharedSpace.gpx */,
+				70F59B79297001DB006AC491 /* Apartment_SharedSpace_Stadium_Battery.gpx */,
+				70F59B77297001DB006AC491 /* mapstogpx20190406_015905.gpx */,
+				70F59B78297001DB006AC491 /* SharedSpace.gpx */,
 			);
 			name = "GPX Files";
 			path = "Resources/GPX Files";
@@ -648,14 +648,14 @@
 				B5A571DE24782C67003C09BD /* ButtonCell.xib in Resources */,
 				96697B71227E51B200794455 /* GoogleService-Info.plist in Resources */,
 				B5A571DC24782C67003C09BD /* DateCell.xib in Resources */,
+				70F59B7A297001DB006AC491 /* mapstogpx20190406_015905.gpx in Resources */,
 				B5A571DB24782C67003C09BD /* TextBoxCell.xib in Resources */,
-				96B06CA522F3885600BAC58B /* Apartment_SharedSpace_Stadium_Battery.gpx in Resources */,
 				B5A571E124782C67003C09BD /* RadioButtonCell.xib in Resources */,
 				961ADEAE227125A00014AB18 /* NotificationBoard.storyboard in Resources */,
 				9604133B22EF841000FBF8AF /* Montserrat-SemiBold.ttf in Resources */,
+				70F59B7C297001DB006AC491 /* Apartment_SharedSpace_Stadium_Battery.gpx in Resources */,
 				968E17EC2266228C00062C43 /* Assets.xcassets in Resources */,
-				964AB5B8227EEC190000F938 /* SharedSpace.gpx in Resources */,
-				964AB5B7227EEC190000F938 /* mapstogpx20190406_015905.gpx in Resources */,
+				70F59B7B297001DB006AC491 /* SharedSpace.gpx in Resources */,
 				96CACC452265F7A90059FCB0 /* Launch Screen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

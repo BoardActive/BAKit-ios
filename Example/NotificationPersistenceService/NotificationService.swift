@@ -15,15 +15,13 @@ final class NotificationService: UNNotificationServiceExtension {
     private var bestAttemptContent: UNMutableNotificationContent?
 
     override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
-        print("this didreceive called")
         self.contentHandler = contentHandler
         bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
  
         defer {
             contentHandler(bestAttemptContent ?? request.content)
         }
-        print("this didreceive called")
-        bestAttemptContent?.categoryIdentifier = "content_added_notification"
+//        bestAttemptContent?.categoryIdentifier = "PreviewNotification"//"content_added_notification"
         guard let attachment = request.attachment else { return }
         bestAttemptContent?.attachments = [attachment]
     }

@@ -49,7 +49,7 @@ public struct App {
 				users.append(value)
 			}
 		}
-        isActive = dictionary["isActive"] as? Bool
+        isActive = dictionary["isActive"] as? Bool ?? false
 	}
 
 	/**
