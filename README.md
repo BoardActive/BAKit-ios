@@ -85,6 +85,11 @@ Requesting location permission requires the follow entries in your ```Info.plist
 - `NSLocationAlwaysUsageDescription`
   - `Privacy - Location Always Usage Description`
 
+#### Update Info.plist - Gallery Permission
+
+- `NSPhotoLibraryAddUsageDescription`
+   - `Privacy - Photo Library Usage Description`  
+   
 ---
 
 #### Update App Capabilities
@@ -108,7 +113,7 @@ import UIKit
 import UserNotifications
 import Messages
 import CoreLocation
-import os.log
+import CoreData
 ```
 
 Prior to the declaration of the ```AppDelegate``` class, a protocol is declared. Those classes conforming to said protocol receive the notification in the example app:
@@ -123,6 +128,7 @@ protocol NotificationDelegate: NSObject {
 Just inside the declaration of the ```AppDelegate``` class, the following variables and constants are declared:
 
 ```swift
+    var locationManager: CLLocationManager?
     public weak var notificationDelegate: NotificationDelegate?
 
     private let authOptions = UNAuthorizationOptions(arrayLiteral: [.alert, .badge, .sound])
@@ -170,49 +176,60 @@ Call this function after having received your FCM and APNS tokens.
 Additionally, you must have set your AppId and AppKey using the
 BoardActive class's userDefaults.
 */
-    func setupSDK() {
+   func setupSDK() {
         let operationQueue = OperationQueue()
         let registerDeviceOperation = BlockOperation.init {
             BoardActive.client.registerDevice { (parsedJSON, err) in
                 guard err == nil, let parsedJSON = parsedJSON else {
                     fatalError()
                 }
-
+                
                 BoardActive.client.userDefaults?.set(true, forKey: String.ConfigKeys.DeviceRegistered)
                 BoardActive.client.userDefaults?.synchronize()
+                
+                let userInfo = UserInfo.init(fromDictionary: parsedJSON)
+                StorageObject.container.userInfo = userInfo
             }
         }
-
+       
         let requestNotificationsOperation = BlockOperation.init {
             self.requestNotifications()
         }
-
+        
         let monitorLocationOperation = BlockOperation.init {
             DispatchQueue.main.async {
                 BoardActive.client.monitorLocation()
             }
         }
+        
+        let saveGeofenceLocationOperation = BlockOperation.init {
+            BoardActive.client.storeAppLocations()
+        }
 
         monitorLocationOperation.addDependency(requestNotificationsOperation)
         requestNotificationsOperation.addDependency(registerDeviceOperation)
-
+        monitorLocationOperation.addDependency(saveGeofenceLocationOperation)
+        
         operationQueue.addOperation(registerDeviceOperation)
         operationQueue.addOperation(requestNotificationsOperation)
         operationQueue.addOperation(monitorLocationOperation)
+        operationQueue.addOperation(saveGeofenceLocationOperation)
     }
 
-    public func requestNotifications() {        
-        UNUserNotificationCenter.current().requestAuthorization(options: authOptions) { granted, error in        
+    public func requestNotifications() {
+        UNUserNotificationCenter.current().requestAuthorization(options: authOptions) { granted, error in
             if BoardActive.client.userDefaults?.object(forKey: "dateNotificationRequested") == nil {
                 BoardActive.client.userDefaults?.set(Date().iso8601, forKey: "dateNotificationRequested")
                 BoardActive.client.userDefaults?.synchronize()
             }
+            UNUserNotificationCenter.current().delegate = self
+            self.configureCategory()
             BoardActive.client.updatePermissionStates()
             guard error == nil, granted else {
-                // Handle error and possibility of user not granting permission
                 return
             }
         }
+        
         DispatchQueue.main.async {
             UIApplication.shared.registerForRemoteNotifications()
         }
@@ -259,6 +276,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
      (Source: https://developer.apple.com/documentation/uikit/uiapplicationdelegate/1623013-application)
      */
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        if application.applicationState != .active && (userInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.Update || userInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.Place_update || userInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.Campaign) {
+            BoardActive.client.userDefaults?.set(true, forKey: String.ConfigKeys.silentPushReceived)
+        }
         handleNotification(application: application, userInfo: userInfo)
         completionHandler(UIBackgroundFetchResult.newData)
     }
@@ -266,11 +286,11 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
 
         let userInfo = notification.request.content.userInfo as! [String: Any]
-
+        
         if userInfo["notificationId"] as? String == "0000001" {
             handleNotification(application: UIApplication.shared, userInfo: userInfo)
         }
-
+        
         NotificationCenter.default.post(name: NSNotification.Name("Refresh HomeViewController Tableview"), object: nil, userInfo: userInfo)
         completionHandler(UNNotificationPresentationOptions.init(arrayLiteral: [.badge, .sound, .alert]))
     }
@@ -279,37 +299,41 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         This delegate method will call when user opens the notification from the notification center.
     */
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-
-        guard (response.actionIdentifier == UNNotificationDefaultActionIdentifier) || (response.actionIdentifier == UNNotificationDismissActionIdentifier) else {
+        let userInfo = response.notification.request.content.userInfo as! [String: Any]
+        StorageObject.container.notification = CoreDataStack.sharedInstance.createNotificationModel(fromDictionary: userInfo)
+        guard let notificationModel = StorageObject.container.notification else {
             return
         }
-        let userInfo = response.notification.request.content.userInfo as! [String: Any]
-
+        
         if isApplicationInBackground && !isNotificationStatusActive {
-          isNotificationStatusActive = false
-          isApplicationInBackground = false
-          if let _ = userInfo["aps"] as? [String: Any], let messageId = userInfo["baMessageId"] as? String, let firebaseNotificationId = userInfo["gcm.message_id"] as? String, let notificationId =  userInfo["baNotificationId"] as? String {
-             if (isReceviedEventUpdated) {
-                 self.notificationDelegate?.appReceivedRemoteNotificationInForeground(notification: userInfo)
-             } else {
-                 self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
-             }
-          }
+            isNotificationStatusActive = false
+            isApplicationInBackground = false
+            if let _ = notificationModel.aps, let _ = notificationModel.messageId, let _ = notificationModel.gcmmessageId, let _ = notificationModel.notificationId {
+                if (isReceviedEventUpdated) {
+                    self.notificationDelegate?.appReceivedRemoteNotificationInForeground(notification: userInfo)
+                } else {
+                    self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
+                }
+            }
+            
+        } else if isAppActive && !isNotificationStatusActive {
+            if (isReceviedEventUpdated) {
+                self.notificationDelegate?.appReceivedRemoteNotificationInForeground(notification: userInfo)
+            } else {
+                self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
+            }
+            
+        } else {
+            isNotificationStatusActive = true
+            isApplicationInBackground = false
+            NotificationCenter.default.post(name: Notification.Name("display"), object: nil)
+        }
+        if response.actionIdentifier == BoardActive.client.downloadActionIdentifier {
+            let strUrl = (userInfo["imageUrl"] as? String ?? "").trimmingCharacters(in: .whitespaces)
+            BoardActive.client.downloadAndSaveImageDownloadFromPush((self.window?.rootViewController)!, strUrl)
+        }
 
-       } else if isAppActive && !isNotificationStatusActive {         
-           if (isReceviedEventUpdated) {
-               self.notificationDelegate?.appReceivedRemoteNotificationInForeground(notification: userInfo)
-           } else {
-               self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
-           }
-
-       } else {
-           isNotificationStatusActive = true
-           isApplicationInBackground = false
-           NotificationCenter.default.post(name: Notification.Name("display"), object: nil)
-       }
-
-       completionHandler()
+        completionHandler()
     }
 
     /**
@@ -318,18 +342,41 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
      - Parameter userInfo: A dictionary that contains information related to the remote notification, potentially including a badge number for the app icon, an alert sound, an alert message to display to the user, a notification identifier, and custom data. The provider originates it as a JSON-defined dictionary that iOS converts to an `NSDictionary` object; the dictionary may contain only property-list objects plus `NSNull`. For more information about the contents of the remote notification dictionary, see Generating a Remote Notification.
      */
     public func handleNotification(application: UIApplication, userInfo: [AnyHashable: Any]) {
-
+        let tempUserInfo = userInfo as! [String: Any]
+        
+        if tempUserInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.App_status && tempUserInfo[String.NotificationKeys.PlaceId] == nil {
+            let app_status = tempUserInfo[String.NotificationKeys.Action] as? String
+            if app_status == String.NotificationKeys.Disable {
+                UserDefaults.standard.set(false, forKey: String.NotificationKeys.App_status)
+            } else if app_status == String.NotificationKeys.Enable {
+                UserDefaults.standard.set(true, forKey: String.NotificationKeys.App_status)
+            }
+        } else if tempUserInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.Place_update || tempUserInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.Update || tempUserInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.Campaign || tempUserInfo[String.NotificationKeys.Typee] as? String == String.NotificationKeys.Delete {
+            UserDefaults(suiteName: "BAKit")?.set(nil, forKey: String.ConfigKeys.geoFenceLocations)
+            BoardActive.client.storeAppLocations()
+        }
+        isReceviedEventUpdated = true
+        StorageObject.container.notification = CoreDataStack.sharedInstance.createNotificationModel(fromDictionary: tempUserInfo)
+        
+        //if let _ = (window?.rootViewController as? UINavigationController)?.viewControllers.last as? HomeViewController{
         NotificationCenter.default.post(name: NSNotification.Name("Refresh HomeViewController Tableview"), object: nil, userInfo: userInfo)
-
-       if let _ = userInfo["aps"] as? [String: Any], let messageId = userInfo["baMessageId"] as? String, let firebaseNotificationId = userInfo["gcm.message_id"] as? String, let notificationId =  userInfo["baNotificationId"] as? String {
+        // }
+        guard let notificationModel = StorageObject.container.notification else {
+            return
+        }
+        
+        if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId, let notificationId = notificationModel.notificationId {
             switch application.applicationState {
             case .active:
+                os_log("%s", String.ReceivedBackground)
                 BoardActive.client.postEvent(name: String.Received, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId)
                 break
             case .background:
+                os_log("%s", String.ReceivedBackground)
                 BoardActive.client.postEvent(name: String.Received, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId)
                 break
             case .inactive:
+                os_log("%s", String.TappedAndTransitioning)
                 BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId)
                 break
             default:
@@ -337,21 +384,35 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             }
         }
     }
+    
+    //Configure category
+    private func configureCategory() {
+        // Define Actions
+        let downloadButton = UNNotificationAction(identifier: BoardActive.client.downloadActionIdentifier, title: "Download", options: UNNotificationActionOptions.foreground)
+        // Define Category
+        let downloadCategory = UNNotificationCategory(identifier: BoardActive.client.categoryIdentifier, actions: [downloadButton], intentIdentifiers: [], hiddenPreviewsBodyPlaceholder: "", options: .customDismissAction)
+        // Register Category
+        UNUserNotificationCenter.current().setNotificationCategories([downloadCategory])
+    }
 }
 ```
 Add the following to monitor for significant location updates whilst the app is terminated.
 ```swift
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
 
-    if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
-            let locationManager = CLLocationManager()
-            if CLLocationManager.locationServicesEnabled() {
-                locationManager.desiredAccuracy = kCLLocationAccuracyBest
-                locationManager.delegate = self
-                locationManager.pausesLocationUpdatesAutomatically = false
-                locationManager.allowsBackgroundLocationUpdates = true
-                locationManager.startMonitoringSignificantLocationChanges()
-            }
+        locationManager = CLLocationManager()
+        self.locationManager?.delegate = self
+        if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
+            isNotificationStatusActive = true
+            //You have a location when app is in killed/ not running state
+                locationManager?.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+                locationManager?.distanceFilter = kCLDistanceFilterNone
+                locationManager?.pausesLocationUpdatesAutomatically = false
+                locationManager?.allowsBackgroundLocationUpdates = true
+                locationManager?.startMonitoringSignificantLocationChanges()
+                locationManager?.activityType = .otherNavigation
+//              locationManager?.requestAlwaysAuthorization()
+                locationManager?.startUpdatingLocation()
         }
         NotificationCenter.default.addObserver(BoardActive.client, selector: #selector(BoardActive.client.updatePermissionStates), name: Notification.Name("Update user permission states"), object: nil)
         return true
@@ -364,15 +425,59 @@ Add the following to monitor for significant location updates whilst the app is 
             NotificationCenter.default.post(name: Notification.Name("Update user permission states"), object: nil)
         }
         isAppActive = true
-
+    }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        print("app terminate")
+        CoreDataStack.sharedInstance.saveContext()
     }
 
-    extension AppDelegate: CLLocationManagerDelegate {
-        func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-            guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-            BoardActive.client.postLocation(location: manager.location!)
+extension AppDelegate: CLLocationManagerDelegate {
+
+    // calls when user Enters a monitored region
+    func locationManager(_ manager: CLLocationManager, didEnterRegion region: CLRegion) {
+        if region is CLCircularRegion {
+          print("entered in region")
+          BoardActive.client.stopMonitoring(region: region)
+      }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didStartMonitoringFor region: CLRegion) {
+        print("Started monitoring \(manager.monitoredRegions.count) regions")
+    }
+    
+    public func locationManager(_ manager: CLLocationManager, monitoringDidFailFor region: CLRegion?, withError error: Error) {
+        print("Error in monitoring: \(error.localizedDescription)")
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else {
+            os_log("\n[BoardActive] didUpdateLocations :: Error: Last location of locations = nil.\n")
+            return
+        }
+        BoardActive.client.currentLocation = location
+        
+        let flag: Bool = BoardActive.client.userDefaults?.value(forKey: String.ConfigKeys.silentPushReceived) as? Bool ?? false
+        if flag {
+            BoardActive.client.userDefaults?.set(false, forKey: String.ConfigKeys.silentPushReceived)
+            UserDefaults(suiteName: "BAKit")?.set(nil, forKey: String.ConfigKeys.geoFenceLocations)
+            BoardActive.client.storeAppLocations()
+        }
+        
+        if UserDefaults.standard.value(forKey: String.ConfigKeys.traveledDistance) == nil {
+            UserDefaults.standard.set([location.coordinate.latitude, location.coordinate.longitude], forKey: String.ConfigKeys.traveledDistance)
+        } else {
+            let previous = UserDefaults.standard.value(forKey: String.ConfigKeys.traveledDistance) as! NSArray
+            let previousLocation = CLLocation(latitude: previous[0] as! CLLocationDegrees, longitude: previous[1] as! CLLocationDegrees)
+            let distanceInMeters = previousLocation.distance(from: location)
+            if distanceInMeters >= BoardActive.client.recordLocationAfterMeters {
+                UserDefaults.standard.set([location.coordinate.latitude, location.coordinate.longitude], forKey: String.ConfigKeys.traveledDistance)
+                UserDefaults(suiteName: "BAKit")?.set(nil, forKey: String.ConfigKeys.geoFenceLocations)
+                BoardActive.client.storeAppLocations()
+            }
         }
     }
+}
 
 ```
 Add the below method in the controller from which you want to start location and notification services.
