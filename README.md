@@ -97,8 +97,11 @@ Requesting location permission requires the follow entries in your ```Info.plist
 Under your app's primary target you will need to edit it's **Capabilities** as follows:  
 1. Enable **Background Modes**. Apple provides documentation explain the various **Background Modes** [here](https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/iPhoneOSKeys.html#//apple_ref/doc/uid/TP40009252-SW22) 
 2. Tick the checkbox *Location updates*  
-3. Tick the checkbox *Remote notifications*  
-4. Enable **Push Notifications**  
+3. Tick the checkbox *Remote notifications* 
+4. Tick the checkbox *Background fetch*  
+5. Tick the checkbox *Background processing*  
+6. Enable **Push Notifications**  
+7. Add **App Groups**
 
 ---
 
@@ -109,11 +112,9 @@ Having followed the Apple's instructions linked in the **Add Firebase Core and F
 ```swift
 import BAKit
 import Firebase
-import UIKit
 import UserNotifications
 import Messages
 import CoreLocation
-import CoreData
 ```
 
 Prior to the declaration of the ```AppDelegate``` class, a protocol is declared. Those classes conforming to said protocol receive the notification in the example app:
@@ -125,6 +126,13 @@ protocol NotificationDelegate: NSObject {
 }
 ```
 
+Flags use to manage notification behaviour in various states
+```swift
+    var isNotificationStatusActive = false
+    var isApplicationInBackground = false
+    var isAppActive = false
+    var isReceviedEventUpdated = false
+```
 Just inside the declaration of the ```AppDelegate``` class, the following variables and constants are declared:
 
 ```swift
@@ -133,14 +141,9 @@ Just inside the declaration of the ```AppDelegate``` class, the following variab
 
     private let authOptions = UNAuthorizationOptions(arrayLiteral: [.alert, .badge, .sound])
     
-    //Flags use to manage notification behaviour in various states
-    var isNotificationStatusActive = false
-    var isApplicationInBackground = false
-    var isAppActive = false
-    var isReceviedEventUpdated = false
 ```
 
-After configuring Firebase and declaring ```AppDelegate```'s conformance to Firebase's ```MessagingDelegate```, store your BoardActive AppId and AppKey to ```BoardActive.client.userDefaults``` like so:
+Now store your BoardActive AppId and AppKey to ```BoardActive.client.userDefaults``` like so:
 
 ```swift
 func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
@@ -157,14 +160,73 @@ func application(_ application: UIApplication, willFinishLaunchingWithOptions la
     return true
 }
 
-/**
-  Update the flag values when application enters in background
-*/
+```
+Add the following to monitor for significant location updates whilst the app is terminated.
+
+**Note: It is mandatory to give always allow permission to achieve the full functionality in killed state. 
+And the option under edit scheme *"wait for the executable to be launched"* must be ticked.**
+
+```swift
+
+func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+
+        locationManager = CLLocationManager()
+        self.locationManager?.delegate = self
+        if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
+            isNotificationStatusActive = true
+            //You have a location when app is in killed/ not running state
+                locationManager?.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+                locationManager?.distanceFilter = kCLDistanceFilterNone
+                locationManager?.pausesLocationUpdatesAutomatically = false
+                locationManager?.allowsBackgroundLocationUpdates = true
+                locationManager?.startMonitoringSignificantLocationChanges()
+                locationManager?.activityType = .otherNavigation
+                locationManager?.startUpdatingLocation()
+        }
+        NotificationCenter.default.addObserver(BoardActive.client, selector: #selector(BoardActive.client.updatePermissionStates), name: Notification.Name("Update user permission states"), object: nil)
+        return true
+}
+
+```
+  Manage the flag values when application enters in background (If using scenedelegate)
+```swift
+
+func sceneDidBecomeActive(_ scene: UIScene) {
+     // Called when the scene has moved from an inactive state to an active state.
+     // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
+     UIApplication.shared.applicationIconBadgeNumber = 0
+     isNotificationStatusActive = true
+     if (isApplicationInBackground) {
+         NotificationCenter.default.post(name: Notification.Name("Update user permission states"), object: nil)
+     }
+     isAppActive = true
+}
+    
+func sceneDidEnterBackground(_ scene: UIScene) {
+      // Called as the scene transitions from the foreground to the background.
+      // Use this method to save data, release shared resources, and store enough scene-specific state information
+      // to restore the scene back to its current state.
+      isApplicationInBackground = true
+      isAppActive = false
+}
+
+```
+  Manage the flag values when application enters in background (If using appdelegate methods)
+```swift
+
 func applicationDidEnterBackground(_ application: UIApplication) {
     isApplicationInBackground = true
     isAppActive = false
 }
+    
+func applicationDidBecomeActive(_ application: UIApplication) {
+     application.applicationIconBadgeNumber = 0
 
+     if (isApplicationInBackground) {
+          NotificationCenter.default.post(name: Notification.Name("Update user permission states"), object: nil)
+     }
+     isAppActive = true
+}
 
 ```
 Add the following below the closing brace of your `AppDelegate` class.
@@ -263,12 +325,12 @@ Both as a means by which you can double check you've implemented the necessary `
 extension AppDelegate: UNUserNotificationCenterDelegate {
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         let deviceTokenString = deviceToken.reduce("", { $0 + String(format: "%02X", $1) })
-        os_log("\n[AppDelegate] didRegisterForRemoteNotificationsWithDeviceToken :: APNs TOKEN: %s \n", deviceTokenString)
+        print("\n[AppDelegate] didRegisterForRemoteNotificationsWithDeviceToken :: APNs TOKEN: %s \n", deviceTokenString)
     }
 
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
     // Handle APNS token registration error
-        os_log("\n[AppDelegate] didFailToRegisterForRemoteNotificationsWithError :: APNs TOKEN FAIL :: %s \n", error.localizedDescription)
+        print("\n[AppDelegate] didFailToRegisterForRemoteNotificationsWithError :: APNs TOKEN FAIL :: %s \n", error.localizedDescription)
     }
 
     /**
@@ -368,15 +430,15 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId, let notificationId = notificationModel.notificationId {
             switch application.applicationState {
             case .active:
-                os_log("%s", String.ReceivedBackground)
+                print("%s", String.ReceivedBackground)
                 BoardActive.client.postEvent(name: String.Received, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId)
                 break
             case .background:
-                os_log("%s", String.ReceivedBackground)
+                print("%s", String.ReceivedBackground)
                 BoardActive.client.postEvent(name: String.Received, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId)
                 break
             case .inactive:
-                os_log("%s", String.TappedAndTransitioning)
+                print("%s", String.TappedAndTransitioning)
                 BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId)
                 break
             default:
@@ -395,42 +457,10 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         UNUserNotificationCenter.current().setNotificationCategories([downloadCategory])
     }
 }
+
 ```
-Add the following to monitor for significant location updates whilst the app is terminated.
+Conform CLLocationManagerDelegate.
 ```swift
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
-
-        locationManager = CLLocationManager()
-        self.locationManager?.delegate = self
-        if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
-            isNotificationStatusActive = true
-            //You have a location when app is in killed/ not running state
-                locationManager?.desiredAccuracy = kCLLocationAccuracyBestForNavigation
-                locationManager?.distanceFilter = kCLDistanceFilterNone
-                locationManager?.pausesLocationUpdatesAutomatically = false
-                locationManager?.allowsBackgroundLocationUpdates = true
-                locationManager?.startMonitoringSignificantLocationChanges()
-                locationManager?.activityType = .otherNavigation
-//              locationManager?.requestAlwaysAuthorization()
-                locationManager?.startUpdatingLocation()
-        }
-        NotificationCenter.default.addObserver(BoardActive.client, selector: #selector(BoardActive.client.updatePermissionStates), name: Notification.Name("Update user permission states"), object: nil)
-        return true
-    }
-    
-    func applicationDidBecomeActive(_ application: UIApplication) {
-            application.applicationIconBadgeNumber = 0
-
-        if (isApplicationInBackground) {
-            NotificationCenter.default.post(name: Notification.Name("Update user permission states"), object: nil)
-        }
-        isAppActive = true
-    }
-    
-    func applicationWillTerminate(_ application: UIApplication) {
-        print("app terminate")
-        CoreDataStack.sharedInstance.saveContext()
-    }
 
 extension AppDelegate: CLLocationManagerDelegate {
 
@@ -452,7 +482,7 @@ extension AppDelegate: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else {
-            os_log("\n[BoardActive] didUpdateLocations :: Error: Last location of locations = nil.\n")
+            print("\n[BoardActive] didUpdateLocations :: Error: Last location of locations = nil.\n")
             return
         }
         BoardActive.client.currentLocation = location
@@ -480,11 +510,84 @@ extension AppDelegate: CLLocationManagerDelegate {
 }
 
 ```
+
+Now add a notification service app extension to your project:
+Select File > New > Target in Xcode.
+Select the Notification Service Extension target from the iOS > Application section.
+Click Next.
+Specify a name and other configuration details for your app extension.
+Click Finish.
+
+And add the same deployment target which you have kept for the project.
+
+It is required to create provisioning profile for the app extention with this kind of bundle id "{main app bundle}.NotificationServiceExtension"
+
+```swift
+import UserNotifications
+
+final class NotificationService: UNNotificationServiceExtension {
+
+    private var contentHandler: ((UNNotificationContent) -> Void)?
+    private var bestAttemptContent: UNMutableNotificationContent?
+
+    override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
+        self.contentHandler = contentHandler
+        bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
+ 
+        defer {
+            contentHandler(bestAttemptContent ?? request.content)
+        }
+        guard let attachment = request.attachment else { return }
+        bestAttemptContent?.attachments = [attachment]
+    }
+
+    override func serviceExtensionTimeWillExpire() {
+        // Called just before the extension will be terminated by the system.
+        // Use this as an opportunity to deliver your "best attempt" at modified content, otherwise the original push payload will be used.
+        if let contentHandler = contentHandler, let bestAttemptContent = bestAttemptContent {
+            contentHandler(bestAttemptContent)
+        }
+    }
+}
+
+extension UNNotificationRequest {
+    var attachment: UNNotificationAttachment? {
+        guard let attachmentURL = content.userInfo["imageUrl"] as? String, let imageData = try? Data(contentsOf: URL(string: attachmentURL)!) else {
+            return nil
+        }
+        return try? UNNotificationAttachment(data: imageData, options: nil)
+    }
+}
+
+extension UNNotificationAttachment {
+    convenience init(data: Data, options: [NSObject: AnyObject]?) throws {
+        let fileManager = FileManager.default
+        let temporaryFolderName = ProcessInfo.processInfo.globallyUniqueString
+        let temporaryFolderURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(temporaryFolderName, isDirectory: true)
+        try fileManager.createDirectory(at: temporaryFolderURL, withIntermediateDirectories: true, attributes: nil)
+        let imageFileIdentifier = UUID().uuidString + ".jpg"
+        let fileURL = temporaryFolderURL.appendingPathComponent(imageFileIdentifier)
+        try data.write(to: fileURL)
+        try self.init(identifier: imageFileIdentifier, url: fileURL, options: options)
+    }
+}
+```
+
 Add the below method in the controller from which you want to start location and notification services.
+
+If Swift:
 ```swift
 (UIApplication.shared.delegate! as! AppDelegate).setupSDK()
 ```
 
+If SwiftUI:
+```swift
+@UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
+.onAppear() {
+     appDelegate.setupSDK()
+ }
+```
 
 ## Download Example App Source Code
 There is an example app included in the repo's code under ["Example"](https://github.com/BoardActive/BAKit-ios/tree/master/Example).
