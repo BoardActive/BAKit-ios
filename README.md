@@ -248,9 +248,6 @@ BoardActive class's userDefaults.
                 
                 BoardActive.client.userDefaults?.set(true, forKey: String.ConfigKeys.DeviceRegistered)
                 BoardActive.client.userDefaults?.synchronize()
-                
-                let userInfo = UserInfo.init(fromDictionary: parsedJSON)
-                StorageObject.container.userInfo = userInfo
             }
         }
        
@@ -284,7 +281,6 @@ BoardActive class's userDefaults.
                 BoardActive.client.userDefaults?.set(Date().iso8601, forKey: "dateNotificationRequested")
                 BoardActive.client.userDefaults?.synchronize()
             }
-            UNUserNotificationCenter.current().delegate = self
             self.configureCategory()
             BoardActive.client.updatePermissionStates()
             guard error == nil, granted else {
@@ -347,7 +343,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
 
-        let userInfo = notification.request.content.userInfo as! [String: Any]
+         let userInfo = notification.request.content.userInfo as! [String: Any]
         
         if userInfo["notificationId"] as? String == "0000001" {
             handleNotification(application: UIApplication.shared, userInfo: userInfo)
@@ -362,15 +358,11 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     */
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo as! [String: Any]
-        StorageObject.container.notification = CoreDataStack.sharedInstance.createNotificationModel(fromDictionary: userInfo)
-        guard let notificationModel = StorageObject.container.notification else {
-            return
-        }
         
         if isApplicationInBackground && !isNotificationStatusActive {
             isNotificationStatusActive = false
             isApplicationInBackground = false
-            if let _ = notificationModel.aps, let _ = notificationModel.messageId, let _ = notificationModel.gcmmessageId, let _ = notificationModel.notificationId {
+            if let _ = userInfo["aps"], let _ = userInfo["baMessageId"] as? String, let _ = userInfo["gcm.message_id"] as? String, let _ = userInfo["baNotificationId"] as? String {
                 if (isReceviedEventUpdated) {
                     self.notificationDelegate?.appReceivedRemoteNotificationInForeground(notification: userInfo)
                 } else {
@@ -392,12 +384,19 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         }
         if response.actionIdentifier == BoardActive.client.downloadActionIdentifier {
             let strUrl = (userInfo["imageUrl"] as? String ?? "").trimmingCharacters(in: .whitespaces)
-            BoardActive.client.downloadAndSaveImageDownloadFromPush((self.window?.rootViewController)!, strUrl)
+            if let url = URL(string: strUrl) {
+                let task = URLSession.shared.dataTask(with: url) { data, response, error in
+                    guard let data = data, error == nil else { return }
+                        UIImageWriteToSavedPhotosAlbum(UIImage(data: data)!, nil, nil, nil)
+                }
+                task.resume()
+            } else {
+                print(strUrl + " is invalid")
+            }
         }
 
         completionHandler()
     }
-
     /**
      Use `userInfo` for validating said instance, and calls `createEvent`, capturing the current application state.
 
@@ -418,16 +417,8 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             BoardActive.client.storeAppLocations()
         }
         isReceviedEventUpdated = true
-        StorageObject.container.notification = CoreDataStack.sharedInstance.createNotificationModel(fromDictionary: tempUserInfo)
         
-        //if let _ = (window?.rootViewController as? UINavigationController)?.viewControllers.last as? HomeViewController{
-        NotificationCenter.default.post(name: NSNotification.Name("Refresh HomeViewController Tableview"), object: nil, userInfo: userInfo)
-        // }
-        guard let notificationModel = StorageObject.container.notification else {
-            return
-        }
-        
-        if let _ = notificationModel.aps, let messageId = notificationModel.messageId, let firebaseNotificationId = notificationModel.gcmmessageId, let notificationId = notificationModel.notificationId {
+        if let _ = tempUserInfo["aps"], let messageId = tempUserInfo["baMessageId"] as? String, let firebaseNotificationId = tempUserInfo["gcm.message_id"] as? String, let notificationId = tempUserInfo["baNotificationId"] as? String {
             switch application.applicationState {
             case .active:
                 print("%s", String.ReceivedBackground)
