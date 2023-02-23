@@ -146,7 +146,7 @@ Just inside the declaration of the ```AppDelegate``` class, the following variab
 Now store your BoardActive AppId and AppKey to ```BoardActive.client.userDefaults``` like so:
 
 ```swift
-func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
     FirebaseApp.configure()
     Messaging.messaging().delegate = self
     UNUserNotificationCenter.current().delegate = self
@@ -172,7 +172,7 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
 
         locationManager = CLLocationManager()
         self.locationManager?.delegate = self
-        if launchOptions?[UIApplicationLaunchOptionsKey.location] != nil {
+        if launchOptions?[UIApplication.LaunchOptionsKey.location] != nil {
             isNotificationStatusActive = true
             //You have a location when app is in killed/ not running state
                 locationManager?.desiredAccuracy = kCLLocationAccuracyBestForNavigation
