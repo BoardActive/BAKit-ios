@@ -248,6 +248,24 @@ BoardActive class's userDefaults.
                 
                 BoardActive.client.userDefaults?.set(true, forKey: String.ConfigKeys.DeviceRegistered)
                 BoardActive.client.userDefaults?.synchronize()
+                
+                var locationSharingEnable = false
+                
+                if CLLocationManager.locationServicesEnabled() {
+                     switch CLLocationManager.authorizationStatus() {
+                        case .notDetermined, .restricted, .denied:
+                            locationSharingEnable = false
+                        
+                        case .authorizedAlways, .authorizedWhenInUse:
+                            locationSharingEnable = true
+                        default:
+                            locationSharingEnable = false
+                    }
+                }
+
+                let dictPara: [String: Any] = ["notificationPermission": self.notificationPermission,
+                                               "locationPermission": locationSharingEnable, "dateLastOpenedApp": Date().iso8601]
+                self.updateUserAttriubtes(dictParameter: dictPara)
             }
         }
        
@@ -290,6 +308,14 @@ BoardActive class's userDefaults.
         
         DispatchQueue.main.async {
             UIApplication.shared.registerForRemoteNotifications()
+        }
+    }
+    
+    fileprivate func updateUserAttriubtes(dictParameter: [String: Any] = [:]) {
+        var tempData = StorageObject.container.userInfo?.toDictionary()
+        tempData?["attributes"] =  ["stock": dictParameter]
+        BoardActive.client.updateUserData(body: tempData!) { (response, error) in
+            print(response as Any)
         }
     }
 }
