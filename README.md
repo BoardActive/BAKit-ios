@@ -305,6 +305,7 @@ BoardActive class's userDefaults.
             guard error == nil, granted else {
                 return
             }
+            self.notificationPermission = granted
         }
         
         DispatchQueue.main.async {
