@@ -140,6 +140,7 @@ Just inside the declaration of the ```AppDelegate``` class, the following variab
     public weak var notificationDelegate: NotificationDelegate?
 
     private let authOptions = UNAuthorizationOptions(arrayLiteral: [.alert, .badge, .sound])
+    var notificationPermission = false
     
 ```
 
@@ -312,9 +313,8 @@ BoardActive class's userDefaults.
     }
     
     fileprivate func updateUserAttriubtes(dictParameter: [String: Any] = [:]) {
-        var tempData = StorageObject.container.userInfo?.toDictionary()
-        tempData?["attributes"] =  ["stock": dictParameter]
-        BoardActive.client.updateUserData(body: tempData!) { (response, error) in
+        let tempData = ["attributes":  ["stock": dictParameter]]
+        BoardActive.client.updateUserData(body: tempData) { (response, error) in
             print(response as Any)
         }
     }
