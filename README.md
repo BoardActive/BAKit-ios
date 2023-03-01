@@ -117,15 +117,6 @@ import Messages
 import CoreLocation
 ```
 
-Prior to the declaration of the ```AppDelegate``` class, a protocol is declared. Those classes conforming to said protocol receive the notification in the example app:
-
-```swift
-protocol NotificationDelegate: NSObject {
-    func appReceivedRemoteNotification(notification: [AnyHashable: Any])
-    func appReceivedRemoteNotificationInForeground(notification: [AnyHashable: Any])
-}
-```
-
 Flags use to manage notification behaviour in various states
 ```swift
     var isNotificationStatusActive = false
@@ -137,8 +128,6 @@ Just inside the declaration of the ```AppDelegate``` class, the following variab
 
 ```swift
     var locationManager: CLLocationManager?
-    public weak var notificationDelegate: NotificationDelegate?
-
     private let authOptions = UNAuthorizationOptions(arrayLiteral: [.alert, .badge, .sound])
     var notificationPermission = false
     
@@ -222,7 +211,7 @@ func applicationDidEnterBackground(_ application: UIApplication) {
     
 func applicationDidBecomeActive(_ application: UIApplication) {
      application.applicationIconBadgeNumber = 0
-
+      isNotificationStatusActive = true
      if (isApplicationInBackground) {
           NotificationCenter.default.post(name: Notification.Name("Update user permission states"), object: nil)
      }
@@ -319,6 +308,29 @@ BoardActive class's userDefaults.
             print(response as Any)
         }
     }
+    
+    
+    public func updateAllNotificationStatus(_ userInfo: [AnyHashable: Any]) {
+        let queue = OperationQueue()
+        if let _ = userInfo["aps"], let messageId = userInfo["baMessageId"] as? String, let firebaseNotificationId = userInfo["gcm.message_id"] as? String, let notificationId = userInfo["baNotificationId"] as? String {
+            queue.addOperation {
+                print("received")
+                BoardActive.client.postEvent(name: String.Received, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId)
+            }
+            queue.addOperation {
+                print("open called")
+                BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId)
+            }
+        }
+    }
+    
+    public func notificationOpened(_ userInfo: [AnyHashable: Any]) {
+        if let _ = userInfo["aps"], let messageId = userInfo["baMessageId"] as? String, let firebaseNotificationId = userInfo["gcm.message_id"] as? String, let notificationId = userInfo["baNotificationId"] as? String {
+            BoardActive.client.postEvent(name: String.Opened, messageId: messageId, firebaseNotificationId: firebaseNotificationId, notificationId: notificationId) {
+                print("event updated")
+            }
+        }
+    }
 }
 
 ```
@@ -391,17 +403,17 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             isApplicationInBackground = false
             if let _ = userInfo["aps"], let _ = userInfo["baMessageId"] as? String, let _ = userInfo["gcm.message_id"] as? String, let _ = userInfo["baNotificationId"] as? String {
                 if (isReceviedEventUpdated) {
-                    self.notificationDelegate?.appReceivedRemoteNotificationInForeground(notification: userInfo)
+                    self.notificationOpened(userInfo)
                 } else {
-                    self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
+                    self.updateAllNotificationStatus(userInfo)
                 }
             }
             
         } else if isAppActive && !isNotificationStatusActive {
             if (isReceviedEventUpdated) {
-                self.notificationDelegate?.appReceivedRemoteNotificationInForeground(notification: userInfo)
+                self.notificationOpened(userInfo)
             } else {
-                self.notificationDelegate?.appReceivedRemoteNotification(notification: userInfo)
+                self.updateAllNotificationStatus(userInfo)
             }
             
         } else {
