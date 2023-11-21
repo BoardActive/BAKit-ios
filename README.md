@@ -625,7 +625,6 @@ There is an example app included in the repo's code under ["Example"](https://gi
 ## Ask for Help
 
 Our team wants to help. Please contact us
-* Call us: [(678) 383-2200](tel:+6494461709)
 * Email Us [support@boardactive.com](mailto:support@boardactive.com)
 * Online Support [Web Site](https://www.boardactive.com/) 
 
