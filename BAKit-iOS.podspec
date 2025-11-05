@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'BAKit-iOS'
-  s.version          = '2.1.0'
+  s.version          = '2.1.1'
   s.summary          = 'Location-based notifications for personalized user engagement and retention campaigns.'
   s.description      = 'Board Active iOS SDK, for integrating BoardActive into your iOS application. The SDK supports iOS 12.0+'
   s.homepage         = 'https://boardactive.com'
