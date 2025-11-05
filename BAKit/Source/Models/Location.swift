@@ -8,13 +8,15 @@
 import Foundation
 
 public struct Location {
-    
+
     var longitude: Double?
     var latitude: Double?
     var locationId: String?
     var lastNotificationDate: Date?
     var radius: Int?
-    
+    var placeName: String?
+    var campaignId: String?  // NEW: Track which campaign this geofence belongs to (nil if not part of campaign)
+
     /**
      * Instantiate the instance using the passed dictionary values to set the properties values
      */
@@ -24,6 +26,8 @@ public struct Location {
         locationId = "\((dictionary["locationId"] as? NSNumber) ?? 0)"
         lastNotificationDate = dictionary["lastNotificationDate"] as? Date
         radius = dictionary["radius"] as? Int
+        placeName = dictionary["placeName"] as? String
+        campaignId = dictionary["campaignId"] as? String ?? dictionary["campaign_id"] as? String  // Support both naming conventions
     }
 
     /**
@@ -45,6 +49,12 @@ public struct Location {
         }
         if radius != nil {
             dictionary["radius"] = radius
+        }
+        if placeName != nil {
+            dictionary["placeName"] = placeName
+        }
+        if campaignId != nil {
+            dictionary["campaignId"] = campaignId
         }
         return dictionary
     }
